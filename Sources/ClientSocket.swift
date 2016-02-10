@@ -34,7 +34,7 @@ class ClientSocket {
     
     init(address: String, port: Int) throws {
         
-        self.descriptor = socket(AF_INET, sock_stream, IPPROTO_TCP)
+        self.descriptor = socket(AF_INET, sock_stream, Int32(IPPROTO_TCP))
         guard self.descriptor > 0 else { throw SocketError("Failed to create socket") }
         
         self.address = address
