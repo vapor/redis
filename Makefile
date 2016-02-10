@@ -19,6 +19,10 @@ redbird:
 	@echo "Building Redbird"
 	@swift build
 
+debug: redbird
+	@echo "Debugging Redbird"
+	@lldb ./run-tests
+
 run-tests: redbird Tests/main.swift $(SPEC_FILES)
 	@echo "Building specs"
 	@$(SWIFTC) -o run-tests \
