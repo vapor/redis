@@ -1,3 +1,10 @@
+//
+//  Redbird.swift
+//  Redbird
+//
+//  Created by Honza Dvorsky on 2/10/16.
+//  Copyright © 2016 Honza Dvorsky. All rights reserved.
+//
 
 ///Redis client object
 class Redbird {
@@ -11,13 +18,18 @@ class Redbird {
     
     func command(name: String) throws -> String {
         
-        let formatted = CommandFormatter().commandToString(name)
+        let formatted = CommandSendFormatter().commandToString(name)
         try self.socket.write(formatted)
         return try self.socket.readAll()
     }
 }
 
-struct CommandFormatter {
+/// Command convenience functions
+extension Redbird {
+    
+}
+
+struct CommandSendFormatter {
     
     private let terminator = "\r\n"
     

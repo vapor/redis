@@ -1,3 +1,10 @@
+//
+//  ClientSocket.swift
+//  Redbird
+//
+//  Created by Honza Dvorsky on 2/10/16.
+//  Copyright © 2016 Honza Dvorsky. All rights reserved.
+//
 
 //Inspired by socket-handling code in https://github.com/kylef/Curassow
 //and by the book https://books.google.co.uk/books/about/TCP_IP_Sockets_in_C.html?id=11YK8bbqYkEC&redir_esc=y

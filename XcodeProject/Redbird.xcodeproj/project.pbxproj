@@ -7,9 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3AFDAEF01C6BDD0B006EB74F /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */; };
+		3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */; };
+		3AFD5E471C6BF4710083B467 /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */; };
+		3AFD5E481C6BF4710083B467 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC8E1C6BE893005F62E7 /* Errors.swift */; };
+		3AFD5E491C6BF4710083B467 /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC881C6BE80D005F62E7 /* Parsers.swift */; };
+		3AFD5E4A1C6BF4710083B467 /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC8C1C6BE854005F62E7 /* Redbird.swift */; };
+		3AFD5E4B1C6BF4710083B467 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEEF1C6BDD0B006EB74F /* Types.swift */; };
+		3AFD5E4C1C6BF4710083B467 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC901C6BE922005F62E7 /* Extensions.swift */; };
+		3AFD5E4D1C6BF4710083B467 /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC921C6BEB29005F62E7 /* Null.swift */; };
+		3AFD5E4E1C6BF4710083B467 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC941C6BEB37005F62E7 /* Error.swift */; };
+		3AFD5E4F1C6BF4730083B467 /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */; };
+		3AFD5E501C6BF4730083B467 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC8E1C6BE893005F62E7 /* Errors.swift */; };
+		3AFD5E511C6BF4730083B467 /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC881C6BE80D005F62E7 /* Parsers.swift */; };
+		3AFD5E521C6BF4730083B467 /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC8C1C6BE854005F62E7 /* Redbird.swift */; };
+		3AFD5E531C6BF4730083B467 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEEF1C6BDD0B006EB74F /* Types.swift */; };
+		3AFD5E541C6BF4730083B467 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC901C6BE922005F62E7 /* Extensions.swift */; };
+		3AFD5E551C6BF4730083B467 /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC921C6BEB29005F62E7 /* Null.swift */; };
+		3AFD5E561C6BF4730083B467 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC941C6BEB37005F62E7 /* Error.swift */; };
 		3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEEE1C6BDD0B006EB74F /* main.swift */; };
-		3AFDAEF21C6BDD0B006EB74F /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEEF1C6BDD0B006EB74F /* Redbird.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,13 +41,29 @@
 
 /* Begin PBXFileReference section */
 		3A4B6D5E1C6BDC79001E1469 /* Redbird */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Redbird; sourceTree = BUILT_PRODUCTS_DIR; };
+		3AFD5E3F1C6BF4390083B467 /* RedbirdTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedbirdTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RedbirdTests.swift; path = ../Tests/RedbirdTests.swift; sourceTree = SOURCE_ROOT; };
+		3AFD5E431C6BF4390083B467 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClientSocket.swift; path = ../Sources/ClientSocket.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEEE1C6BDD0B006EB74F /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = ../Sources/main.swift; sourceTree = SOURCE_ROOT; };
-		3AFDAEEF1C6BDD0B006EB74F /* Redbird.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Redbird.swift; path = ../Sources/Redbird.swift; sourceTree = SOURCE_ROOT; };
+		3AFDAEEF1C6BDD0B006EB74F /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Types.swift; path = ../Sources/Types.swift; sourceTree = SOURCE_ROOT; };
+		3AFDBC881C6BE80D005F62E7 /* Parsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Parsers.swift; path = ../Sources/Parsers.swift; sourceTree = SOURCE_ROOT; };
+		3AFDBC8C1C6BE854005F62E7 /* Redbird.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Redbird.swift; path = ../Sources/Redbird.swift; sourceTree = SOURCE_ROOT; };
+		3AFDBC8E1C6BE893005F62E7 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Errors.swift; path = ../Sources/Errors.swift; sourceTree = SOURCE_ROOT; };
+		3AFDBC901C6BE922005F62E7 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = ../Sources/Extensions.swift; sourceTree = SOURCE_ROOT; };
+		3AFDBC921C6BEB29005F62E7 /* Null.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Null.swift; path = ../Sources/Null.swift; sourceTree = SOURCE_ROOT; };
+		3AFDBC941C6BEB37005F62E7 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Error.swift; path = ../Sources/Error.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		3A4B6D5B1C6BDC79001E1469 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3AFD5E3C1C6BF4390083B467 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				3A4B6D601C6BDC79001E1469 /* Redbird */,
+				3AFD5E401C6BF4390083B467 /* RedbirdTests */,
 				3A4B6D5F1C6BDC79001E1469 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				3A4B6D5E1C6BDC79001E1469 /* Redbird */,
+				3AFD5E3F1C6BF4390083B467 /* RedbirdTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,11 +94,26 @@
 		3A4B6D601C6BDC79001E1469 /* Redbird */ = {
 			isa = PBXGroup;
 			children = (
-				3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */,
 				3AFDAEEE1C6BDD0B006EB74F /* main.swift */,
-				3AFDAEEF1C6BDD0B006EB74F /* Redbird.swift */,
+				3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */,
+				3AFDBC8E1C6BE893005F62E7 /* Errors.swift */,
+				3AFDBC881C6BE80D005F62E7 /* Parsers.swift */,
+				3AFDBC8C1C6BE854005F62E7 /* Redbird.swift */,
+				3AFDAEEF1C6BDD0B006EB74F /* Types.swift */,
+				3AFDBC901C6BE922005F62E7 /* Extensions.swift */,
+				3AFDBC921C6BEB29005F62E7 /* Null.swift */,
+				3AFDBC941C6BEB37005F62E7 /* Error.swift */,
 			);
 			path = Redbird;
+			sourceTree = "<group>";
+		};
+		3AFD5E401C6BF4390083B467 /* RedbirdTests */ = {
+			isa = PBXGroup;
+			children = (
+				3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */,
+				3AFD5E431C6BF4390083B467 /* Info.plist */,
+			);
+			path = RedbirdTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -88,6 +136,24 @@
 			productReference = 3A4B6D5E1C6BDC79001E1469 /* Redbird */;
 			productType = "com.apple.product-type.tool";
 		};
+		3AFD5E3E1C6BF4390083B467 /* RedbirdTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3AFD5E441C6BF4390083B467 /* Build configuration list for PBXNativeTarget "RedbirdTests" */;
+			buildPhases = (
+				3AFD5E3B1C6BF4390083B467 /* Sources */,
+				3AFD5E3C1C6BF4390083B467 /* Frameworks */,
+				3AFD5E3D1C6BF4390083B467 /* Resources */,
+				3AFD5E571C6BF55B0083B467 /* Ensure running Test Redis */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RedbirdTests;
+			productName = RedbirdTests;
+			productReference = 3AFD5E3F1C6BF4390083B467 /* RedbirdTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -99,6 +165,9 @@
 				ORGANIZATIONNAME = "Honza Dvorsky";
 				TargetAttributes = {
 					3A4B6D5D1C6BDC79001E1469 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					3AFD5E3E1C6BF4390083B467 = {
 						CreatedOnToolsVersion = 7.3;
 					};
 				};
@@ -116,18 +185,68 @@
 			projectRoot = "";
 			targets = (
 				3A4B6D5D1C6BDC79001E1469 /* Redbird */,
+				3AFD5E3E1C6BF4390083B467 /* RedbirdTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3AFD5E3D1C6BF4390083B467 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3AFD5E571C6BF55B0083B467 /* Ensure running Test Redis */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Ensure running Test Redis";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ..\nmake redis\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3A4B6D5A1C6BDC79001E1469 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AFD5E551C6BF4730083B467 /* Null.swift in Sources */,
+				3AFD5E511C6BF4730083B467 /* Parsers.swift in Sources */,
 				3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */,
-				3AFDAEF01C6BDD0B006EB74F /* ClientSocket.swift in Sources */,
-				3AFDAEF21C6BDD0B006EB74F /* Redbird.swift in Sources */,
+				3AFD5E501C6BF4730083B467 /* Errors.swift in Sources */,
+				3AFD5E531C6BF4730083B467 /* Types.swift in Sources */,
+				3AFD5E521C6BF4730083B467 /* Redbird.swift in Sources */,
+				3AFD5E4F1C6BF4730083B467 /* ClientSocket.swift in Sources */,
+				3AFD5E561C6BF4730083B467 /* Error.swift in Sources */,
+				3AFD5E541C6BF4730083B467 /* Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3AFD5E3B1C6BF4390083B467 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3AFD5E4D1C6BF4710083B467 /* Null.swift in Sources */,
+				3AFD5E491C6BF4710083B467 /* Parsers.swift in Sources */,
+				3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */,
+				3AFD5E481C6BF4710083B467 /* Errors.swift in Sources */,
+				3AFD5E4B1C6BF4710083B467 /* Types.swift in Sources */,
+				3AFD5E4A1C6BF4710083B467 /* Redbird.swift in Sources */,
+				3AFD5E471C6BF4710083B467 /* ClientSocket.swift in Sources */,
+				3AFD5E4E1C6BF4710083B467 /* Error.swift in Sources */,
+				3AFD5E4C1C6BF4710083B467 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +352,28 @@
 			};
 			name = Release;
 		};
+		3AFD5E451C6BF4390083B467 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = RedbirdTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.honzadvorsky.RedbirdTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3AFD5E461C6BF4390083B467 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = RedbirdTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.honzadvorsky.RedbirdTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -253,6 +394,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		3AFD5E441C6BF4390083B467 /* Build configuration list for PBXNativeTarget "RedbirdTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3AFD5E451C6BF4390083B467 /* Debug */,
+				3AFD5E461C6BF4390083B467 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
