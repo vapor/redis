@@ -6,4 +6,5 @@ Redis + Swift. Red Is Swift. Swift is a bird. Redbird.
 
 Redis protocol: [http://redis.io/topics/protocol](http://redis.io/topics/protocol)
 
+# WORK IN PROGRESS, doesn't work yet
 
