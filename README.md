@@ -8,3 +8,25 @@ Redis protocol: [http://redis.io/topics/protocol](http://redis.io/topics/protoco
 
 # WORK IN PROGRESS, doesn't work yet
 
+# Progress
+
+## Parsing Incoming Types
+- [x] Null
+- [x] Error
+- [ ] Simple String
+- [ ] Integer
+- [ ] Bulk String
+- [ ] Array
+
+## Serializing Outgoing Types
+- [ ] Null
+- [ ] Error
+- [ ] Simple String
+- [ ] Integer
+- [ ] Bulk String
+- [ ] Array
+
+## Commands
+- [ ] none yet
+
+## Galaxy far far away...

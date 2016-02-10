@@ -18,10 +18,12 @@ class ParsingTests: XCTestCase {
     
     func testParsingError() {
 
-        let obj = try! ErrorParser().parse("-ERR unknown command 'BLAH'\r\n")
+        let obj = try! ErrorParser().parse("-WAAAT unknown command 'BLAH'\r\n")
         XCTAssertEqual(obj.respType, RespType.Error)
         let err = obj as! Error
-        XCTAssertEqual(err.content, "ERR unknown command 'BLAH'")
+        XCTAssertEqual(err.content, "WAAAT unknown command 'BLAH'")
+        XCTAssertEqual(err.kind, "WAAAT")
+        XCTAssertEqual(err.message, "unknown command 'BLAH'")
     }
     
 }
