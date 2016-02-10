@@ -6,9 +6,15 @@ Redis + Swift. Red Is Swift. Swift is a bird. Redbird.
 
 Redis protocol: [http://redis.io/topics/protocol](http://redis.io/topics/protocol)
 
-# WORK IN PROGRESS, doesn't work yet
+<!-- 
+# Installation
+## Swift Package Manager
 
-# Progress
+```swift
+.Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0, minor: 0)
+``` -->
+
+# Work in progress (see below)
 
 ## Parsing Incoming Types
 - [x] Null
@@ -30,3 +36,15 @@ Redis protocol: [http://redis.io/topics/protocol](http://redis.io/topics/protoco
 - [ ] none yet
 
 ## Galaxy far far away...
+
+:gift_heart: Contributing
+------------
+Please create an issue with a description of your problem or open a pull request with a fix.
+
+:v: License
+-------
+MIT
+
+:alien: Author
+------
+Honza Dvorsky - http://honzadvorsky.com, [@czechboy0](http://twitter.com/czechboy0)
