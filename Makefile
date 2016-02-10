@@ -31,6 +31,15 @@ run-tests: redbird Tests/main.swift $(SPEC_FILES)
 		-I.build/debug \
 		$(DEBUG_SWIFT_ARGS)
 
+install-deps-mac:
+	@brew tap zewo/tap
+	@brew install libvenice
+
+install-deps-linux:
+	@echo "deb [trusted=yes] http://apt.zewo.io/deb ./" | sudo tee --append /etc/apt/sources.list
+	@sudo apt-get update
+	@sudo apt-get install libvenice
+
 test: run-tests
 	@./run-tests
 
