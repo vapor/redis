@@ -9,7 +9,7 @@
 /// Parses the Error type
 struct Error: RespObject {
     static var signature: String = "-"
-    var respType: RespType = .Error
+    let respType: RespType = .Error
     
     let content: String
 }

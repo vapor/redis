@@ -16,17 +16,17 @@ extension String {
     
     func strippedTrailingTerminator() -> String {
         guard self.hasSuffix(RespTerminator) else { return self }
-        return String(self.characters.dropLast(2))
+        return String(self.characters.dropLast(RespTerminator.characters.count))
     }
     
-    func strippedInitialSignature() -> String {
+    func strippedSingleInitialCharacterSignature() -> String {
         guard !self.isEmpty else { return self }
         return String(self.characters.dropFirst(1))
     }
     
     func strippedInitialSignatureAndTrailingTerminator() -> String {
         return self
-            .strippedInitialSignature()
+            .strippedSingleInitialCharacterSignature()
             .strippedTrailingTerminator()
     }
 }
@@ -71,8 +71,7 @@ struct ErrorParser: Parser {
         
         //it is an error, strip trailing terminator
         let inner = string.strippedInitialSignatureAndTrailingTerminator()
-        
-        return Null()
+        return Error(content: inner)
     }
 }
 

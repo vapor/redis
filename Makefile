@@ -16,7 +16,8 @@ redis-start:
 redis-stop:
 	@if [ -a "TestRedis/redis.pid" ]; then kill `cat TestRedis/redis.pid`; fi;
 
-redis: redis-stop redis-start
+redis:
+	@if [ ! -a "TestRedis/redis.pid" ]; then redis-server TestRedis/redis.conf; fi;
 
 clean: stop-redis
 	rm -fr run-tests example/example .build TestRedis/dump.rdb

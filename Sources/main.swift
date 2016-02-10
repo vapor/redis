@@ -10,7 +10,7 @@ print("Redbird starting")
 
 do {
     let client = try Redbird(port: 6380)
-    let response = try client.command("PING")
+    let response = try client.command("BLAH")
     print(response)
 } catch {
     assertionFailure("\(error)")

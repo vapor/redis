@@ -16,7 +16,7 @@ class RedbirdTests: XCTestCase {
             let response = try client.command("PING")
             print(response)
         } catch {
-            assertionFailure("\(error)")
+            XCTAssert(false, "Failed to create client \(error)")
         }
     }
         
