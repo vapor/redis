@@ -1,10 +1,20 @@
 # Redbird
 
+[![Build Status](https://travis-ci.org/czechboy0/Redbird.svg?branch=master)](https://travis-ci.org/czechboy0/Redbird)
+
+[![Blog](https://img.shields.io/badge/blog-honzadvorsky.com-green.svg)](http://honzadvorsky.com)
+[![Twitter Czechboy0](https://img.shields.io/badge/twitter-czechboy0-green.svg)](http://twitter.com/czechboy0)
+
 Redis + Swift. Red Is Swift. Swift is a bird. Redbird.
 
 > Attempt at a pure-Swift implementation of a Redis client from the original protocol spec.
 
-Redis protocol: [http://redis.io/topics/protocol](http://redis.io/topics/protocol)
+Redis protocol specification: [http://redis.io/topics/protocol](http://redis.io/topics/protocol)
+
+# :question: Why?
+When I write servers for my apps, I usually use 1) Linux servers, 2) Redis as my database/cache. Now I also want to write everything in Swift. I looked through the existing Swift Redis wrappers and unfortunately all of them just wrapped a C library, which had to be installed externally (yuck). Thus I decided to throw all that away, go back to the Redis protocol specification and build up a Swift client without any dependencies, so that it can be easily used on OS X and on Linux easily, just by adding a Swift Package Manager entry, no need to install anything extra.
+
+That means I'm writing it up all the way from bare sockets. Just using `Glibc` and `Darwin` headers, together with standard Swift libraries. #0dependencies
 
 <!-- 
 # Installation
@@ -14,7 +24,7 @@ Redis protocol: [http://redis.io/topics/protocol](http://redis.io/topics/protoco
 .Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0, minor: 0)
 ``` -->
 
-# Work in progress (see below)
+# :construction_worker: Work in progress (see below)
 
 ## Parsing Incoming Types
 - [x] Null
@@ -34,8 +44,6 @@ Redis protocol: [http://redis.io/topics/protocol](http://redis.io/topics/protoco
 
 ## Commands
 - [ ] none yet
-
-## Galaxy far far away...
 
 :gift_heart: Contributing
 ------------
