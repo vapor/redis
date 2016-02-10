@@ -13,7 +13,7 @@ Redis protocol specification: [http://redis.io/topics/protocol](http://redis.io/
 # :question: Why?
 When I write servers for my apps, I usually use 1) Linux servers, 2) Redis as my database/cache. Now I also want to write everything in Swift. I looked through the existing Swift Redis wrappers and unfortunately all of them just wrapped a C library, which had to be installed externally (yuck). Thus I decided to throw all that away, go back to the Redis protocol specification and build up a Swift client without any dependencies, so that it can be easily used on OS X and on Linux easily, just by adding a Swift Package Manager entry, no need to install anything extra.
 
-That means I'm writing it up all the way from bare sockets. Just using `Glibc` and `Darwin` headers, together with standard Swift libraries. #0dependencies
+That means I'm writing it up all the way from bare sockets. Just using `Glibc` and `Darwin` headers, together with standard Swift libraries. `#0dependencies`
 
 <!-- 
 # Installation
