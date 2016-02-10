@@ -38,6 +38,14 @@ redbird-release:
 	@echo "Building Redbird"
 	@swift build --configuration release
 
+start-redis:
+	@redis-server TestRedis/redis.conf
+
+stop-redis:
+	@if [ -a "TestRedis/redis.pid" ]; then kill `cat TestRedis/redis.pid`; fi;
+
+redis: stop-redis start-redis
+
 # example: redbird-release example/example.swift
 # 	@echo "Building Example"
 # 	@$(SWIFTC) -o example/example \
@@ -45,5 +53,5 @@ redbird-release:
 # 		-I.build/release \
 # 		$(RELEASE_SWIFT_ARGS)
 
-clean:
-	rm -fr run-tests example/example .build
+clean: stop-redis
+	rm -fr run-tests example/example .build TestRedis/dump.rdb
