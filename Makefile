@@ -9,7 +9,7 @@ TARGET=x86_64-apple-macosx10.10
 SWIFTC=swiftc -target $(TARGET) -sdk $(SDK) -Xlinker -all_load
 endif
 
-RELEASE_LIBS=Redbird
+RELEASE_LIBS=Redbird 
 DEBUG_LIBS=$(RELEASE_LIBS)
 
 DEBUG_SWIFT_ARGS=$(foreach lib,$(DEBUG_LIBS),-Xlinker .build/debug/$(lib).a)
@@ -21,13 +21,12 @@ redbird:
 
 debug: redbird
 	@echo "Debugging Redbird"
-	@lldb ./run-tests
+	@lldb .build/debug/Redbird
 
-run-tests: redbird Tests/main.swift $(SPEC_FILES)
+run-tests: redbird Tests/main.swift
 	@echo "Building specs"
 	@$(SWIFTC) -o run-tests \
 		Tests/main.swift \
-		$(SPEC_FILES) \
 		-I.build/debug \
 		$(DEBUG_SWIFT_ARGS)
 
