@@ -12,25 +12,6 @@ protocol Parser {
 
 let RespTerminator = "\r\n"
 
-extension String {
-    
-    func strippedTrailingTerminator() -> String {
-        guard self.hasSuffix(RespTerminator) else { return self }
-        return String(self.characters.dropLast(RespTerminator.characters.count))
-    }
-    
-    func strippedSingleInitialCharacterSignature() -> String {
-        guard !self.isEmpty else { return self }
-        return String(self.characters.dropFirst(1))
-    }
-    
-    func strippedInitialSignatureAndTrailingTerminator() -> String {
-        return self
-            .strippedSingleInitialCharacterSignature()
-            .strippedTrailingTerminator()
-    }
-}
-
 /// Tries parsing with all available parsers before one successfully parses the string, otherwise fails
 struct DefaultParser: Parser {
 
@@ -69,11 +50,26 @@ struct ErrorParser: Parser {
             throw RedbirdError.ParsingStringNotThisType(string, RespType.Error)
         }
         
-        //it is an error, strip trailing terminator
+        //it is an error, strip leading signature and trailing terminator
         let inner = string.strippedInitialSignatureAndTrailingTerminator()
         return Error(content: inner)
     }
 }
+
+/// Parses the SimpleString type
+struct SimpleStringParser: Parser {
+    
+    func parse(string: String) throws -> RespObject {
+        guard string.hasPrefix(SimpleString.signature) else {
+            throw RedbirdError.ParsingStringNotThisType(string, RespType.SimpleString)
+        }
+        
+        //it is a simple string, strip leading signature and trailing terminator
+        let inner = string.strippedInitialSignatureAndTrailingTerminator()
+        return try SimpleString(content: inner)
+    }
+}
+
 
 
 

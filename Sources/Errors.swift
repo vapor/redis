@@ -9,4 +9,5 @@
 enum RedbirdError: ErrorType {
     case ParsingGeneric(String)
     case ParsingStringNotThisType(String, RespType?)
+    case SimpleStringInvalidInput(String)
 }

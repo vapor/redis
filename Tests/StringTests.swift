@@ -27,5 +27,19 @@ class StringTests: XCTestCase {
         let string = "+HELLO world\r\n".strippedInitialSignatureAndTrailingTerminator()
         XCTAssertEqual(string, "HELLO world")
     }
+    
+    func testHasPrefix() {
+        
+        let has = "Hello World".hasPrefix("Hell")
+        XCTAssertTrue(has)
+    }
+    
+    func testHasSuffix() {
+        
+        let has = "Hello World".hasSuffix("rld")
+        XCTAssertTrue(has)
+    }
+
+
 
 }

@@ -26,6 +26,8 @@
 		3AFD5E561C6BF4730083B467 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC941C6BEB37005F62E7 /* Error.swift */; };
 		3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */; };
 		3AFD5E5B1C6BFD2B0083B467 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */; };
+		3AFD5E5D1C6C07BC0083B467 /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */; };
+		3AFD5E5E1C6C07C60083B467 /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */; };
 		3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEEE1C6BDD0B006EB74F /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +50,7 @@
 		3AFD5E431C6BF4390083B467 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParsingTests.swift; path = ../../Tests/ParsingTests.swift; sourceTree = "<group>"; };
 		3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringTests.swift; path = ../../Tests/StringTests.swift; sourceTree = "<group>"; };
+		3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleString.swift; path = ../Sources/SimpleString.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClientSocket.swift; path = ../Sources/ClientSocket.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEEE1C6BDD0B006EB74F /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = ../Sources/main.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEEF1C6BDD0B006EB74F /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Types.swift; path = ../Sources/Types.swift; sourceTree = SOURCE_ROOT; };
@@ -107,6 +110,7 @@
 				3AFDBC901C6BE922005F62E7 /* Extensions.swift */,
 				3AFDBC921C6BEB29005F62E7 /* Null.swift */,
 				3AFDBC941C6BEB37005F62E7 /* Error.swift */,
+				3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */,
 			);
 			path = Redbird;
 			sourceTree = "<group>";
@@ -228,6 +232,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AFD5E5D1C6C07BC0083B467 /* SimpleString.swift in Sources */,
 				3AFD5E551C6BF4730083B467 /* Null.swift in Sources */,
 				3AFD5E511C6BF4730083B467 /* Parsers.swift in Sources */,
 				3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */,
@@ -254,6 +259,7 @@
 				3AFD5E471C6BF4710083B467 /* ClientSocket.swift in Sources */,
 				3AFD5E4E1C6BF4710083B467 /* Error.swift in Sources */,
 				3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */,
+				3AFD5E5E1C6C07C60083B467 /* SimpleString.swift in Sources */,
 				3AFD5E4C1C6BF4710083B467 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,6 +275,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -313,6 +320,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;

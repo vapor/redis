@@ -26,4 +26,13 @@ class ParsingTests: XCTestCase {
         XCTAssertEqual(err.message, "unknown command 'BLAH'")
     }
     
+    func testParsingSimpleString() {
+        
+        let obj = try! SimpleStringParser().parse("+OK\r\n")
+        XCTAssertEqual(obj.respType, RespType.SimpleString)
+        let simpleString = obj as! SimpleString
+        XCTAssertEqual(simpleString.content, "OK")
+    }
+
+    
 }

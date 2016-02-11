@@ -17,13 +17,10 @@ struct Error: RespObject {
     //this is present in Redis implementations, but is not required by the protocol,
     //thus the optionals.
     var kind: String? {
-        return self.content.componentsSeparatedByString(" ").first
+        return self.content.subwords().first
     }
     
     var message: String? {
-        return self.content
-            .componentsSeparatedByString(" ")
-            .dropFirst()
-            .joinWithSeparator(" ")
+        return self.content.stringWithDroppedFirstWord()
     }
 }
