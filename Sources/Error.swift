@@ -24,3 +24,10 @@ struct Error: RespObject {
         return self.content.stringWithDroppedFirstWord()
     }
 }
+
+//equatable
+extension Error: Equatable {}
+func ==(lhs: Error, rhs: Error) -> Bool {
+    return lhs.content == rhs.content
+}
+

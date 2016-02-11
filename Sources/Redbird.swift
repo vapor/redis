@@ -16,11 +16,13 @@ class Redbird {
         self.socket = try ClientSocket(address: address, port: port)
 	}
     
-    func command(name: String) throws -> String {
+    func command(name: String) throws -> RespObject {
         
         let formatted = CommandSendFormatter().commandToString(name)
         try self.socket.write(formatted)
-        return try self.socket.readAll()
+        let response = try self.socket.readAll()
+        let responseObject = try DefaultParser().parse(response)
+        return responseObject
     }
 }
 

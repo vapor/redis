@@ -17,7 +17,9 @@ struct DefaultParser: Parser {
 
     let parsers: [Parser] = [
         NullParser(),
-        ErrorParser()
+        ErrorParser(),
+        SimpleStringParser(),
+        IntegerParser()
     ]
 
     func parse(string: String) throws -> RespObject {

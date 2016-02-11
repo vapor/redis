@@ -10,14 +10,32 @@ import XCTest
 
 class RedbirdTests: XCTestCase {
     
-    func testConnectedPing() {
+    func live(@noescape block: (client: Redbird) throws -> ()) {
         do {
             let client = try Redbird(port: 6380)
-            let response = try client.command("PING")
-            print(response)
+            try block(client: client)
         } catch {
             XCTAssert(false, "Failed to create client \(error)")
         }
     }
+    
+    func testSimpleString_Ping() {
         
+        live { (client) in
+            let response = try client.command("PING")
+            XCTAssertEqual(response.respType, RespType.SimpleString)
+            XCTAssertEqual(response as? SimpleString, try? SimpleString(content: "PONG"))
+        }
+    }
+    
+    func testError_UnknownCommand() {
+        
+        live { (client) in
+            let response = try client.command("BLAH")
+            XCTAssertEqual(response.respType, RespType.Error)
+            XCTAssertEqual((response as? Error)?.kind, "ERR")
+        }
+    }
+
+    
 }

@@ -20,4 +20,9 @@ struct SimpleString: RespObject {
     }
 }
 
+//equatable
+extension SimpleString: Equatable {}
+func ==(lhs: SimpleString, rhs: SimpleString) -> Bool {
+    return lhs.content == rhs.content
+}
 

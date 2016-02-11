@@ -21,3 +21,10 @@ struct Integer: RespObject {
         self.intContent = intContent
     }
 }
+
+//equatable
+extension Integer: Equatable {}
+func ==(lhs: Integer, rhs: Integer) -> Bool {
+    return lhs.intContent == rhs.intContent
+}
+
