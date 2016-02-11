@@ -70,6 +70,21 @@ struct SimpleStringParser: Parser {
     }
 }
 
+/// Parses the Integer type
+struct IntegerParser: Parser {
+    
+    func parse(string: String) throws -> RespObject {
+        guard string.hasPrefix(Integer.signature) else {
+            throw RedbirdError.ParsingStringNotThisType(string, RespType.SimpleString)
+        }
+        
+        //it is a simple string, strip leading signature and trailing terminator
+        let inner = string.strippedInitialSignatureAndTrailingTerminator()
+        return try Integer(content: inner)
+    }
+}
+
+
 
 
 

@@ -28,6 +28,8 @@
 		3AFD5E5B1C6BFD2B0083B467 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */; };
 		3AFD5E5D1C6C07BC0083B467 /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */; };
 		3AFD5E5E1C6C07C60083B467 /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */; };
+		3AFD5E601C6C0EE90083B467 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5F1C6C0EE90083B467 /* Integer.swift */; };
+		3AFD5E611C6C10AC0083B467 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5F1C6C0EE90083B467 /* Integer.swift */; };
 		3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEEE1C6BDD0B006EB74F /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +53,7 @@
 		3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParsingTests.swift; path = ../../Tests/ParsingTests.swift; sourceTree = "<group>"; };
 		3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringTests.swift; path = ../../Tests/StringTests.swift; sourceTree = "<group>"; };
 		3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleString.swift; path = ../Sources/SimpleString.swift; sourceTree = SOURCE_ROOT; };
+		3AFD5E5F1C6C0EE90083B467 /* Integer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Integer.swift; path = ../Sources/Integer.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClientSocket.swift; path = ../Sources/ClientSocket.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEEE1C6BDD0B006EB74F /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = ../Sources/main.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEEF1C6BDD0B006EB74F /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Types.swift; path = ../Sources/Types.swift; sourceTree = SOURCE_ROOT; };
@@ -111,6 +114,7 @@
 				3AFDBC921C6BEB29005F62E7 /* Null.swift */,
 				3AFDBC941C6BEB37005F62E7 /* Error.swift */,
 				3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */,
+				3AFD5E5F1C6C0EE90083B467 /* Integer.swift */,
 			);
 			path = Redbird;
 			sourceTree = "<group>";
@@ -241,6 +245,7 @@
 				3AFD5E521C6BF4730083B467 /* Redbird.swift in Sources */,
 				3AFD5E4F1C6BF4730083B467 /* ClientSocket.swift in Sources */,
 				3AFD5E561C6BF4730083B467 /* Error.swift in Sources */,
+				3AFD5E601C6C0EE90083B467 /* Integer.swift in Sources */,
 				3AFD5E541C6BF4730083B467 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -249,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AFD5E611C6C10AC0083B467 /* Integer.swift in Sources */,
 				3AFD5E4D1C6BF4710083B467 /* Null.swift in Sources */,
 				3AFD5E491C6BF4710083B467 /* Parsers.swift in Sources */,
 				3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */,

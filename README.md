@@ -28,8 +28,8 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 ## Parsing Incoming Types
 - [x] Null
 - [x] Error
-- [ ] Simple String
-- [ ] Integer
+- [x] Simple String
+- [x] Integer
 - [ ] Bulk String
 - [ ] Array
 

@@ -34,5 +34,13 @@ class ParsingTests: XCTestCase {
         XCTAssertEqual(simpleString.content, "OK")
     }
 
-    
+    func testParsingInteger() {
+        
+        let obj = try! IntegerParser().parse(":1000\r\n")
+        XCTAssertEqual(obj.respType, RespType.Integer)
+        let int = obj as! Integer
+        XCTAssertEqual(int.intContent, 1000)
+        XCTAssertEqual(int.boolContent, true)
+    }
+
 }
