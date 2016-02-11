@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		3A61ECFE1C6C158D0095A34C /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ECFD1C6C158D0095A34C /* BulkString.swift */; };
 		3A61ED001C6C15AB0095A34C /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ECFF1C6C15AB0095A34C /* Array.swift */; };
+		3A61ED021C6C16120095A34C /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED011C6C16120095A34C /* Formatters.swift */; };
+		3A61ED031C6C16220095A34C /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED011C6C16120095A34C /* Formatters.swift */; };
+		3A61ED041C6C16220095A34C /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ECFD1C6C158D0095A34C /* BulkString.swift */; };
+		3A61ED051C6C16220095A34C /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ECFF1C6C15AB0095A34C /* Array.swift */; };
+		3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED061C6C17330095A34C /* FormattingTests.swift */; };
 		3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */; };
 		3AFD5E471C6BF4710083B467 /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */; };
 		3AFD5E481C6BF4710083B467 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDBC8E1C6BE893005F62E7 /* Errors.swift */; };
@@ -51,6 +56,8 @@
 		3A4B6D5E1C6BDC79001E1469 /* Redbird */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Redbird; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A61ECFD1C6C158D0095A34C /* BulkString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BulkString.swift; path = ../Sources/BulkString.swift; sourceTree = SOURCE_ROOT; };
 		3A61ECFF1C6C15AB0095A34C /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = ../Sources/Array.swift; sourceTree = SOURCE_ROOT; };
+		3A61ED011C6C16120095A34C /* Formatters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Formatters.swift; path = ../Sources/Formatters.swift; sourceTree = SOURCE_ROOT; };
+		3A61ED061C6C17330095A34C /* FormattingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FormattingTests.swift; path = ../../Tests/FormattingTests.swift; sourceTree = "<group>"; };
 		3AFD5E3F1C6BF4390083B467 /* RedbirdTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedbirdTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RedbirdTests.swift; path = ../Tests/RedbirdTests.swift; sourceTree = SOURCE_ROOT; };
 		3AFD5E431C6BF4390083B467 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -111,6 +118,7 @@
 				3AFDAEEE1C6BDD0B006EB74F /* main.swift */,
 				3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */,
 				3AFDBC8E1C6BE893005F62E7 /* Errors.swift */,
+				3A61ED011C6C16120095A34C /* Formatters.swift */,
 				3AFDBC881C6BE80D005F62E7 /* Parsers.swift */,
 				3AFDBC8C1C6BE854005F62E7 /* Redbird.swift */,
 				3AFDAEEF1C6BDD0B006EB74F /* Types.swift */,
@@ -131,6 +139,7 @@
 				3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */,
 				3AFD5E431C6BF4390083B467 /* Info.plist */,
 				3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */,
+				3A61ED061C6C17330095A34C /* FormattingTests.swift */,
 				3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */,
 			);
 			path = RedbirdTests;
@@ -248,6 +257,7 @@
 				3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */,
 				3A61ECFE1C6C158D0095A34C /* BulkString.swift in Sources */,
 				3AFD5E501C6BF4730083B467 /* Errors.swift in Sources */,
+				3A61ED021C6C16120095A34C /* Formatters.swift in Sources */,
 				3AFD5E531C6BF4730083B467 /* Types.swift in Sources */,
 				3AFD5E521C6BF4730083B467 /* Redbird.swift in Sources */,
 				3AFD5E4F1C6BF4730083B467 /* ClientSocket.swift in Sources */,
@@ -267,7 +277,10 @@
 				3AFD5E491C6BF4710083B467 /* Parsers.swift in Sources */,
 				3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */,
 				3AFD5E481C6BF4710083B467 /* Errors.swift in Sources */,
+				3A61ED051C6C16220095A34C /* Array.swift in Sources */,
 				3AFD5E5B1C6BFD2B0083B467 /* StringTests.swift in Sources */,
+				3A61ED031C6C16220095A34C /* Formatters.swift in Sources */,
+				3A61ED041C6C16220095A34C /* BulkString.swift in Sources */,
 				3AFD5E4B1C6BF4710083B467 /* Types.swift in Sources */,
 				3AFD5E4A1C6BF4710083B467 /* Redbird.swift in Sources */,
 				3AFD5E471C6BF4710083B467 /* ClientSocket.swift in Sources */,
@@ -275,6 +288,7 @@
 				3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */,
 				3AFD5E5E1C6C07C60083B467 /* SimpleString.swift in Sources */,
 				3AFD5E4C1C6BF4710083B467 /* Extensions.swift in Sources */,
+				3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

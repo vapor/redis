@@ -10,21 +10,19 @@ protocol Parser {
     func parse(string: String) throws -> RespObject
 }
 
-let RespTerminator = "\r\n"
+let parsers: [Parser] = [
+    NullParser(),
+    ErrorParser(),
+    SimpleStringParser(),
+    IntegerParser()
+]
 
 /// Tries parsing with all available parsers before one successfully parses the string, otherwise fails
 struct DefaultParser: Parser {
 
-    let parsers: [Parser] = [
-        NullParser(),
-        ErrorParser(),
-        SimpleStringParser(),
-        IntegerParser()
-    ]
-
     func parse(string: String) throws -> RespObject {
         
-        for p in self.parsers {
+        for p in parsers {
             if let object = try? p.parse(string) {
                 return object
             }

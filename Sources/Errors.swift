@@ -11,4 +11,5 @@ enum RedbirdError: ErrorType {
     case ParsingStringNotThisType(String, RespType?)
     case SimpleStringInvalidInput(String)
     case IntegerInvalidInput(String)
+    case FormatterNotForThisType(RespObject, RespType?)
 }

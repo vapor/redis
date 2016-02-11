@@ -6,6 +6,8 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
+let RespTerminator = "\r\n"
+
 enum RespType {
     case Array
     case BulkString
@@ -18,16 +20,3 @@ enum RespType {
 protocol RespObject {
     var respType: RespType { get }
 }
-
-protocol RespEncodable {
-    func encode() -> String
-}
-
-protocol RespDecodable {
-    init(input: String)
-}
-
-protocol RESPCodable: RespEncodable, RespDecodable {}
-
-
-

@@ -33,8 +33,8 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 - [ ] Bulk String
 - [ ] Array
 
-## Serializing Outgoing Types
-- [ ] Null
+## Formatting Outgoing Types
+- [x] Null
 - [ ] Error
 - [ ] Simple String
 - [ ] Integer
@@ -42,7 +42,7 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 - [ ] Array
 
 ## Supported Commands
-- [ ] none yet
+- [ ] -
 
 :gift_heart: Contributing
 ------------
