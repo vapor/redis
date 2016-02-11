@@ -41,7 +41,7 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 - [ ] Bulk String
 - [ ] Array
 
-## Commands
+## Supported Commands
 - [ ] none yet
 
 :gift_heart: Contributing
