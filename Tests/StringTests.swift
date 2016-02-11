@@ -39,6 +39,13 @@ class StringTests: XCTestCase {
         let has = "Hello World".hasSuffix("rld")
         XCTAssertTrue(has)
     }
+    
+    func testContainsCharacter() {
+        
+        let does = "Hello World".containsCharacter("W")
+        XCTAssertTrue(does)
+    }
+
 
 
 

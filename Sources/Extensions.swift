@@ -45,5 +45,9 @@ extension String {
     func hasSuffix(suffix: String) -> Bool {
         return self.characters.reverse().startsWith(suffix.characters.reverse())
     }
+    
+    func containsCharacter(other: Character) -> Bool {
+        return self.characters.contains(other)
+    }
 }
 
