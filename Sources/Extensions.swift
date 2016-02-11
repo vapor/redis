@@ -13,15 +13,29 @@ extension String {
         return String(self.characters.dropLast(RespTerminator.characters.count))
     }
     
+    func wrappedTrailingTerminator() -> String {
+        return self + RespTerminator
+    }
+    
     func strippedSingleInitialCharacterSignature() -> String {
         guard !self.isEmpty else { return self }
         return String(self.characters.dropFirst(1))
+    }
+    
+    func wrappedSingleInitialCharacterSignature(signature: String) -> String {
+        return signature + self
     }
     
     func strippedInitialSignatureAndTrailingTerminator() -> String {
         return self
             .strippedSingleInitialCharacterSignature()
             .strippedTrailingTerminator()
+    }
+    
+    func wrappedInitialSignatureAndTrailingTerminator(signature: String) -> String {
+        return self
+            .wrappedSingleInitialCharacterSignature(signature)
+            .wrappedTrailingTerminator()
     }
     
     func subwords(separator: Character = " ") -> [String] {

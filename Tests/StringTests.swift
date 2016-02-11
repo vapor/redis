@@ -28,6 +28,24 @@ class StringTests: XCTestCase {
         XCTAssertEqual(string, "HELLO world")
     }
     
+    func testWrappingTrailingTerminator() {
+        
+        let string = "HELLO world".wrappedTrailingTerminator()
+        XCTAssertEqual(string, "HELLO world\r\n")
+    }
+    
+    func testWrappingSignature() {
+        
+        let string = "HELLO world".wrappedSingleInitialCharacterSignature("+")
+        XCTAssertEqual(string, "+HELLO world")
+    }
+    
+    func testWrappingSignatureAndTrailingTerminator() {
+        
+        let string = "HELLO world".wrappedInitialSignatureAndTrailingTerminator("+")
+        XCTAssertEqual(string, "+HELLO world\r\n")
+    }
+    
     func testHasPrefix() {
         
         let has = "Hello World".hasPrefix("Hell")
