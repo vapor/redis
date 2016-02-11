@@ -45,11 +45,4 @@ class StringTests: XCTestCase {
         let does = "Hello World".containsCharacter("W")
         XCTAssertTrue(does)
     }
-
-    func testReadingFromSocketCorrectNullTerminatedString {
-        XCTAssertTrue(false)   
-    }
-
-
-
 }
