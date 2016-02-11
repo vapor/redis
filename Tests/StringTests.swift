@@ -46,6 +46,9 @@ class StringTests: XCTestCase {
         XCTAssertTrue(does)
     }
 
+    func testReadingFromSocketCorrectNullTerminatedString {
+        XCTAssertTrue(false)   
+    }
 
 
 
