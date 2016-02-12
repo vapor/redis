@@ -68,19 +68,31 @@ class ParsingTests: XCTestCase {
         XCTAssertEqual(int.boolContent, true)
     }
     
-//    func testParsingBulkString() {
-//        
-//        let obj = try! BulkStringParser().parse("+OK\r\n")
-//        XCTAssertEqual(obj.respType, RespType.SimpleString)
-//        let simpleString = obj as! SimpleString
-//        XCTAssertEqual(simpleString.content, "OK")
-//    }
+    func testParsingBulkString_Normal() {
+        
+        let reader = TestReader(content: "$6\r\nfoobar\r\n")
+        let obj = try! BulkStringParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.BulkString)
+        let bulkString = obj as! BulkString
+        XCTAssertEqual(bulkString.content, "foobar")
+    }
     
-    //    func testParsingNull() {
-    //
-    //        let obj = try! NullParser().parse("$-1\r\n")
-    //        XCTAssertEqual(obj.respType, RespType.Null)
-    //    }
+    func testParsingBulkString_Empty() {
+        
+        let reader = TestReader(content: "$0\r\n\r\n")
+        let obj = try! BulkStringParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.BulkString)
+        let bulkString = obj as! BulkString
+        XCTAssertEqual(bulkString.content, "")
+    }
+
+    func testParsingBulkString_Null() {
+        
+        let reader = TestReader(content: "$-1\r\n")
+        let obj = try! BulkStringParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.NullBulkString)
+        XCTAssertNotNil(obj as? NullBulkString)
+    }
 
 
 }

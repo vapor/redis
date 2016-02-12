@@ -106,6 +106,11 @@ struct BulkStringParser: Parser {
             throw RedbirdError.BulkStringProvidedUnparseableByteCount(byteCountString)
         }
         
+        //if byte count is -1, then return a null string
+        if byteCount == -1 {
+            return NullBulkString()
+        }
+        
         //now read the exact number of bytes + 2 for the terminator string
         //but subtract what we've already read, which is in tail
         let bytesToRead = byteCount + 2 - tail.count

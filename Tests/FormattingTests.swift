@@ -10,33 +10,41 @@ import XCTest
 
 class FormattingTests: XCTestCase {
 
-//    func testNull() {
+    func testError() {
+        
+        let obj = Error(content: "WAAAT unknown command 'BLAH'")
+        let str = try! ErrorFormatter().format(obj)
+        XCTAssertEqual(str, "-WAAAT unknown command 'BLAH'\r\n")
+    }
+    
+    func testSimpleString() {
+        
+        let obj = try! SimpleString(content: "OK")
+        let str = try! SimpleStringFormatter().format(obj)
+        XCTAssertEqual(str, "+OK\r\n")
+    }
+    
+    func testInteger() {
+        
+        let obj = try! Integer(content: "1000")
+        let str = try! IntegerFormatter().format(obj)
+        XCTAssertEqual(str, ":1000\r\n")
+    }
+    
+//    func testBulkString_Empty() {
 //        
-//        let obj = Null()
-//        let str = try! NullFormatter().format(obj)
-//        XCTAssertEqual(str, "$-1\r\n")
-//    }
-//    
-//    func testError() {
-//        
-//        let obj = Error(content: "WAAAT unknown command 'BLAH'")
-//        let str = try! ErrorFormatter().format(obj)
-//        XCTAssertEqual(str, "-WAAAT unknown command 'BLAH'\r\n")
-//    }
-//    
-//    func testSimpleString() {
-//        
-//        let obj = try! SimpleString(content: "OK")
-//        let str = try! SimpleStringFormatter().format(obj)
-//        XCTAssertEqual(str, "+OK\r\n")
-//    }
-//    
-//    func testInteger() {
-//        
-//        let obj = try! Integer(content: "1000")
+//        let obj = try! BulkString(content: "1000")
 //        let str = try! IntegerFormatter().format(obj)
 //        XCTAssertEqual(str, ":1000\r\n")
 //    }
+
     
+//    func testBulkString_Null() {
+//        
+//        let obj = NullBulkString()
+//        let str = try! NullFormatter().format(obj)
+//        XCTAssertEqual(str, "$-1\r\n")
+//    }
     
+
 }
