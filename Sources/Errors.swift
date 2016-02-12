@@ -16,5 +16,6 @@ enum RedbirdError: ErrorType {
     case StringNotConvertibleToCChar(String)
     case NotEnoughCharactersToReadFromSocket(Int, [CChar])
     case BulkStringProvidedUnparseableByteCount(String)
+    case ArrayProvidedUnparseableCount(String)
     case NoFormatterFoundForObject(RespObject)
 }

@@ -132,6 +132,46 @@ struct BulkStringParser: Parser {
     }
 }
 
+// Parses the Array type
+struct ArrayParser: Parser {
+    
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
+        
+        //first parse the number of string bytes
+        let (head, maybeTail) = try reader.readUntilDelimiter(RespTerminator)
+        guard let tail = maybeTail else {
+            let readSoFar = try head.stringView()
+            throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(readSoFar)
+        }
+        let allHead = alreadyRead + head
+        let rawCountString = try allHead.stringView()
+        let countString = rawCountString.strippedInitialSignatureAndTrailingTerminator()
+        guard let count = Int(countString) else {
+            throw RedbirdError.ArrayProvidedUnparseableCount(countString)
+        }
+        
+        //if byte count is -1, then return a null array
+        if count == -1 {
+            return (NullArray(), tail)
+        }
+        
+        //TODO: now read in a for loop that many elements,
+        //each time using the initial parser and collecting the leftovers
+        
+        
+        //now read the exact number of bytes + 2 for the terminator string
+        //but subtract what we've already read, which is in tail
+//        let bytesToRead = byteCount + 2 - tail.count
+//        let newChars = try reader.read(bytesToRead)
+//        let allChars = tail + newChars
+//        let allString = try allChars.stringView()
+//        
+//        let parsedBulk = allString.strippedTrailingTerminator()
+//        return (BulkString(content: parsedBulk), [])
+    }
+}
+
+
 
 
 
