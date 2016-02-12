@@ -16,11 +16,24 @@ class Redbird {
         self.socket = try ClientSocket(address: address, port: port)
 	}
     
-    func command(name: String) throws -> RespObject {
+    func command(name: String, params: [String] = []) throws -> RespObject {
         
+        //format the outgoing command into a Resp string
         let formatted = CommandSendFormatter().commandToString(name)
+
+        //send the command string
         try self.socket.write(formatted)
+
+        //read response string
         let response = try self.socket.readAll()
+
+        //validate that the string is terminated with "\r\n" otherwise we haven't received everything!
+        //all the parsers rely on this fact
+        guard response.hasSuffix(RespTerminator) else {
+            throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(response)
+        }
+
+        //try to parse the string into a Resp object, fail if no parser accepts it
         let responseObject = try DefaultParser().parse(response)
         return responseObject
     }

@@ -96,6 +96,7 @@ class ClientSocket {
     }
     
     //convert little-endian to big-endian for network transfer
+    //aka Host TO Network Short
     private func htons(value: CUnsignedShort) -> CUnsignedShort {
         return (value << 8) + (value >> 8)
     }
@@ -139,7 +140,7 @@ struct SocketError : ErrorType, CustomStringConvertible {
     
     init(_ details: String) {
         self.details = details
-        self.number = errno
+        self.number = errno //last reported error code
     }
     
     var description: String {
@@ -147,7 +148,7 @@ struct SocketError : ErrorType, CustomStringConvertible {
     }
 }
 
-private let BufferCapacity = 64
+private let BufferCapacity = 512
 
 class Data {
     
@@ -156,6 +157,10 @@ class Data {
 
     init(capacity: Int = BufferCapacity) {
         self.bytes = UnsafeMutablePointer<Int8>(malloc(capacity + 1))
+        //add null strings terminator at location 'capacity'
+        //so that whatever we receive, we always terminate properly when converting to a string?
+        //otherwise we might overread and read garbage, potentially opening a security hole.
+        self.bytes[capacity] = 0
         self.capacity = capacity
     }
 
