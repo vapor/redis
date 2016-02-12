@@ -6,15 +6,23 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-struct Null: RespObject {
+struct NullBulkString: RespObject {
     static var signature: String = "$-1\r\n"
-    var respType: RespType = .Null
+    var respType: RespType = .NullBulkString
+}
+
+struct NullArray: RespObject {
+    static var signature: String = "*-1\r\n"
+    var respType: RespType = .NullArray
 }
 
 //equatable
-extension Null: Equatable {}
-func ==(lhs: Null, rhs: Null) -> Bool { return true }
+extension NullBulkString: Equatable {}
+func ==(lhs: NullBulkString, rhs: NullBulkString) -> Bool { return true }
 
+//equatable
+extension NullArray: Equatable {}
+func ==(lhs: NullArray, rhs: NullArray) -> Bool { return true }
 
 
 

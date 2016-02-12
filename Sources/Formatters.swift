@@ -13,14 +13,25 @@ protocol Formatter {
 let formatters: [Formatter] = [
 ]
 
-struct NullFormatter: Formatter {
+struct NullBulkStringFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
-        guard object.respType == .Null else {
-            throw RedbirdError.FormatterNotForThisType(object, .Null)
+        guard object.respType == .NullBulkString else {
+            throw RedbirdError.FormatterNotForThisType(object, .NullBulkString)
         }
         
-        return Null.signature
+        return NullBulkString.signature
+    }
+}
+
+struct NullArrayFormatter: Formatter {
+    
+    func format(object: RespObject) throws -> String {
+        guard object.respType == .NullArray else {
+            throw RedbirdError.FormatterNotForThisType(object, .NullArray)
+        }
+        
+        return NullArray.signature
     }
 }
 

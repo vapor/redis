@@ -7,51 +7,59 @@
 //
 
 protocol Parser {
-    func parse(string: String) throws -> RespObject
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject
 }
 
-let parsers: [Parser] = [
-    NullParser(),
-    ErrorParser(),
-    SimpleStringParser(),
-    IntegerParser()
-]
-
-/// Tries parsing with all available parsers before one successfully parses the string, otherwise fails
-struct DefaultParser: Parser {
-
-    func parse(string: String) throws -> RespObject {
+extension Parser {
+    
+    func ensureReadElements(min: Int, alreadyRead: [CChar], reader: SocketReader) throws -> [CChar] {
         
-        for p in parsers {
-            if let object = try? p.parse(string) {
-                return object
-            }
+        precondition(min > 0)
+        
+        if alreadyRead.count >= min {
+            return alreadyRead
         }
-        throw RedbirdError.ParsingStringNotThisType(string, nil)
+        
+        let leftToRead = min - alreadyRead.count
+        let readChars = try reader.read(leftToRead)
+        guard readChars.count == leftToRead else {
+            throw RedbirdError.NotEnoughCharactersToReadFromSocket(leftToRead, alreadyRead)
+        }
+        return alreadyRead + readChars
     }
 }
 
-/// Parses the Null type
-struct NullParser: Parser {
-    
-    func parse(string: String) throws -> RespObject {
-        guard string.hasPrefix(Null.signature) else {
-            throw RedbirdError.ParsingStringNotThisType(string, RespType.Null)
+/// Does the initial "proxy" parsing to recognize type and then hands off
+/// to the specific parser.
+struct InitialParser: Parser {
+
+    func parse(alreadyParsed: [CChar], reader: SocketReader) throws -> RespObject {
+        
+        let read = try self.ensureReadElements(1, alreadyRead: [], reader: reader)
+        let signature = try read.stringView()
+        
+        let parser: Parser
+        switch signature {
+        case Error.signature: parser = ErrorParser()
+        case SimpleString.signature: parser = SimpleStringParser()
+        case Integer.signature: parser = IntegerParser()
+        case BulkString.signature: parser = BulkStringParser()
+        default:
+            throw RedbirdError.ParsingStringNotThisType(try alreadyParsed.stringView(), nil)
         }
-        return Null()
+        return try parser.parse(read, reader: reader)
     }
 }
 
 /// Parses the Error type
 struct ErrorParser: Parser {
     
-    func parse(string: String) throws -> RespObject {
-        guard string.hasPrefix(Error.signature) else {
-            throw RedbirdError.ParsingStringNotThisType(string, RespType.Error)
-        }
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
         
-        //it is an error, strip leading signature and trailing terminator
-        let inner = string.strippedInitialSignatureAndTrailingTerminator()
+        let head = try reader.readUntilDelimiter(RespTerminator)
+        let read = alreadyRead + head.0
+        let readString = try read.stringView()
+        let inner = readString.strippedInitialSignatureAndTrailingTerminator()
         return Error(content: inner)
     }
 }
@@ -59,13 +67,11 @@ struct ErrorParser: Parser {
 /// Parses the SimpleString type
 struct SimpleStringParser: Parser {
     
-    func parse(string: String) throws -> RespObject {
-        guard string.hasPrefix(SimpleString.signature) else {
-            throw RedbirdError.ParsingStringNotThisType(string, RespType.SimpleString)
-        }
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
         
-        //it is a simple string, strip leading signature and trailing terminator
-        let inner = string.strippedInitialSignatureAndTrailingTerminator()
+        let read = alreadyRead + (try reader.readUntilDelimiter(RespTerminator)).0
+        let readString = try read.stringView()
+        let inner = readString.strippedInitialSignatureAndTrailingTerminator()
         return try SimpleString(content: inner)
     }
 }
@@ -73,17 +79,44 @@ struct SimpleStringParser: Parser {
 /// Parses the Integer type
 struct IntegerParser: Parser {
     
-    func parse(string: String) throws -> RespObject {
-        guard string.hasPrefix(Integer.signature) else {
-            throw RedbirdError.ParsingStringNotThisType(string, RespType.SimpleString)
-        }
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
         
-        //it is a simple string, strip leading signature and trailing terminator
-        let inner = string.strippedInitialSignatureAndTrailingTerminator()
+        let read = alreadyRead + (try reader.readUntilDelimiter(RespTerminator)).0
+        let readString = try read.stringView()
+        let inner = readString.strippedInitialSignatureAndTrailingTerminator()
         return try Integer(content: inner)
     }
 }
 
+/// Parses the BulkString type
+struct BulkStringParser: Parser {
+    
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
+
+        //first parse the number of string bytes
+        let (head, maybeTail) = try reader.readUntilDelimiter(RespTerminator)
+        guard let tail = maybeTail else {
+            let readSoFar = try head.stringView()
+            throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(readSoFar)
+        }
+        let allHead = alreadyRead + head
+        let rawByteCountString = try allHead.stringView()
+        let byteCountString = rawByteCountString.strippedInitialSignatureAndTrailingTerminator()
+        guard let byteCount = Int(byteCountString) else {
+            throw RedbirdError.BulkStringProvidedUnparseableByteCount(byteCountString)
+        }
+        
+        //now read the exact number of bytes + 2 for the terminator string
+        //but subtract what we've already read, which is in tail
+        let bytesToRead = byteCount + 2 - tail.count
+        let newChars = try reader.read(bytesToRead)
+        let allChars = tail + newChars
+        let allString = try allChars.stringView()
+        
+        let parsedBulk = allString.strippedTrailingTerminator()
+        return BulkString(content: parsedBulk)
+    }
+}
 
 
 

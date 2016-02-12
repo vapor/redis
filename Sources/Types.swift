@@ -13,8 +13,9 @@ enum RespType {
     case BulkString
     case Error
     case Integer
-    case Null
     case SimpleString
+    case NullBulkString
+    case NullArray
 }
 
 protocol RespObject {

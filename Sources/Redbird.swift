@@ -24,17 +24,11 @@ class Redbird {
         //send the command string
         try self.socket.write(formatted)
 
-        //read response string
-        let response = try self.socket.readAll()
-
-        //validate that the string is terminated with "\r\n" otherwise we haven't received everything!
-        //all the parsers rely on this fact
-        guard response.hasSuffix(RespTerminator) else {
-            throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(response)
-        }
-
+        //delegate reading to parsers
+        let reader: SocketReader = self.socket
+        
         //try to parse the string into a Resp object, fail if no parser accepts it
-        let responseObject = try DefaultParser().parse(response)
+        let responseObject = try InitialParser().parse([], reader: reader)
         return responseObject
     }
 }

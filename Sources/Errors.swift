@@ -12,5 +12,8 @@ enum RedbirdError: ErrorType {
     case SimpleStringInvalidInput(String)
     case IntegerInvalidInput(String)
     case FormatterNotForThisType(RespObject, RespType?)
-    case ReceivedStringNotTerminated(String)
+    case ReceivedStringNotTerminatedByRespTerminator(String)
+    case StringNotConvertibleToCChar(String)
+    case NotEnoughCharactersToReadFromSocket(Int, [CChar])
+    case BulkStringProvidedUnparseableByteCount(String)
 }

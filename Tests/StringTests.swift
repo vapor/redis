@@ -63,4 +63,40 @@ class StringTests: XCTestCase {
         let does = "Hello World".containsCharacter("W")
         XCTAssertTrue(does)
     }
+    
+    func testCCharArrayView() {
+        
+        let chars = "Yol lo".ccharArrayView()
+        let exp = [89, 111, 108, 32, 108, 111].map { CChar($0) }
+        XCTAssertEqual(chars, exp)
+    }
+    
+    func testSplitAround_NotFound() {
+        
+        let split = try! "Hello World".splitAround("Meh")
+        XCTAssertEqual(split.0, "Hello World")
+        XCTAssertNil(split.1)
+    }
+    
+    func testSplitAround_Middle() {
+        
+        let split = try! "Hello World".splitAround("Wor")
+        XCTAssertEqual(split.0, "Hello Wor")
+        XCTAssertEqual(split.1, "ld")
+    }
+    
+    func testSplitAround_Start() {
+        
+        let split = try! "Hello World".splitAround("H")
+        XCTAssertEqual(split.0, "H")
+        XCTAssertEqual(split.1, "ello World")
+    }
+    
+    func testSplitAround_End() {
+        
+        let split = try! "Hello World".splitAround("rld")
+        XCTAssertEqual(split.0, "Hello World")
+        XCTAssertEqual(split.1, "")
+    }
+
 }

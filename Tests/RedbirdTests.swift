@@ -36,6 +36,20 @@ class RedbirdTests: XCTestCase {
             XCTAssertEqual((response as? Error)?.kind, "ERR")
         }
     }
+    
+    func testBulkString_SetGet() {
+        
+        live { (client) in
+            let setResponse = try client.command("SET test Me_llamo_test")
+            let getResponse = try client.command("GET test")
+            
+            XCTAssertEqual(setResponse.respType, RespType.SimpleString)
+            XCTAssertEqual(setResponse as? SimpleString, try? SimpleString(content: "OK"))
+            XCTAssertEqual(getResponse.respType, RespType.BulkString)
+            XCTAssertEqual(getResponse as? BulkString, BulkString(content: "Me_llamo_test"))
+        }
+    }
+
 
     
 }

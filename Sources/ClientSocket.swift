@@ -102,31 +102,46 @@ class ClientSocket {
     }
 }
 
-extension ClientSocket {
-    
-    func readUntilEnd() throws -> [CChar] {
+protocol SocketReader: class {
+    func read(bytes: Int) throws -> [CChar]
+}
+
+extension SocketReader {
+
+    /// Reads until 1) we run out of characters or 2) we detect the delimiter
+    /// whichever happens first.
+    func readUntilDelimiter(delimiter: String) throws -> ([CChar], [CChar]?) {
         
         var totalBuffer = [CChar]()
+        let delimiterChars = delimiter.ccharArrayView()
         
         while true {
             
-            let readChars = try self.read()
+            let readChars = try self.read(BufferCapacity)
             
-            //append received chars
+            //append received chars before delimiter
             totalBuffer.appendContentsOf(readChars)
             
+            //test whether the incoming chars contain the delimiter
+            let (head, tail) = totalBuffer.splitAround(delimiterChars)
+            
             //if less than max chars were received, finish up
-            if readChars.count < BufferCapacity {
+            if tail != nil || readChars.count < BufferCapacity {
                 //end of transmission
-                return totalBuffer
+                return (head, tail)
             }
         }
     }
+}
+
+extension ClientSocket: SocketReader {}
+
+extension CollectionType where Generator.Element == CChar {
     
-    func readAll() throws -> String {
-        let chars = try self.readUntilEnd()
-        guard let string = String.fromCString(chars) else {
-            throw SocketError("Failed to parse into a string received chars: \(chars)")
+    func stringView() throws -> String {
+        let selfArray = Array(self) + [0]
+        guard let string = String.fromCString(selfArray) else {
+            throw SocketError("Failed to parse into a string received chars: \(selfArray)")
         }
         return string
     }
@@ -148,7 +163,7 @@ struct SocketError : ErrorType, CustomStringConvertible {
     }
 }
 
-private let BufferCapacity = 512
+private let BufferCapacity = 4 //TODO: up to 512 once ready
 
 class Data {
     
@@ -160,7 +175,7 @@ class Data {
         //add null strings terminator at location 'capacity'
         //so that whatever we receive, we always terminate properly when converting to a string?
         //otherwise we might overread and read garbage, potentially opening a security hole.
-        self.bytes[capacity] = 0
+        self.bytes[capacity] = Int8(0)
         self.capacity = capacity
     }
 
