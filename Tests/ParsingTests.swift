@@ -30,7 +30,7 @@ class ParsingTests: XCTestCase {
     func testParsingError_NothingReadYet() {
         
         let reader = TestReader(content: "-WAAAT unknown command 'BLAH'\r\n")
-        let (obj, leftovers) = try! ErrorParser().parse([], reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.Error)
         XCTAssertEqual(leftovers, [])
         let err = obj as! Error
@@ -42,7 +42,7 @@ class ParsingTests: XCTestCase {
     func testParsingError_FirstReadChar() {
         
         let reader = TestReader(content: "WAAAT unknown command 'BLAH'\r\n")
-        let (obj, leftovers) = try! ErrorParser().parse("-".ccharArrayView(), reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse("-".ccharArrayView(), reader: reader)
         XCTAssertEqual(obj.respType, RespType.Error)
         XCTAssertEqual(leftovers, [])
         let err = obj as! Error
@@ -54,7 +54,7 @@ class ParsingTests: XCTestCase {
     func testParsingSimpleString() {
         
         let reader = TestReader(content: "+OK\r\n")
-        let (obj, leftovers) = try! SimpleStringParser().parse([], reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.SimpleString)
         XCTAssertEqual(leftovers, [])
         let simpleString = obj as! SimpleString
@@ -66,7 +66,7 @@ class ParsingTests: XCTestCase {
     func testParsingSimpleString_WithLeftover() {
         
         let reader = TestReader(content: "+OK\r\nleftover")
-        let (obj, leftovers) = try! SimpleStringParser().parse([], reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.SimpleString)
         XCTAssertEqual(leftovers, "leftover".ccharArrayView())
         let simpleString = obj as! SimpleString
@@ -76,7 +76,7 @@ class ParsingTests: XCTestCase {
     func testParsingInteger() {
         
         let reader = TestReader(content: ":1000\r\n")
-        let (obj, leftovers) = try! IntegerParser().parse([], reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.Integer)
         XCTAssertEqual(leftovers, [])
         let int = obj as! Integer
@@ -87,7 +87,7 @@ class ParsingTests: XCTestCase {
     func testParsingBulkString_Normal() {
         
         let reader = TestReader(content: "$6\r\nfoobar\r\n")
-        let (obj, leftovers) = try! BulkStringParser().parse([], reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.BulkString)
         XCTAssertEqual(leftovers, [])
         let bulkString = obj as! BulkString
@@ -97,7 +97,7 @@ class ParsingTests: XCTestCase {
     func testParsingBulkString_Empty() {
         
         let reader = TestReader(content: "$0\r\n\r\n")
-        let (obj, leftovers) = try! BulkStringParser().parse([], reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.BulkString)
         XCTAssertEqual(leftovers, [])
         let bulkString = obj as! BulkString
@@ -107,7 +107,7 @@ class ParsingTests: XCTestCase {
     func testParsingBulkString_Null() {
         
         let reader = TestReader(content: "$-1\r\n")
-        let (obj, leftovers) = try! BulkStringParser().parse([], reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.NullBulkString)
         XCTAssertEqual(leftovers, [])
         XCTAssertNotNil(obj as? NullBulkString)

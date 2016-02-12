@@ -10,15 +10,33 @@ protocol Formatter {
     func format(object: RespObject) throws -> String
 }
 
-let formatters: [Formatter] = [
+let formatters: [RespType: Formatter] = [
+    .Array: ArrayFormatter(),
+    .BulkString: BulkStringFormatter(),
+    .Error: ErrorFormatter(),
+    .Integer: IntegerFormatter(),
+    .SimpleString: SimpleStringFormatter(),
+    .NullBulkString: NullBulkStringFormatter(),
+    .NullArray: NullArrayFormatter()
 ]
+
+struct InitialFormatter: Formatter {
+    
+    func format(object: RespObject) throws -> String {
+        
+        //find the appropriate formatter for this type
+        guard let formatter = formatters[object.respType] else {
+            throw RedbirdError.NoFormatterFoundForObject(object)
+        }
+        
+        let formatted = try formatter.format(object)
+        return formatted
+    }
+}
 
 struct NullBulkStringFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
-        guard object.respType == .NullBulkString else {
-            throw RedbirdError.FormatterNotForThisType(object, .NullBulkString)
-        }
         
         return NullBulkString.signature
     }
@@ -27,10 +45,7 @@ struct NullBulkStringFormatter: Formatter {
 struct NullArrayFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
-        guard object.respType == .NullArray else {
-            throw RedbirdError.FormatterNotForThisType(object, .NullArray)
-        }
-        
+
         return NullArray.signature
     }
 }
@@ -38,10 +53,7 @@ struct NullArrayFormatter: Formatter {
 struct ErrorFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
-        guard object.respType == .Error else {
-            throw RedbirdError.FormatterNotForThisType(object, .Error)
-        }
-        
+
         let str = (object as! Error)
             .content
             .wrappedInitialSignatureAndTrailingTerminator(Error.signature)
@@ -52,10 +64,7 @@ struct ErrorFormatter: Formatter {
 struct SimpleStringFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
-        guard object.respType == .SimpleString else {
-            throw RedbirdError.FormatterNotForThisType(object, .SimpleString)
-        }
-        
+
         let str = (object as! SimpleString)
             .content
             .wrappedInitialSignatureAndTrailingTerminator(SimpleString.signature)
@@ -66,13 +75,34 @@ struct SimpleStringFormatter: Formatter {
 struct IntegerFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
-        guard object.respType == .Integer else {
-            throw RedbirdError.FormatterNotForThisType(object, .Integer)
-        }
-        
+ 
         let str = String((object as! Integer).intContent)
             .wrappedInitialSignatureAndTrailingTerminator(Integer.signature)
         return str
+    }
+}
+
+struct BulkStringFormatter: Formatter {
+    
+    func format(object: RespObject) throws -> String {
+        
+        let content = (object as! BulkString).content
+        
+        //first count the number of bytes of the string
+        let byteCount = content.ccharArrayView().count
+        
+        //format the outgoing string
+        let str = (String(byteCount) + content)
+            .wrappedInitialSignatureAndTrailingTerminator(BulkString.signature)
+        return str
+    }
+}
+
+struct ArrayFormatter: Formatter {
+    
+    func format(object: RespObject) throws -> String {
+        
+        fatalError("Unimplemented")
     }
 }
 
