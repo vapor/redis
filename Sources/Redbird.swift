@@ -7,11 +7,11 @@
 //
 
 ///Redis client object
-class Redbird {
+public class Redbird {
     
     let socket: ClientSocket
     
-    init(address: String = "127.0.0.1", port: Int = 6379) throws {
+    public init(address: String = "127.0.0.1", port: Int = 6379) throws {
 		
         self.socket = try ClientSocket(address: address, port: port)
 	}
@@ -28,7 +28,11 @@ class Redbird {
         let reader: SocketReader = self.socket
         
         //try to parse the string into a Resp object, fail if no parser accepts it
-        let responseObject = try InitialParser().parse([], reader: reader)
+        let (responseObject, _) = try InitialParser().parse([], reader: reader)
+        
+        //TODO: read up on whether potential leftover characters from
+        //parsing should be treated as error or not, for now ignore them.
+        
         return responseObject
     }
 }

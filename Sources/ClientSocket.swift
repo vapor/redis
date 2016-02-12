@@ -163,7 +163,7 @@ struct SocketError : ErrorType, CustomStringConvertible {
     }
 }
 
-private let BufferCapacity = 4 //TODO: up to 512 once ready
+private let BufferCapacity = 512
 
 class Data {
     

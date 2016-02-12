@@ -7,7 +7,10 @@
 //
 
 protocol Parser {
-    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject
+    
+    /// takes already read chars and the reader, returns the parsed response
+    /// object and the read, but unused trailing characters
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar])
 }
 
 extension Parser {
@@ -33,9 +36,9 @@ extension Parser {
 /// to the specific parser.
 struct InitialParser: Parser {
 
-    func parse(alreadyParsed: [CChar], reader: SocketReader) throws -> RespObject {
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
-        let read = try self.ensureReadElements(1, alreadyRead: [], reader: reader)
+        let read = try self.ensureReadElements(1, alreadyRead: alreadyRead, reader: reader)
         let signature = try read.stringView()
         
         let parser: Parser
@@ -45,8 +48,9 @@ struct InitialParser: Parser {
         case Integer.signature: parser = IntegerParser()
         case BulkString.signature: parser = BulkStringParser()
         default:
-            throw RedbirdError.ParsingStringNotThisType(try alreadyParsed.stringView(), nil)
+            throw RedbirdError.ParsingStringNotThisType(try alreadyRead.stringView(), nil)
         }
+        
         return try parser.parse(read, reader: reader)
     }
 }
@@ -54,44 +58,49 @@ struct InitialParser: Parser {
 /// Parses the Error type
 struct ErrorParser: Parser {
     
-    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
-        let head = try reader.readUntilDelimiter(RespTerminator)
-        let read = alreadyRead + head.0
+        let (head, tail) = try reader.readUntilDelimiter(RespTerminator)
+        let read = alreadyRead + head
         let readString = try read.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
-        return Error(content: inner)
+        let parsed = Error(content: inner)
+        return (parsed, tail ?? [])
     }
 }
 
 /// Parses the SimpleString type
 struct SimpleStringParser: Parser {
     
-    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
-        let read = alreadyRead + (try reader.readUntilDelimiter(RespTerminator)).0
+        let (head, tail) = try reader.readUntilDelimiter(RespTerminator)
+        let read = alreadyRead + head
         let readString = try read.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
-        return try SimpleString(content: inner)
+        let parsed = try SimpleString(content: inner)
+        return (parsed, tail ?? [])
     }
 }
 
 /// Parses the Integer type
 struct IntegerParser: Parser {
     
-    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
-        let read = alreadyRead + (try reader.readUntilDelimiter(RespTerminator)).0
+        let (head, tail) = try reader.readUntilDelimiter(RespTerminator)
+        let read = alreadyRead + head
         let readString = try read.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
-        return try Integer(content: inner)
+        let parsed = try Integer(content: inner)
+        return (parsed, tail ?? [])
     }
 }
 
 /// Parses the BulkString type
 struct BulkStringParser: Parser {
     
-    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> RespObject {
+    func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
 
         //first parse the number of string bytes
         let (head, maybeTail) = try reader.readUntilDelimiter(RespTerminator)
@@ -108,7 +117,7 @@ struct BulkStringParser: Parser {
         
         //if byte count is -1, then return a null string
         if byteCount == -1 {
-            return NullBulkString()
+            return (NullBulkString(), tail)
         }
         
         //now read the exact number of bytes + 2 for the terminator string
@@ -119,7 +128,7 @@ struct BulkStringParser: Parser {
         let allString = try allChars.stringView()
         
         let parsedBulk = allString.strippedTrailingTerminator()
-        return BulkString(content: parsedBulk)
+        return (BulkString(content: parsedBulk), [])
     }
 }
 
