@@ -18,15 +18,21 @@ When I write servers for my apps, I usually use 1) Linux servers, 2) Redis as my
 
 That means I'm writing it up all the way from bare TCP sockets. Just using `Glibc` and `Darwin` headers, together with standard Swift libraries. `#0dependencies`
 
-<!-- 
 # Installation
+
 ## Swift Package Manager
 
 ```swift
-.Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0, minor: 0)
-``` -->
+.Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0, minor: 1)
+```
 
-# :construction_worker: Work in progress (see below)
+## CocoaPods
+
+```
+pod 'Redbird'
+```
+
+# :construction_worker: Features
 
 ## Parsing Incoming Types
 - [x] Null
@@ -45,7 +51,10 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 - [x] Array
 
 ## Supported Commands
-- [ ] -
+- [x] all standard commands, provided as a string
+
+## Plan
+- [ ] add a convenience function for each command with automatic type conversion 
 
 :gift_heart: Contributing
 ------------
