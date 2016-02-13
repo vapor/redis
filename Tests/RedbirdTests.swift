@@ -8,6 +8,24 @@
 
 import XCTest
 
+func assertNoThrow(@noescape block: () throws -> ()) {
+    do {
+        try block()
+    } catch {
+        XCTFail("Should not have thrown \(error)")
+    }
+}
+
+func assertThrow(@autoclosure errorType: () -> RedbirdError, @noescape block: () throws -> ()) {
+    do {
+        try block()
+        XCTFail("Should have thrown an error, but didn't")
+    } catch {
+        //all good
+        XCTAssertEqual(String(errorType()), String(error as! RedbirdError))
+    }
+}
+
 class RedbirdTests: XCTestCase {
     
     func live(@noescape block: (client: Redbird) throws -> ()) {

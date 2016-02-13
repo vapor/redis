@@ -38,11 +38,23 @@ Create a Redbird instance, which opens a socket to the specified Redis server. T
 ```swift
 do {
 	let client = try Redbird(address: "127.0.0.1", port: 6379)
-	let response = try client.command("SET", params: ["mykey", "hello_redis"]) //SimpleString("OK")
+	let response = try client.command("SET", params: ["mykey", "hello_redis"]).toString() //"OK"
 } catch {
 	print("Redis error: \(error)")
 }
 ```
+
+## Easy conversion back
+
+Instead of handling the `RespObject` types directly, you can also use the following convenience converters into standard Swift types:
+- `toString() -> String`
+- `toMaybeString() -> String?`
+- `toArray() -> [RespObject]`
+- `toMaybeArray() -> [RespObject]?`
+- `toInt() -> Int`
+- `toBool() -> Bool`
+
+All of the above converters throw an error if invoked on a non-compatible type (like calling `toArray()` on an `Integer`).
 
 :gift_heart: Contributing
 ------------

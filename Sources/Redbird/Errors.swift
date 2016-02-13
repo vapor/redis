@@ -6,7 +6,7 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-enum RedbirdError: ErrorType {
+public enum RedbirdError: ErrorType {
     case ParsingGeneric(String)
     case ParsingStringNotThisType(String, RespType?)
     case SimpleStringInvalidInput(String)
@@ -19,4 +19,5 @@ enum RedbirdError: ErrorType {
     case ArrayProvidedUnparseableCount(String)
     case NoFormatterFoundForObject(RespObject)
     case MoreThanOneWordSpecifiedAsCommand(String)
+    case WrongNativeTypeUnboxing(RespObject, String)
 }

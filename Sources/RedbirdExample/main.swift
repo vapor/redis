@@ -14,16 +14,20 @@ do {
     let client = try Redbird(port: 6380)
 
     print("Sending 'PING' to Redis server at \(client.address):\(client.port)")
-    let response1 = try client.command("PING", params: [])
+    let response1 = try client.command("PING", params: []).toString()
     print("Response: \(response1)")
     
     print("Sending 'SET mykey hello_redis' to Redis server at \(client.address):\(client.port)")
-    let response2 = try client.command("SET", params: ["mykey", "hello_redis"])
+    let response2 = try client.command("SET", params: ["mykey", "hello_redis"]).toString()
     print("Response: \(response2)")
     
     print("Sending 'GET mykey' to Redis server at \(client.address):\(client.port)")
-    let response3 = try client.command("GET", params: ["mykey"])
+    let response3 = try client.command("GET", params: ["mykey"]).toString()
     print("Response: \(response3)")
+    
+    print("Sending 'GET nokey' to Redis server at \(client.address):\(client.port)")
+    let response4 = try client.command("GET", params: ["nokey"]).toMaybeString()
+    print("Response: \(response4)")
     
 } catch {
     assertionFailure("\(error)")

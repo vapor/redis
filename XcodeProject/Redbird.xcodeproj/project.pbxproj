@@ -36,9 +36,12 @@
 		3A0C1E851C6FA04800201A9D /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
 		3A0C1E871C6FA9E800201A9D /* RedbirdExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */; };
 		3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED061C6C17330095A34C /* FormattingTests.swift */; };
+		3A7015BA1C6FF091001C9511 /* ConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7015B91C6FF091001C9511 /* ConversionTests.swift */; };
 		3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */; };
 		3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */; };
 		3AFD5E5B1C6BFD2B0083B467 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */; };
+		3AFDE20D1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */; };
+		3AFDE20E1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -71,11 +74,13 @@
 		3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RedbirdExtensions.swift; path = ../Sources/Redbird/RedbirdExtensions.swift; sourceTree = SOURCE_ROOT; };
 		3A4B6D5E1C6BDC79001E1469 /* Redbird */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Redbird; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A61ED061C6C17330095A34C /* FormattingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FormattingTests.swift; path = ../../Tests/FormattingTests.swift; sourceTree = "<group>"; };
+		3A7015B91C6FF091001C9511 /* ConversionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversionTests.swift; path = ../../Tests/ConversionTests.swift; sourceTree = "<group>"; };
 		3AFD5E3F1C6BF4390083B467 /* RedbirdTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedbirdTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RedbirdTests.swift; path = ../Tests/RedbirdTests.swift; sourceTree = SOURCE_ROOT; };
 		3AFD5E431C6BF4390083B467 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParsingTests.swift; path = ../../Tests/ParsingTests.swift; sourceTree = "<group>"; };
 		3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringTests.swift; path = ../../Tests/StringTests.swift; sourceTree = "<group>"; };
+		3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExternalTypeConversions.swift; path = ../Sources/Redbird/ExternalTypeConversions.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,15 +122,16 @@
 		3A4B6D601C6BDC79001E1469 /* Redbird */ = {
 			isa = PBXGroup;
 			children = (
-				3A0C1E771C6F9FFB00201A9D /* main.swift */,
 				3A0C1E5D1C6F9FB900201A9D /* Array.swift */,
 				3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */,
 				3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */,
 				3A0C1E601C6F9FB900201A9D /* Error.swift */,
 				3A0C1E611C6F9FB900201A9D /* Errors.swift */,
 				3A0C1E621C6F9FB900201A9D /* Extensions.swift */,
+				3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */,
 				3A0C1E631C6F9FB900201A9D /* Formatters.swift */,
 				3A0C1E641C6F9FB900201A9D /* Integer.swift */,
+				3A0C1E771C6F9FFB00201A9D /* main.swift */,
 				3A0C1E651C6F9FB900201A9D /* Null.swift */,
 				3A0C1E661C6F9FB900201A9D /* Parsers.swift */,
 				3A0C1E671C6F9FB900201A9D /* Redbird.swift */,
@@ -139,10 +145,11 @@
 		3AFD5E401C6BF4390083B467 /* RedbirdTests */ = {
 			isa = PBXGroup;
 			children = (
-				3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */,
 				3AFD5E431C6BF4390083B467 /* Info.plist */,
-				3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */,
+				3A7015B91C6FF091001C9511 /* ConversionTests.swift */,
 				3A61ED061C6C17330095A34C /* FormattingTests.swift */,
+				3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */,
+				3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */,
 				3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */,
 			);
 			path = RedbirdTests;
@@ -260,6 +267,7 @@
 				3A0C1E721C6F9FB900201A9D /* Null.swift in Sources */,
 				3A0C1E6B1C6F9FB900201A9D /* BulkString.swift in Sources */,
 				3A0C1E6C1C6F9FB900201A9D /* ClientSocket.swift in Sources */,
+				3AFDE20D1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */,
 				3A0C1E871C6FA9E800201A9D /* RedbirdExtensions.swift in Sources */,
 				3A0C1E6A1C6F9FB900201A9D /* Array.swift in Sources */,
 				3A0C1E711C6F9FB900201A9D /* Integer.swift in Sources */,
@@ -288,10 +296,12 @@
 				3A0C1E831C6FA04800201A9D /* Redbird.swift in Sources */,
 				3A0C1E7E1C6FA04800201A9D /* Extensions.swift in Sources */,
 				3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */,
+				3AFDE20E1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */,
 				3A0C1E7A1C6FA04800201A9D /* BulkString.swift in Sources */,
 				3A0C1E7D1C6FA04800201A9D /* Errors.swift in Sources */,
 				3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */,
 				3A0C1E841C6FA04800201A9D /* SimpleString.swift in Sources */,
+				3A7015BA1C6FF091001C9511 /* ConversionTests.swift in Sources */,
 				3A0C1E811C6FA04800201A9D /* Null.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
