@@ -6,9 +6,13 @@ debug: build
 	@echo "Debugging Redbird"
 	@lldb .build/debug/Redbird
 
-redbird-release:
+build-release:
 	@echo "Building Redbird in Release"
 	@swift build --configuration release
+
+example: redis build-release
+	@echo "Running example client"
+	.build/release/RedbirdExample
 
 redis-start:
 	@redis-server TestRedis/redis.conf

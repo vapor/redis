@@ -10,6 +10,9 @@
 public class Redbird {
     
     let socket: ClientSocket
+
+    public var address: String { return self.socket.address }
+    public var port: Int { return self.socket.port }
     
     public init(address: String = "127.0.0.1", port: Int = 6379) throws {
 		
