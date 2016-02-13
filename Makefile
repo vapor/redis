@@ -28,4 +28,4 @@ redis:
 	@if [ ! -a "TestRedis/redis.pid" ]; then redis-server TestRedis/redis.conf; fi;
 
 clean: redis-stop
-	rm -fr run-tests example/example .build TestRedis/dump.rdb
+	rm -fr .build Packages TestRedis/dump.rdb
