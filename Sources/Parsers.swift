@@ -39,7 +39,9 @@ struct InitialParser: Parser {
     func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
         let read = try self.ensureReadElements(1, alreadyRead: alreadyRead, reader: reader)
-        let signature = try read.stringView()
+
+        //just take the first char of read, can be more than 1
+        let signature = try read.prefix(1).stringView()
         
         let parser: Parser
         switch signature {
@@ -47,6 +49,7 @@ struct InitialParser: Parser {
         case SimpleString.signature: parser = SimpleStringParser()
         case Integer.signature: parser = IntegerParser()
         case BulkString.signature: parser = BulkStringParser()
+        case RespArray.signature: parser = ArrayParser()
         default:
             throw RedbirdError.ParsingStringNotThisType(try alreadyRead.stringView(), nil)
         }
@@ -60,9 +63,8 @@ struct ErrorParser: Parser {
     
     func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
-        let (head, tail) = try reader.readUntilDelimiter(RespTerminator)
-        let read = alreadyRead + head
-        let readString = try read.stringView()
+        let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
+        let readString = try head.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
         let parsed = Error(content: inner)
         return (parsed, tail ?? [])
@@ -74,9 +76,8 @@ struct SimpleStringParser: Parser {
     
     func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
-        let (head, tail) = try reader.readUntilDelimiter(RespTerminator)
-        let read = alreadyRead + head
-        let readString = try read.stringView()
+        let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
+        let readString = try head.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
         let parsed = try SimpleString(content: inner)
         return (parsed, tail ?? [])
@@ -88,9 +89,8 @@ struct IntegerParser: Parser {
     
     func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
-        let (head, tail) = try reader.readUntilDelimiter(RespTerminator)
-        let read = alreadyRead + head
-        let readString = try read.stringView()
+        let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
+        let readString = try head.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
         let parsed = try Integer(content: inner)
         return (parsed, tail ?? [])
@@ -103,13 +103,12 @@ struct BulkStringParser: Parser {
     func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
 
         //first parse the number of string bytes
-        let (head, maybeTail) = try reader.readUntilDelimiter(RespTerminator)
+        let (head, maybeTail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         guard let tail = maybeTail else {
             let readSoFar = try head.stringView()
             throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(readSoFar)
         }
-        let allHead = alreadyRead + head
-        let rawByteCountString = try allHead.stringView()
+        let rawByteCountString = try head.stringView()
         let byteCountString = rawByteCountString.strippedInitialSignatureAndTrailingTerminator()
         guard let byteCount = Int(byteCountString) else {
             throw RedbirdError.BulkStringProvidedUnparseableByteCount(byteCountString)
@@ -138,13 +137,12 @@ struct ArrayParser: Parser {
     func parse(alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
         
         //first parse the number of string bytes
-        let (head, maybeTail) = try reader.readUntilDelimiter(RespTerminator)
+        let (head, maybeTail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         guard let tail = maybeTail else {
             let readSoFar = try head.stringView()
             throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(readSoFar)
         }
-        let allHead = alreadyRead + head
-        let rawCountString = try allHead.stringView()
+        let rawCountString = try head.stringView()
         let countString = rawCountString.strippedInitialSignatureAndTrailingTerminator()
         guard let count = Int(countString) else {
             throw RedbirdError.ArrayProvidedUnparseableCount(countString)
@@ -155,19 +153,18 @@ struct ArrayParser: Parser {
             return (NullArray(), tail)
         }
         
-        //TODO: now read in a for loop that many elements,
+        //now read in a for loop that many elements,
         //each time using the initial parser and collecting the leftovers
+        var elements = [RespObject]()
+        var elTail = tail
+        while elements.count < count {
+            let (parsed, leftovers) = try InitialParser().parse(elTail, reader: reader)
+            elTail = leftovers
+            elements.append(parsed)
+        }
         
-        
-        //now read the exact number of bytes + 2 for the terminator string
-        //but subtract what we've already read, which is in tail
-//        let bytesToRead = byteCount + 2 - tail.count
-//        let newChars = try reader.read(bytesToRead)
-//        let allChars = tail + newChars
-//        let allString = try allChars.stringView()
-//        
-//        let parsedBulk = allString.strippedTrailingTerminator()
-//        return (BulkString(content: parsedBulk), [])
+        let array = RespArray(content: elements)
+        return (array, elTail)
     }
 }
 

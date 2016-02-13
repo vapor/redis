@@ -112,6 +112,47 @@ class ParsingTests: XCTestCase {
         XCTAssertEqual(leftovers, [])
         XCTAssertNotNil(obj as? NullBulkString)
     }
+    
+    func testParsingArray_Null() {
+        
+        let reader = TestReader(content: "*-1\r\n")
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.NullArray)
+        XCTAssertEqual(leftovers, [])
+        XCTAssertNotNil(obj as? NullArray)
+    }
+    
+    func testParsingArray_Empty() {
+        
+        let reader = TestReader(content: "*0\r\n")
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.Array)
+        XCTAssertEqual(leftovers, [])
+        let array = obj as! RespArray
+        XCTAssertEqual(array, RespArray(content: []))
+    }
+    
+    func testParsingArray_Normal() {
+        
+        let reader = TestReader(content: "*5\r\n:1\r\n:205\r\n:0\r\n:-1\r\n$6\r\nfoobar\r\n")
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.Array)
+        XCTAssertEqual(leftovers, [])
+        let array = obj as! RespArray
+        do {
+            let expected: [RespObject] = [
+                try Integer(content: "1"),
+                try Integer(content: "205"),
+                try Integer(content: "0"),
+                try Integer(content: "-1"),
+                BulkString(content: "foobar")
+            ]
+            XCTAssertEqual(array, RespArray(content: expected))
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+
 
 
 }

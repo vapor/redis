@@ -31,7 +31,7 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 - [x] Simple String
 - [x] Integer
 - [x] Bulk String
-- [ ] Array
+- [x] Array
 
 ## Formatting Outgoing Types
 - [x] Null

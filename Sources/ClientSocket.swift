@@ -110,26 +110,31 @@ extension SocketReader {
 
     /// Reads until 1) we run out of characters or 2) we detect the delimiter
     /// whichever happens first.
-    func readUntilDelimiter(delimiter: String) throws -> ([CChar], [CChar]?) {
+    func readUntilDelimiter(alreadyRead alreadyRead: [CChar], delimiter: String) throws -> ([CChar], [CChar]?) {
         
-        var totalBuffer = [CChar]()
+        var totalBuffer = alreadyRead
         let delimiterChars = delimiter.ccharArrayView()
+        var lastReadCount = BufferCapacity
         
         while true {
-            
-            let readChars = try self.read(BufferCapacity)
-            
-            //append received chars before delimiter
-            totalBuffer.appendContentsOf(readChars)
             
             //test whether the incoming chars contain the delimiter
             let (head, tail) = totalBuffer.splitAround(delimiterChars)
             
-            //if less than max chars were received, finish up
-            if tail != nil || readChars.count < BufferCapacity {
+            //if we have a tail, we found the delimiter in the buffer,
+            //or if there's no more data to read
+            //let's terminate and return the current split
+            if tail != nil || lastReadCount < BufferCapacity {
                 //end of transmission
                 return (head, tail)
             }
+            
+            //read more characters from the reader
+            let readChars = try self.read(BufferCapacity)
+            lastReadCount = readChars.count
+            
+            //append received chars before delimiter
+            totalBuffer.appendContentsOf(readChars)
         }
     }
 }
@@ -163,6 +168,7 @@ struct SocketError : ErrorType, CustomStringConvertible {
     }
 }
 
+//private let BufferCapacity = 4 //for testing
 private let BufferCapacity = 512
 
 class Data {
