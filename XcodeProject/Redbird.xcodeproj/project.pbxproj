@@ -21,6 +21,19 @@
 		3A0C1E751C6F9FB900201A9D /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E681C6F9FB900201A9D /* SimpleString.swift */; };
 		3A0C1E761C6F9FB900201A9D /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
 		3A0C1E781C6F9FFB00201A9D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E771C6F9FFB00201A9D /* main.swift */; };
+		3A0C1E791C6FA04800201A9D /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5D1C6F9FB900201A9D /* Array.swift */; };
+		3A0C1E7A1C6FA04800201A9D /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */; };
+		3A0C1E7B1C6FA04800201A9D /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */; };
+		3A0C1E7C1C6FA04800201A9D /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E601C6F9FB900201A9D /* Error.swift */; };
+		3A0C1E7D1C6FA04800201A9D /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E611C6F9FB900201A9D /* Errors.swift */; };
+		3A0C1E7E1C6FA04800201A9D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E621C6F9FB900201A9D /* Extensions.swift */; };
+		3A0C1E7F1C6FA04800201A9D /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E631C6F9FB900201A9D /* Formatters.swift */; };
+		3A0C1E801C6FA04800201A9D /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E641C6F9FB900201A9D /* Integer.swift */; };
+		3A0C1E811C6FA04800201A9D /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E651C6F9FB900201A9D /* Null.swift */; };
+		3A0C1E821C6FA04800201A9D /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E661C6F9FB900201A9D /* Parsers.swift */; };
+		3A0C1E831C6FA04800201A9D /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E671C6F9FB900201A9D /* Redbird.swift */; };
+		3A0C1E841C6FA04800201A9D /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E681C6F9FB900201A9D /* SimpleString.swift */; };
+		3A0C1E851C6FA04800201A9D /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
 		3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED061C6C17330095A34C /* FormattingTests.swift */; };
 		3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */; };
 		3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */; };
@@ -259,10 +272,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A0C1E7C1C6FA04800201A9D /* Error.swift in Sources */,
 				3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */,
+				3A0C1E821C6FA04800201A9D /* Parsers.swift in Sources */,
+				3A0C1E851C6FA04800201A9D /* Types.swift in Sources */,
+				3A0C1E7F1C6FA04800201A9D /* Formatters.swift in Sources */,
+				3A0C1E7B1C6FA04800201A9D /* ClientSocket.swift in Sources */,
+				3A0C1E791C6FA04800201A9D /* Array.swift in Sources */,
 				3AFD5E5B1C6BFD2B0083B467 /* StringTests.swift in Sources */,
+				3A0C1E801C6FA04800201A9D /* Integer.swift in Sources */,
+				3A0C1E831C6FA04800201A9D /* Redbird.swift in Sources */,
+				3A0C1E7E1C6FA04800201A9D /* Extensions.swift in Sources */,
 				3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */,
+				3A0C1E7A1C6FA04800201A9D /* BulkString.swift in Sources */,
+				3A0C1E7D1C6FA04800201A9D /* Errors.swift in Sources */,
 				3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */,
+				3A0C1E841C6FA04800201A9D /* SimpleString.swift in Sources */,
+				3A0C1E811C6FA04800201A9D /* Null.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
