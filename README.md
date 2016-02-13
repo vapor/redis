@@ -32,6 +32,18 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 pod 'Redbird'
 ```
 
+# Usage
+Create a Redbird instance, which opens a socket to the specified Redis server. Then call desired commands on that instance, which synchronously returns a response. That response can be of any of the supported types: `SimpleString`, `BulkString`, `Integer`, `Error`, `RespArray`, `NullBulkString`, `NullArray` all inherit from the protocol `RespObject`, which has a `RespType` to communicate which type you're getting.
+
+```swift
+do {
+	let client = try Redbird(address: "127.0.0.1", port: 6379)
+	let response = try client.command("SET", params: ["mykey", "hello_redis"]) //SimpleString("OK")
+} catch {
+	print("Redis error: \(error)")
+}
+```
+
 # :construction_worker: Features
 
 ## Parsing Incoming Types
@@ -53,7 +65,9 @@ pod 'Redbird'
 ## Supported Commands
 - [x] all standard commands, provided as a string
 
-## Plan
+## Future Plans
+- [ ] authentication
+- [ ] easy Resp type conversion back into Swift types
 - [ ] add a convenience function for each command with automatic type conversion 
 
 :gift_heart: Contributing
