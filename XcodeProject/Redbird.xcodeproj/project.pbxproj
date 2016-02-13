@@ -37,7 +37,6 @@
 		3AFD5E5E1C6C07C60083B467 /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */; };
 		3AFD5E601C6C0EE90083B467 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5F1C6C0EE90083B467 /* Integer.swift */; };
 		3AFD5E611C6C10AC0083B467 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5F1C6C0EE90083B467 /* Integer.swift */; };
-		3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDAEEE1C6BDD0B006EB74F /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,7 +65,6 @@
 		3AFD5E5C1C6C07BC0083B467 /* SimpleString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleString.swift; path = ../Sources/SimpleString.swift; sourceTree = SOURCE_ROOT; };
 		3AFD5E5F1C6C0EE90083B467 /* Integer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Integer.swift; path = ../Sources/Integer.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClientSocket.swift; path = ../Sources/ClientSocket.swift; sourceTree = SOURCE_ROOT; };
-		3AFDAEEE1C6BDD0B006EB74F /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = ../Sources/main.swift; sourceTree = SOURCE_ROOT; };
 		3AFDAEEF1C6BDD0B006EB74F /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Types.swift; path = ../Sources/Types.swift; sourceTree = SOURCE_ROOT; };
 		3AFDBC881C6BE80D005F62E7 /* Parsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Parsers.swift; path = ../Sources/Parsers.swift; sourceTree = SOURCE_ROOT; };
 		3AFDBC8C1C6BE854005F62E7 /* Redbird.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Redbird.swift; path = ../Sources/Redbird.swift; sourceTree = SOURCE_ROOT; };
@@ -115,7 +113,6 @@
 		3A4B6D601C6BDC79001E1469 /* Redbird */ = {
 			isa = PBXGroup;
 			children = (
-				3AFDAEEE1C6BDD0B006EB74F /* main.swift */,
 				3AFDAEED1C6BDD0B006EB74F /* ClientSocket.swift */,
 				3AFDBC8E1C6BE893005F62E7 /* Errors.swift */,
 				3A61ED011C6C16120095A34C /* Formatters.swift */,
@@ -254,7 +251,6 @@
 				3AFD5E5D1C6C07BC0083B467 /* SimpleString.swift in Sources */,
 				3AFD5E551C6BF4730083B467 /* Null.swift in Sources */,
 				3AFD5E511C6BF4730083B467 /* Parsers.swift in Sources */,
-				3AFDAEF11C6BDD0B006EB74F /* main.swift in Sources */,
 				3A61ECFE1C6C158D0095A34C /* BulkString.swift in Sources */,
 				3AFD5E501C6BF4730083B467 /* Errors.swift in Sources */,
 				3A61ED021C6C16120095A34C /* Formatters.swift in Sources */,

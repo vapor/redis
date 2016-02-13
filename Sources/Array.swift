@@ -6,16 +6,16 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-struct RespArray: RespObject {
+public struct RespArray: RespObject {
     static var signature: String = "*"
-    let respType: RespType = .Array
+    public let respType: RespType = .Array
     
-    let content: [RespObject]
+    public let content: [RespObject]
 }
 
 //equatable
 extension RespArray: Equatable {}
-func ==(lhs: RespArray, rhs: RespArray) -> Bool {
+public func ==(lhs: RespArray, rhs: RespArray) -> Bool {
     
     //we cannot add Equatable on RespObject, so we'll have to do it manually here
     guard lhs.content.count == rhs.content.count else { return false }

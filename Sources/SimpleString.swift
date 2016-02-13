@@ -6,11 +6,11 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-struct SimpleString: RespObject {
+public struct SimpleString: RespObject {
     static var signature: String = "+"
-    let respType: RespType = .SimpleString
+    public let respType: RespType = .SimpleString
     
-    let content: String
+    public let content: String
     
     init(content: String) throws {
         if content.containsCharacter("\r") || content.containsCharacter("\n") {
@@ -22,7 +22,7 @@ struct SimpleString: RespObject {
 
 //equatable
 extension SimpleString: Equatable {}
-func ==(lhs: SimpleString, rhs: SimpleString) -> Bool {
+public func ==(lhs: SimpleString, rhs: SimpleString) -> Bool {
     return lhs.content == rhs.content
 }
 

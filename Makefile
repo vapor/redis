@@ -19,5 +19,5 @@ redis-stop:
 redis:
 	@if [ ! -a "TestRedis/redis.pid" ]; then redis-server TestRedis/redis.conf; fi;
 
-clean: stop-redis
+clean: redis-stop
 	rm -fr run-tests example/example .build TestRedis/dump.rdb

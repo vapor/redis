@@ -16,10 +16,10 @@ public class Redbird {
         self.socket = try ClientSocket(address: address, port: port)
 	}
     
-    func command(name: String, params: [String] = []) throws -> RespObject {
+    public func command(name: String, params: [String] = []) throws -> RespObject {
         
         //format the outgoing command into a Resp string
-        let formatted = CommandSendFormatter().commandToString(name)
+        let formatted = try CommandSendFormatter().commandToString(name, params: params)
 
         //send the command string
         try self.socket.write(formatted)
@@ -44,14 +44,11 @@ extension Redbird {
 
 struct CommandSendFormatter {
     
-    private let terminator = "\r\n"
-    
-    func commandToString(command: String) -> String {
-        let out = [
-            command,
-            terminator
-        ].joinWithSeparator("")
-        return out
+    func commandToString(command: String, params: [String]) throws -> String {
+        
+        let comps = ([command] + params).map { BulkString(content: $0) as RespObject }
+        let formatted = try ArrayFormatter().format(RespArray(content: comps))
+        return formatted
     }
 }
 

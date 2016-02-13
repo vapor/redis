@@ -6,15 +6,15 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-struct BulkString: RespObject {
+public struct BulkString: RespObject {
     static var signature: String = "$"
-    let respType: RespType = .BulkString
+    public let respType: RespType = .BulkString
     
-    let content: String
+    public let content: String
 }
 
 //equatable
 extension BulkString: Equatable {}
-func ==(lhs: BulkString, rhs: BulkString) -> Bool {
+public func ==(lhs: BulkString, rhs: BulkString) -> Bool {
     return lhs.content == rhs.content
 }

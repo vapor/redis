@@ -6,12 +6,12 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-struct Integer: RespObject {
+public struct Integer: RespObject {
     static var signature: String = ":"
-    let respType: RespType = .Integer
+    public let respType: RespType = .Integer
     
-    let intContent: Int64
-    var boolContent: Bool { return self.intContent != 0 }
+    public let intContent: Int64
+    public var boolContent: Bool { return self.intContent != 0 }
     
     init(content: String) throws {
         
@@ -24,7 +24,7 @@ struct Integer: RespObject {
 
 //equatable
 extension Integer: Equatable {}
-func ==(lhs: Integer, rhs: Integer) -> Bool {
+public func ==(lhs: Integer, rhs: Integer) -> Bool {
     return lhs.intContent == rhs.intContent
 }
 

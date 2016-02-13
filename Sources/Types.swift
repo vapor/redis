@@ -8,7 +8,7 @@
 
 let RespTerminator = "\r\n"
 
-enum RespType {
+public enum RespType {
     case Array
     case BulkString
     case Error
@@ -18,6 +18,6 @@ enum RespType {
     case NullArray
 }
 
-protocol RespObject {
+public protocol RespObject {
     var respType: RespType { get }
 }
