@@ -1,7 +1,7 @@
 # Redbird
 
 [![Build Status](https://travis-ci.org/czechboy0/Redbird.svg?branch=master)](https://travis-ci.org/czechboy0/Redbird)
-![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20OSX%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%29-blue.svg)
+![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20OSX%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux-blue.svg)
 
 [![Blog](https://img.shields.io/badge/blog-honzadvorsky.com-green.svg)](http://honzadvorsky.com)
 [![Twitter Czechboy0](https://img.shields.io/badge/twitter-czechboy0-green.svg)](http://twitter.com/czechboy0)
