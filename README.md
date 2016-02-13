@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/czechboy0/Redbird.svg?branch=master)](https://travis-ci.org/czechboy0/Redbird)
 ![Platforms](https://img.shields.io/badge/tested%20on%20platforms-Linux%20%7C%20OS%20X-blue.svg)
-![Package Managers](https://img.shields.io/badge/package%20managers-swiftpm-yellow.svg)
+![Package Managers](https://img.shields.io/badge/package%20managers-swiftpm%20%7C%20CocoaPods-yellow.svg)
 
 [![Blog](https://img.shields.io/badge/blog-honzadvorsky.com-green.svg)](http://honzadvorsky.com)
 [![Twitter Czechboy0](https://img.shields.io/badge/twitter-czechboy0-green.svg)](http://twitter.com/czechboy0)

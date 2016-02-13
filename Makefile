@@ -14,6 +14,10 @@ example: redis build-release
 	@echo "Running example client"
 	.build/release/RedbirdExample
 
+validate_spec:
+	@echo "Validating podspec"
+	pod lib lint Redbird.podspec
+
 redis-start:
 	@redis-server TestRedis/redis.conf
 
