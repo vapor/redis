@@ -21,6 +21,12 @@ public class Redbird {
     
     public func command(name: String, params: [String] = []) throws -> RespObject {
         
+        //make sure nobody passed params in the command name 
+        //TODO: will become obsolete once we change name to an enum value
+        guard name.subwords().count == 1 else {
+            throw RedbirdError.MoreThanOneWordSpecifiedAsCommand(name)
+        }
+        
         //format the outgoing command into a Resp string
         let formatted = try CommandSendFormatter().commandToString(name, params: params)
 

@@ -18,4 +18,5 @@ enum RedbirdError: ErrorType {
     case BulkStringProvidedUnparseableByteCount(String)
     case ArrayProvidedUnparseableCount(String)
     case NoFormatterFoundForObject(RespObject)
+    case MoreThanOneWordSpecifiedAsCommand(String)
 }
