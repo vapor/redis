@@ -46,13 +46,13 @@ do {
 
 ## Easy conversion back
 
-Instead of handling the `RespObject` types directly, you can also use the following convenience converters into standard Swift types:
-- `toString() -> String`
-- `toMaybeString() -> String?`
-- `toArray() -> [RespObject]`
-- `toMaybeArray() -> [RespObject]?`
-- `toInt() -> Int`
-- `toBool() -> Bool`
+Instead of handling the `RespObject` types directly, you can also use the following convenience converters which will try to convert your `RespObject` into the specified type:
+- `.toString() -> String`
+- `.toMaybeString() -> String?`
+- `.toArray() -> [RespObject]`
+- `.toMaybeArray() -> [RespObject]?`
+- `.toInt() -> Int`
+- `.toBool() -> Bool`
 
 All of the above converters throw an error if invoked on a non-compatible type (like calling `toArray()` on an `Integer`).
 
