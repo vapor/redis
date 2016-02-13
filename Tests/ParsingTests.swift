@@ -18,6 +18,7 @@ class TestReader: SocketReader {
     
     func read(bytes: Int) throws -> [CChar] {
         
+        precondition(bytes > 0)
         let toReadCount = min(bytes, self.content.count)
         let head = Array(self.content.prefix(toReadCount))
         self.content.removeFirst(toReadCount)
@@ -94,6 +95,16 @@ class ParsingTests: XCTestCase {
         XCTAssertEqual(bulkString.content, "foobar")
     }
     
+    func testParsingBulkString_Normal_WithLeftover() {
+        
+        let reader = TestReader(content: "$6\r\nfoobar\r\nleftover")
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.BulkString)
+        XCTAssertEqual(leftovers, "leftover".ccharArrayView())
+        let bulkString = obj as! BulkString
+        XCTAssertEqual(bulkString.content, "foobar")
+    }
+    
     func testParsingBulkString_Empty() {
         
         let reader = TestReader(content: "$0\r\n\r\n")
@@ -152,7 +163,40 @@ class ParsingTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
+    
+    func testParsingArray_TwoString() {
+        
+        let reader = TestReader(content: "*2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n")
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.Array)
+        XCTAssertEqual(leftovers, [])
+        let array = obj as! RespArray
+        let expected: [RespObject] = [
+            BulkString(content: "foo"),
+            BulkString(content: "bar")
+        ]
+        XCTAssertEqual(array, RespArray(content: expected))
+    }
 
-
-
+    func testParsingArray_ArrayOfArrays() {
+        
+        let reader = TestReader(content: "*2\r\n*3\r\n:1\r\n:2\r\n:3\r\n*2\r\n+Foo\r\n-Bar\r\n")
+        let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
+        XCTAssertEqual(obj.respType, RespType.Array)
+        XCTAssertEqual(leftovers, [])
+        let array = obj as! RespArray
+        let expected: [RespObject] = [
+            RespArray(content: [
+                try! Integer(content: "1"),
+                try! Integer(content: "2"),
+                try! Integer(content: "3"),
+                ]),
+            RespArray(content: [
+                try! SimpleString(content: "Foo"),
+                Error(content: "Bar")
+                ])
+        ]
+        XCTAssertEqual(array, RespArray(content: expected))
+    }
+    
 }

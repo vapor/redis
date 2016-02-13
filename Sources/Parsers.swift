@@ -121,13 +121,31 @@ struct BulkStringParser: Parser {
         
         //now read the exact number of bytes + 2 for the terminator string
         //but subtract what we've already read, which is in tail
-        let bytesToRead = byteCount + 2 - tail.count
-        let newChars = try reader.read(bytesToRead)
-        let allChars = tail + newChars
-        let allString = try allChars.stringView()
+        let requiredCount = byteCount + 2
+        let bytesToRead = requiredCount - tail.count
         
+        //if we have exactly or more than needed bytes in tail
+        //bytesToRead will be 0 or negative
+        //in such case, split the tail into prefixTail, which we'll use
+        //and suffixTail that we'll pass along
+        
+        let neededChars: [CChar]
+        let suffixTail: [CChar]
+        
+        if bytesToRead > 0 {
+            //we need to read further chars
+            let newlyRead = try reader.read(bytesToRead)
+            neededChars = tail + newlyRead
+            suffixTail = []
+        } else {
+            //we've read enough/more than needed
+            neededChars = Array(tail.prefix(requiredCount))
+            suffixTail = Array(tail.suffix(tail.count - requiredCount))
+        }
+        
+        let allString = try neededChars.stringView()
         let parsedBulk = allString.strippedTrailingTerminator()
-        return (BulkString(content: parsedBulk), [])
+        return (BulkString(content: parsedBulk), suffixTail)
     }
 }
 

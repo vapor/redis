@@ -92,8 +92,10 @@ struct BulkStringFormatter: Formatter {
         let byteCount = content.ccharArrayView().count
         
         //format the outgoing string
-        let str = (String(byteCount) + content)
+        let prefix = String(byteCount)
             .wrappedInitialSignatureAndTrailingTerminator(BulkString.signature)
+        let suffix = content.wrappedTrailingTerminator()
+        let str = prefix + suffix
         return str
     }
 }
@@ -102,7 +104,19 @@ struct ArrayFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
         
-        fatalError("Unimplemented")
+        let content = (object as! RespArray).content
+        
+        //first count number of elements
+        let count = content.count
+        
+        //format the outgoing string
+        let prefix = String(count)
+            .wrappedInitialSignatureAndTrailingTerminator(RespArray.signature)
+        let suffix = try content
+            .map { try InitialFormatter().format($0) }
+            .reduce("", combine: +)
+        let str = prefix + suffix
+        return str
     }
 }
 

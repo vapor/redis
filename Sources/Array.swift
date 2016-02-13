@@ -20,16 +20,17 @@ func ==(lhs: RespArray, rhs: RespArray) -> Bool {
     //we cannot add Equatable on RespObject, so we'll have to do it manually here
     guard lhs.content.count == rhs.content.count else { return false }
     
-    for (l, r) in zip(lhs.content, rhs.content) {
+    let zipped = zip(lhs.content, rhs.content)
+    for (l, r) in zipped {
         guard l.respType == r.respType else { return false }
         switch l.respType {
-        case .Array: return l as! RespArray == r as! RespArray
-        case .BulkString: return l as! BulkString == r as! BulkString
-        case .Error: return l as! Error == r as! Error
-        case .Integer: return l as! Integer == r as! Integer
-        case .NullArray: return l as! NullArray == r as! NullArray
-        case .NullBulkString: return l as! NullBulkString == r as! NullBulkString
-        case .SimpleString: return l as! SimpleString == r as! SimpleString
+        case .Array: guard l as! RespArray == r as! RespArray else { return false }
+        case .BulkString: guard l as! BulkString == r as! BulkString else { return false }
+        case .Error: guard l as! Error == r as! Error else { return false }
+        case .Integer: guard l as! Integer == r as! Integer else { return false }
+        case .NullArray: guard l as! NullArray == r as! NullArray else { return false }
+        case .NullBulkString: guard l as! NullBulkString == r as! NullBulkString else { return false }
+        case .SimpleString: guard l as! SimpleString == r as! SimpleString else { return false }
         }
     }
     
