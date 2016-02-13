@@ -69,6 +69,7 @@ do {
 - [ ] authentication
 - [ ] easy Resp type conversion back into Swift types
 - [ ] add a convenience function for each command with automatic type conversion 
+- [ ] pipelining
 
 :gift_heart: Contributing
 ------------
