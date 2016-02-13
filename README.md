@@ -44,33 +44,6 @@ do {
 }
 ```
 
-# :construction_worker: Features
-
-## Parsing Incoming Types
-- [x] Null
-- [x] Error
-- [x] Simple String
-- [x] Integer
-- [x] Bulk String
-- [x] Array
-
-## Formatting Outgoing Types
-- [x] Null
-- [x] Error
-- [x] Simple String
-- [x] Integer
-- [x] Bulk String
-- [x] Array
-
-## Supported Commands
-- [x] all standard commands, provided as a string
-
-## Future Plans
-- [ ] authentication
-- [ ] easy Resp type conversion back into Swift types
-- [ ] add a convenience function for each command with automatic type conversion 
-- [ ] pipelining
-
 :gift_heart: Contributing
 ------------
 Please create an issue with a description of your problem or open a pull request with a fix.
