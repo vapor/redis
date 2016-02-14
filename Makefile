@@ -17,16 +17,14 @@ example: redis build-release
 	@echo "Running example client"
 	.build/release/RedbirdExample
 
-setup-linux:
-	wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
-	wget https://swift.org/builds/ubuntu1404/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04.tar.gz
-	tar xzf swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04.tar.gz
-	export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04/usr/bin:"${PATH}"
+ci-setup: install-deps-locally
+	swiftenv install `swiftenv local`
 
-setup-osx:
-	curl -sLo "swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg" "https://swift.org/builds/swift-2.2-branch/xcode/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg"
-	installer -pkg "swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg" -target .
-	export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg/usr/bin:"${PATH}"
+install-deps-locally:
+	git clone https://github.com/kylef/swiftenv.git .swiftenv
+	export SWIFTENV_ROOT="$PWD/.swiftenv"
+	export PATH="$SWIFTENV_ROOT/bin:$PATH"
+	eval "$(swiftenv init -)"
 
 validate_spec:
 	@echo "Validating podspec"
