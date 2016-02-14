@@ -182,7 +182,6 @@
 				3AFD5E3B1C6BF4390083B467 /* Sources */,
 				3AFD5E3C1C6BF4390083B467 /* Frameworks */,
 				3AFD5E3D1C6BF4390083B467 /* Resources */,
-				3AFD5E571C6BF55B0083B467 /* Ensure running Test Redis */,
 			);
 			buildRules = (
 			);
@@ -238,23 +237,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		3AFD5E571C6BF55B0083B467 /* Ensure running Test Redis */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Ensure running Test Redis";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd ..\nmake redis\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3A4B6D5A1C6BDC79001E1469 /* Sources */ = {
