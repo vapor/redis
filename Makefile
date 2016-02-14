@@ -20,7 +20,7 @@ example: redis build-release
 ci-setup:
 	git clone https://github.com/kylef/swiftenv.git .swiftenv
 	eval "$(.swiftenv/bin/swiftenv init -)"
-	.swiftenv/bin/swiftenv install `.swiftenv/bin/swiftenv local`
+	env UBUNTU_VERSION=ubuntu14.04 .swiftenv/bin/swiftenv install `.swiftenv/bin/swiftenv local`
 
 validate_spec:
 	@echo "Validating podspec"
