@@ -5,10 +5,9 @@ language: generic
 sudo: required
 dist: trusty
 osx_image: xcode7.3
-services:
-  - redis-server
 install:
   - curl -sL https://gist.github.com/kylef/5c0475ff02b7c7671d2a/raw/621ef9b29bbb852fdfd2e10ed147b321d792c1e4/swiftenv-install.sh | bash
+before_script: sudo redis-server $TRAVIS_BUILD_DIR/TestRedis/redis.conf
 script:
   - . ~/.swiftenv/init
   - swift build
