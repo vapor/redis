@@ -30,7 +30,8 @@ do {
     print("Response: \(response4)")
     
 } catch {
-    assertionFailure("\(error)")
+    print("Encountered error \(error)")
+    fatalError("\(error)")
 }
 
 print("Redbird ending")
