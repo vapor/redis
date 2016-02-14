@@ -1,0 +1,68 @@
+
+update_fastlane
+
+fastlane_version "1.59.0"
+
+# -----------
+
+def project_name
+  "Redbird"
+end
+
+def project_github_name
+  "czechboy0/#{project_name}"
+end
+
+def release_branch
+  "master"
+end
+
+# -----------
+
+lane :test do
+  sh "cd .. && make xctest"
+end
+
+lane :release do
+
+  test
+
+  # prep the local state
+  ensure_git_status_clean
+  ensure_git_branch(branch: release_branch)
+  git_pull
+
+  # regen the changelog and open it
+  sh "cd .. && github_changelog_generator -t $GITHUB_TOKEN && subl CHANGELOG.md"
+
+  # assume version from the podspec
+  version = read_podspec['source']['tag']
+
+  # ask for info
+  title = prompt(text: 'Release Title: ')
+  description = prompt(text: "Release changelog: ",
+                       multi_line_end_keyword: "END")
+
+  # create a new release on GitHub
+  repo_url = project_github_name
+  ENV["FL_GITHUB_RELEASE_API_TOKEN"] = ENV["GITHUB_TOKEN"]
+  release = set_github_release(
+    repository_name: repo_url,
+    commitish: release_branch,
+    name: [version, title].join(" - "),
+    tag_name: version,
+    description: description,
+    is_draft: false,
+    is_prerelease: false
+  )
+
+  # release podspec to cocoapods
+  sh "cd .. && pod trunk push"
+
+  # regenerate changelog to get it committed
+  sh "cd .. && github_changelog_generator -t $GITHUB_TOKEN"
+  sh "cd .. && git commit -am \"changelog\" && git push"
+
+end
+
+

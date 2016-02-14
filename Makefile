@@ -10,6 +10,9 @@ build-release:
 	@echo "Building Redbird in Release"
 	@swift build --configuration release
 
+xctest:
+	set -o pipefail && xcodebuild test -project XcodeProject/Redbird.xcodeproj -scheme RedbirdTests -toolchain /Library/Developer/Toolchains/swift-2.2-SNAPSHOT-2016-01-06-a.xctoolchain | xcpretty
+
 example: redis build-release
 	@echo "Running example client"
 	.build/release/RedbirdExample
