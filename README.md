@@ -24,7 +24,7 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 ## Swift Package Manager
 
 ```swift
-.Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0, minor: 0)
+.Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0)
 ```
 
 ## CocoaPods
