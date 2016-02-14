@@ -9,12 +9,11 @@ matrix:
     - os: linux
       dist: trusty
       sudo: required
-      before_install:
-        - make setup-linux
     - os: osx
       osx_image: xcode7.3
-      before_install:
-        - make setup-osx
+
+before_install:
+  - make ci-setup
 
 script:
   - swift build
