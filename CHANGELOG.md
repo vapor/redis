@@ -1,5 +1,19 @@
 # Change Log
 
+## [0.1.0](https://github.com/czechboy0/Redbird/tree/0.1.0) (2016-02-14)
+[Full Changelog](https://github.com/czechboy0/Redbird/compare/0.0.3...0.1.0)
+
+**Closed issues:**
+
+- Create targets and travis jobs for iOS, tvOS and watchOS [\#8](https://github.com/czechboy0/Redbird/issues/8)
+- Add fastlane for easy release process [\#6](https://github.com/czechboy0/Redbird/issues/6)
+- Authentication [\#2](https://github.com/czechboy0/Redbird/issues/2)
+
+**Merged pull requests:**
+
+- Authentication simplified [\#11](https://github.com/czechboy0/Redbird/pull/11) ([czechboy0](https://github.com/czechboy0))
+- Live Tests on Travis [\#10](https://github.com/czechboy0/Redbird/pull/10) ([czechboy0](https://github.com/czechboy0))
+
 ## [0.0.3](https://github.com/czechboy0/Redbird/tree/0.0.3) (2016-02-14)
 [Full Changelog](https://github.com/czechboy0/Redbird/compare/0.0.2...0.0.3)
 
