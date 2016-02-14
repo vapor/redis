@@ -20,4 +20,5 @@ public enum RedbirdError: ErrorType {
     case NoFormatterFoundForObject(RespObject)
     case MoreThanOneWordSpecifiedAsCommand(String)
     case WrongNativeTypeUnboxing(RespObject, String)
+    case UnexpectedReturnedObject(RespObject)
 }
