@@ -30,7 +30,7 @@ class RedbirdTests: XCTestCase {
     
     func live(@noescape block: (client: Redbird) throws -> ()) {
         do {
-            let client = try Redbird(port: 6380)
+            let client = try Redbird()
             try block(client: client)
         } catch {
             XCTAssert(false, "Failed to create client \(error)")

@@ -11,7 +11,7 @@ import Redbird
 print("Redbird starting")
 
 do {
-    let client = try Redbird(port: 6380)
+    let client = try Redbird(port: 6379)
 
     print("Sending 'PING' to Redis server at \(client.address):\(client.port)")
     let response1 = try client.command("PING", params: []).toString()
