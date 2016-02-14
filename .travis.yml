@@ -12,8 +12,8 @@ install:
 script:
   - . ~/.swiftenv/init
   - swift build
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make xctest; fi
-  - .build/debug/RedbirdExample 
+  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make xctest; fi
+  # - .build/debug/RedbirdExample 
 notifications:
   email:
     on_success: never
