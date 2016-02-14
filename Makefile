@@ -19,10 +19,8 @@ example: redis build-release
 
 ci-setup:
 	git clone https://github.com/kylef/swiftenv.git .swiftenv
-	export SWIFTENV_ROOT="$PWD/.swiftenv"
-	export PATH="$SWIFTENV_ROOT/bin:$PATH"
-	eval "$(swiftenv init -)"
-	swiftenv install `swiftenv local`
+	eval "$(.swiftenv/bin/swiftenv init -)"
+	.swiftenv/bin/swiftenv install `.swiftenv/bin/swiftenv local`
 
 validate_spec:
 	@echo "Validating podspec"
