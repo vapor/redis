@@ -17,6 +17,18 @@ example: redis build-release
 	@echo "Running example client"
 	.build/release/RedbirdExample
 
+setup-linux:
+	wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
+	wget https://swift.org/builds/ubuntu1404/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04.tar.gz
+	tar xzf swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04.tar.gz
+	export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04/usr/bin:"${PATH}"
+
+setup-osx:
+	wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
+	wget https://swift.org/builds/swift-2.2-branch/xcode/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg
+	installer -pkg "swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg" -target .
+	export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg/usr/bin:"${PATH}"
+
 validate_spec:
 	@echo "Validating podspec"
 	pod lib lint Redbird.podspec

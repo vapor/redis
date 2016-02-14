@@ -8,20 +8,15 @@ matrix:
       dist: trusty
       sudo: required
       before_install:
-        - wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
-        - wget https://swift.org/builds/ubuntu1404/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04.tar.gz
-        - tar xzf swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04.tar.gz
-        - export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04/usr/bin:"${PATH}"
+        - make setup-linux
     - os: osx
       osx_image: xcode7.3
       before_install:
-        - wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
-        - wget https://swift.org/builds/swift-2.2-branch/xcode/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg
-        - sudo installer -pkg "swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg" -target .
-        - export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg/usr/bin:"${PATH}"
+        - make setup-osx
 
 script:
   - swift build
+  
 notifications:
   email:
     on_success: never
