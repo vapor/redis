@@ -1,6 +1,6 @@
 os:
   - linux
-  - osx
+  # - osx
 language: generic
 sudo: required
 dist: trusty
@@ -13,7 +13,7 @@ script:
   - . ~/.swiftenv/init
   - swift build
   # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make xctest; fi
-  # - .build/debug/RedbirdExample 
+  - .build/debug/RedbirdExample 
 notifications:
   email:
     on_success: never
