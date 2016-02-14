@@ -10,6 +10,7 @@ install:
 script:
   - . ~/.swiftenv/init
   - swift build
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make xctest; fi
 
 notifications:
   email:
