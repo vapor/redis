@@ -96,5 +96,13 @@ class ConversionTests: XCTestCase {
             XCTAssertEqual(ret, false)
         }
     }
+    
+    func testError_Ok() {
+        assertNoThrow {
+            let orig = Error(content: "NOAUTH Password required")
+            let ret = try orig.toError()
+            XCTAssertEqual(ret.content, "NOAUTH Password required")
+        }
+    }
 
 }

@@ -24,7 +24,7 @@ That means I'm writing it up all the way from bare TCP sockets. Just using `Glib
 ## Swift Package Manager
 
 ```swift
-.Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0, minor: 0)
+.Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0)
 ```
 
 ## CocoaPods
@@ -39,6 +39,7 @@ Create a Redbird instance, which opens a socket to the specified Redis server. T
 ```swift
 do {
 	let client = try Redbird(address: "127.0.0.1", port: 6379)
+	try client.auth(password: "mypass1") // call .auth once after creation if your Redis requires a password
 	let response = try client.command("SET", params: ["mykey", "hello_redis"]).toString() //"OK"
 } catch {
 	print("Redis error: \(error)")
@@ -54,6 +55,7 @@ Instead of handling the `RespObject` types directly, you can also use the follow
 - `.toMaybeArray() -> [RespObject]?`
 - `.toInt() -> Int`
 - `.toBool() -> Bool`
+- `.toError() -> ErrorType`
 
 All of the above converters throw an error if invoked on a non-compatible type (like calling `toArray()` on an `Integer`).
 

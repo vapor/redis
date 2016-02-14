@@ -57,4 +57,12 @@ extension RespObject {
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "Bool")
         }
     }
+    
+    public func toError() throws -> Error {
+        switch self.respType {
+        case .Error: return (self as! Error)
+        default: throw RedbirdError.WrongNativeTypeUnboxing(self, "Error")
+        }
+    }
+
 }
