@@ -24,8 +24,7 @@ setup-linux:
 	export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-ubuntu14.04/usr/bin:"${PATH}"
 
 setup-osx:
-	wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
-	wget https://swift.org/builds/swift-2.2-branch/xcode/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg
+	curl -sLo "swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg" "https://swift.org/builds/swift-2.2-branch/xcode/swift-2.2-SNAPSHOT-2016-01-06-a/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg"
 	installer -pkg "swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg" -target .
 	export PATH=${PWD}/swift-2.2-SNAPSHOT-2016-01-06-a-osx.pkg/usr/bin:"${PATH}"
 
