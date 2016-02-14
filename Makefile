@@ -17,14 +17,12 @@ example: redis build-release
 	@echo "Running example client"
 	.build/release/RedbirdExample
 
-ci-setup: install-deps-locally
-	swiftenv install `swiftenv local`
-
-install-deps-locally:
+ci-setup:
 	git clone https://github.com/kylef/swiftenv.git .swiftenv
 	export SWIFTENV_ROOT="$PWD/.swiftenv"
 	export PATH="$SWIFTENV_ROOT/bin:$PATH"
 	eval "$(swiftenv init -)"
+	swiftenv install `swiftenv local`
 
 validate_spec:
 	@echo "Validating podspec"
