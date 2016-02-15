@@ -116,5 +116,20 @@ class FormattingTests: XCTestCase {
         let str = try! InitialFormatter().format(obj)
         XCTAssertEqual(str, "*2\r\n*3\r\n:1\r\n:2\r\n:3\r\n*2\r\n+Foo\r\n-Bar\r\n")
     }
-
+    
+    func testPerf_LargeArray() {
+        let subinput: [RespObject] = [
+            BulkString(content: "large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here"),
+            try! Integer(content: "1234567"),
+            Error(content: "ERR Something went mildly wrong"),
+            NullArray(),
+            try! SimpleString(content: "Jokes"),
+            NullBulkString()
+        ]
+        let content: [RespObject] = Array(1..<1000).map { _ in RespArray(content: subinput) }
+        let input = RespArray(content: content)
+        measureBlock {
+            _ = try! InitialFormatter().format(input)
+        }
+    }
 }
