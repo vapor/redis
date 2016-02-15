@@ -37,7 +37,6 @@ class RedbirdTests: XCTestCase {
         }
     }
     
-    //TODO: add specific error validation
     func liveShouldThrow(@noescape block: (client: Redbird) throws -> ()) {
         do {
             let client = try Redbird()
@@ -53,6 +52,18 @@ class RedbirdTests: XCTestCase {
             
             //kill our connection, simulating e.g. server disconnecting us/crashing
             try client.command("CLIENT", params: ["KILL", "SKIPME", "NO"])
+            
+            //try to ping, expected to throw
+            _ = try client.command("PING")
+        }
+    }
+    
+    func testServersideTimeout() {
+        liveShouldThrow { (client) in
+            
+            //set timeout to 1 sec
+            try client.command("CONFIG", params: ["SET", "timeout", "1"])
+            sleep(2)
             
             //try to ping, expected to throw
             _ = try client.command("PING")

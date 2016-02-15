@@ -18,6 +18,7 @@
     private let s_close = Glibc.close
     private let s_read = Glibc.read
     private let s_write = Glibc.write
+    private let s_alarm = Glibc.alarm
 #else
     import Darwin.C
     
@@ -27,6 +28,7 @@
     private let s_close = Darwin.close
     private let s_read = Darwin.read
     private let s_write = Darwin.write
+    private let s_alarm = Darwin.alarm
 #endif
 
 public enum SocketErrorType {
