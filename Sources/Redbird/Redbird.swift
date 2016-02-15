@@ -19,9 +19,13 @@ public class Redbird {
         self.socket = try ClientSocket(address: address, port: port)
 	}
     
-    public func command(name: String, params: [String] = []) throws -> RespObject {
+    init(socket: ClientSocket) {
+        self.socket = socket
+    }
+    
+    func formatCommand(name: String, params: [String] = []) throws -> String {
         
-        //make sure nobody passed params in the command name 
+        //make sure nobody passed params in the command name
         //TODO: will become obsolete once we change name to an enum value
         guard name.subwords().count == 1 else {
             throw RedbirdError.MoreThanOneWordSpecifiedAsCommand(name)
@@ -29,7 +33,13 @@ public class Redbird {
         
         //format the outgoing command into a Resp string
         let formatted = try CommandSendFormatter().commandToString(name, params: params)
-
+        return formatted
+    }
+    
+    public func command(name: String, params: [String] = []) throws -> RespObject {
+        
+        let formatted = try self.formatCommand(name, params: params)
+        
         //send the command string
         try self.socket.write(formatted)
 
@@ -44,11 +54,44 @@ public class Redbird {
         
         return responseObject
     }
+    
+    public func multi() -> Multi {
+        return Multi(socket: self.socket)
+    }
 }
 
-/// Command convenience functions
-extension Redbird {
+public class Multi: Redbird {
     
+    private var commands = [String]()
+    
+    public func enqueue(name: String, params: [String] = []) throws -> Multi {
+        let formatted = try self.formatCommand(name, params: params)
+        self.commands.append(formatted)
+        return self
+    }
+    
+    public func execute() throws -> [RespObject] {
+        guard self.commands.count > 0 else {
+            throw RedbirdError.MultiNoCommandProvided
+        }
+        let formatted = self.commands.reduce("", combine: +)
+        
+        //send the command string
+        try self.socket.write(formatted)
+        
+        //delegate reading to parsers
+        let reader: SocketReader = self.socket
+
+        var leftovers = [CChar]()
+        var responses = [RespObject]()
+        for _ in self.commands {
+            //try to parse the string into a Resp object, fail if no parser accepts it
+            let (responseObject, los) = try InitialParser().parse(leftovers, reader: reader)
+            leftovers = los
+            responses.append(responseObject)
+        }
+        return responses
+    }
 }
 
 struct CommandSendFormatter {
