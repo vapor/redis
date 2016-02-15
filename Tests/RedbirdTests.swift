@@ -37,6 +37,28 @@ class RedbirdTests: XCTestCase {
         }
     }
     
+    //TODO: add specific error validation
+    func liveShouldThrow(@noescape block: (client: Redbird) throws -> ()) {
+        do {
+            let client = try Redbird()
+            try block(client: client)
+            XCTFail("Should have thrown")
+        } catch {
+            //all good
+        }
+    }
+    
+    func testServersideKilledSocket() {
+        liveShouldThrow { (client) in
+            
+            //kill our connection, simulating e.g. server disconnecting us/crashing
+            try client.command("CLIENT", params: ["KILL", "SKIPME", "NO"])
+            
+            //try to ping, expected to throw
+            _ = try client.command("PING")
+        }
+    }
+    
     func testSimpleString_Ping() {
         
         live { (client) in

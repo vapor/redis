@@ -32,7 +32,7 @@ public class Redbird {
         }
         
         //format the outgoing command into a Resp string
-        let formatted = try CommandSendFormatter().commandToString(name, params: params)
+        let formatted = try CommandFormatter().commandToString(name, params: params)
         return formatted
     }
     
@@ -94,7 +94,7 @@ public class Multi: Redbird {
     }
 }
 
-struct CommandSendFormatter {
+struct CommandFormatter {
     
     func commandToString(command: String, params: [String]) throws -> String {
         

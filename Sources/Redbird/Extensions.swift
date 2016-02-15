@@ -79,6 +79,16 @@ extension String {
             return out
         }
     }
+    
+    func splitAround(delimiter: String) throws -> (String, String?) {
+        
+        let split = self.ccharArrayView().splitAround(delimiter.ccharArrayView())
+        let first = try split.0.stringView()
+        if let second = split.1 {
+            return (first, try second.stringView())
+        }
+        return (first, nil)
+    }
 }
 
 extension CollectionType where Generator.Element == CChar {
@@ -111,17 +121,5 @@ extension CollectionType where Generator.Element == CChar {
     }
 }
 
-extension String {
-    
-    func splitAround(delimiter: String) throws -> (String, String?) {
-        
-        let split = self.ccharArrayView().splitAround(delimiter.ccharArrayView())
-        let first = try split.0.stringView()
-        if let second = split.1 {
-            return (first, try second.stringView())
-        }
-        return (first, nil)
-    }
-}
 
 
