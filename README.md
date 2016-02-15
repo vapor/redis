@@ -57,6 +57,21 @@ Instead of handling the `RespObject` types directly, you can also use the follow
 - `.toBool() -> Bool`
 - `.toError() -> ErrorType`
 
+## Pipelining
+
+Command pipelining is also supported. Just ask for a `Multi` object, `enqueue` commands on it and then call `execute()` to send commands to the server. You receive an array of response objects, which respect the enqueing order of your commands.
+
+```swift
+let responses = try client.multi()
+    .enqueue("PING")
+    .enqueue("SET", params: ["test", "Me_llamo_test"])
+    .enqueue("GET", params: ["test"])
+    .enqueue("BLAH")
+    .enqueue("PING")
+    .execute()
+// responses: [RespObject]
+```
+
 All of the above converters throw an error if invoked on a non-compatible type (like calling `toArray()` on an `Integer`).
 
 :gift_heart: Contributing

@@ -67,6 +67,25 @@ class RedbirdTests: XCTestCase {
             XCTAssertEqual(getResponse as? BulkString, BulkString(content: "Me_llamo_test"))
         }
     }
+    
+    func testPipelining_PingSetGetUnknownPing() {
+        live { (client) in
+            let multi = client.multi()
+            let responses = try multi
+                .enqueue("PING")
+                .enqueue("SET", params: ["test", "Me_llamo_test"])
+                .enqueue("GET", params: ["test"])
+                .enqueue("BLAH")
+                .enqueue("PING")
+                .execute()
+            XCTAssertEqual(responses.count, 5)
+            XCTAssertEqual(try responses[0].toString(), "PONG")
+            XCTAssertEqual(try responses[1].toString(), "OK")
+            XCTAssertEqual(try responses[2].toString(), "Me_llamo_test")
+            XCTAssertEqual(try responses[3].toError().content, "ERR unknown command \'BLAH\'")
+            XCTAssertEqual(try responses[4].toString(), "PONG")
+        }
+    }
 
 
     

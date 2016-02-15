@@ -21,4 +21,5 @@ public enum RedbirdError: ErrorType {
     case MoreThanOneWordSpecifiedAsCommand(String)
     case WrongNativeTypeUnboxing(RespObject, String)
     case UnexpectedReturnedObject(RespObject)
+    case MultiNoCommandProvided
 }
