@@ -66,7 +66,6 @@ let responses = try client.multi()
     .enqueue("PING")
     .enqueue("SET", params: ["test", "Me_llamo_test"])
     .enqueue("GET", params: ["test"])
-    .enqueue("BLAH")
     .enqueue("PING")
     .execute()
 // responses: [RespObject]
