@@ -15,6 +15,7 @@ cache:
 script:
   - . ~/.swiftenv/init
   - swift build
+  - ls -la ~
   - export PATH="~/.redis-stable/src/:$PATH"
   - make redis-start
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make xctest; fi
