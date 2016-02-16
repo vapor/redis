@@ -11,7 +11,7 @@ install:
 script:
   - . ~/.swiftenv/init
   - swift build
-  - export PATH="$PWD/redis-stable/src/:$PATH"
+  - export PATH="~/.redis-stable/src/:$PATH"
   - make redis-start
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make xctest; fi
   - .build/debug/RedbirdExample
