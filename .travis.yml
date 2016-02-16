@@ -7,9 +7,8 @@ dist: trusty
 osx_image: xcode7.3
 install:
   - bash TestRedis/install_redis_local.sh
-  - curl -sL https://gist.github.com/kylef/5c0475ff02b7c7671d2a/raw/621ef9b29bbb852fdfd2e10ed147b321d792c1e4/swiftenv-install.sh | bash
+  - curl -sL https://gist.githubusercontent.com/czechboy0/6539d0586a2c080e403c/raw/fa5300ae2764f7c8b3c4d835f2d14d7cc3ab1ebf/swiftenv-install.sh | bash
 script:
-  - . ~/.swiftenv/init
   - swift build
   - export PATH="$PWD/redis-stable/src/:$PATH"
   - make redis-start
