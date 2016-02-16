@@ -126,7 +126,7 @@ class FormattingTests: XCTestCase {
             try! SimpleString(content: "Jokes"),
             NullBulkString()
         ]
-        let content: [RespObject] = Array(1..<1000).map { _ in RespArray(content: subinput) }
+        let content: [RespObject] = Array(1..<100).map { _ in RespArray(content: subinput) }
         let input = RespArray(content: content)
         measureBlock {
             _ = try! InitialFormatter().format(input)
