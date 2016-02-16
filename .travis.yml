@@ -8,15 +8,9 @@ osx_image: xcode7.3
 install:
   - curl -sL https://gist.githubusercontent.com/czechboy0/77c97b4ced37b512d1a2/raw/f668d418df353de36d79b7215f21be66adbf0dec/redis-local-install.sh | bash
   - curl -sL https://gist.githubusercontent.com/czechboy0/6539d0586a2c080e403c/raw/66eae4e588fd43f00d85ca768db46f7ceae89566/swiftenv-install.sh | bash
-cache:
-  directories:
-  - ~/.swiftenv
-  - ~/.redis-stable
 script:
   - . ~/.swiftenv/init
   - swift build
-  - ls -la ~
-  - export PATH="~/.redis-stable/src/:$PATH"
   - make redis-start
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make xctest; fi
   - .build/debug/RedbirdExample
