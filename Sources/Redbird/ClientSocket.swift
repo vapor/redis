@@ -18,6 +18,7 @@
     private let s_close = Glibc.close
     private let s_read = Glibc.read
     private let s_write = Glibc.write
+    private let s_alarm = Glibc.alarm
 #else
     import Darwin.C
     
@@ -27,7 +28,32 @@
     private let s_close = Darwin.close
     private let s_read = Darwin.read
     private let s_write = Darwin.write
+    private let s_alarm = Darwin.alarm
 #endif
+
+public enum SocketErrorType {
+    case CreateSocketFailed
+    case WriteFailedToSendAllBytes
+    case ReadFailed
+    case ConnectFailed
+    case UnparsableChars([CChar])
+}
+
+//see error codes: https://gist.github.com/gabrielfalcao/4216897
+public struct SocketError : ErrorType, CustomStringConvertible {
+    
+    public let type: SocketErrorType
+    public let number: Int32
+    
+    init(_ type: SocketErrorType) {
+        self.type = type
+        self.number = errno //last reported error code
+    }
+    
+    public var description: String {
+        return "Socket failed with code \(self.number) [\(self.type)]"
+    }
+}
 
 class ClientSocket {
     
@@ -42,7 +68,7 @@ class ClientSocket {
     init(address: String, port: Int) throws {
         
         self.descriptor = socket(AF_INET, sock_stream, Int32(IPPROTO_TCP))
-        guard self.descriptor > 0 else { throw SocketError("Failed to create socket") }
+        guard self.descriptor > 0 else { throw SocketError(.CreateSocketFailed) }
         
         self.address = address
         self.port = port
@@ -50,7 +76,7 @@ class ClientSocket {
     }
 
     deinit {
-        s_close(self.descriptor)
+        self.disconnect()
     }
     
     //MARK: Actual functionality
@@ -59,13 +85,13 @@ class ClientSocket {
         
         let len = Int(strlen(string))
         let written = s_write(self.descriptor, string, len)
-        guard written == len else { throw SocketError("Didn't send all bytes") }
+        guard written == len else { throw SocketError(.WriteFailedToSendAllBytes) }
     }
     
     func read(bytes: Int = BufferCapacity) throws -> [CChar] {
         let data = Data(capacity: bytes)
         let receivedBytes = s_read(self.descriptor, data.bytes, data.capacity)
-        guard receivedBytes > -1 else { throw SocketError("Invalid read") }
+        guard receivedBytes > -1 else { throw SocketError(.ReadFailed) }
         return Array(data.characters[0..<receivedBytes])
     }
 
@@ -79,7 +105,7 @@ class ClientSocket {
         return in_port_t(htons(in_port_t(self.port)))
     }
     
-    private func connect() throws {
+    func connect() throws {
         
         var addr = sockaddr_in()
         addr.sin_family = sa_family_t(AF_INET)
@@ -88,7 +114,11 @@ class ClientSocket {
         addr.sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
         
         let con = s_connect(self.descriptor, sockaddr_cast(&addr), socklen_t(sizeof(sockaddr_in)))
-        guard con > -1 else { throw SocketError("Couldn't connect") }
+        guard con > -1 else { throw SocketError(.ConnectFailed) }
+    }
+    
+    func disconnect() {
+        s_close(self.descriptor)
     }
     
     private func sockaddr_cast(p: UnsafeMutablePointer<Void>) -> UnsafeMutablePointer<sockaddr> {
@@ -146,25 +176,9 @@ extension CollectionType where Generator.Element == CChar {
     func stringView() throws -> String {
         let selfArray = Array(self) + [0]
         guard let string = String.fromCString(selfArray) else {
-            throw SocketError("Failed to parse into a string received chars: \(selfArray)")
+            throw SocketError(.UnparsableChars(selfArray))
         }
         return string
-    }
-}
-
-//see error codes: https://gist.github.com/gabrielfalcao/4216897
-struct SocketError : ErrorType, CustomStringConvertible {
-    
-    let details: String
-    let number: Int32
-    
-    init(_ details: String) {
-        self.details = details
-        self.number = errno //last reported error code
-    }
-    
-    var description: String {
-        return "Socket failed with code \(number) [\(details)]"
     }
 }
 

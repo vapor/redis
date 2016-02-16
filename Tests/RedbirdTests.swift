@@ -37,6 +37,39 @@ class RedbirdTests: XCTestCase {
         }
     }
     
+    func liveShouldThrow(@noescape block: (client: Redbird) throws -> ()) {
+        do {
+            let client = try Redbird()
+            try block(client: client)
+            XCTFail("Should have thrown")
+        } catch {
+            //all good
+        }
+    }
+    
+    func testServersideKilledSocket() {
+        liveShouldThrow { (client) in
+            
+            //kill our connection, simulating e.g. server disconnecting us/crashing
+            try client.command("CLIENT", params: ["KILL", "SKIPME", "NO"])
+            
+            //try to ping, expected to throw
+            _ = try client.command("PING")
+        }
+    }
+    
+    func testServersideTimeout() {
+        liveShouldThrow { (client) in
+            
+            //set timeout to 1 sec
+            try client.command("CONFIG", params: ["SET", "timeout", "1"])
+            sleep(2)
+            
+            //try to ping, expected to throw
+            _ = try client.command("PING")
+        }
+    }
+    
     func testSimpleString_Ping() {
         
         live { (client) in
@@ -70,8 +103,8 @@ class RedbirdTests: XCTestCase {
     
     func testPipelining_PingSetGetUnknownPing() {
         live { (client) in
-            let multi = client.multi()
-            let responses = try multi
+            let pip = client.pipeline()
+            let responses = try pip
                 .enqueue("PING")
                 .enqueue("SET", params: ["test", "Me_llamo_test"])
                 .enqueue("GET", params: ["test"])

@@ -164,6 +164,15 @@ class ParsingTests: XCTestCase {
         }
     }
     
+    func testPerf_ParsingArray_Normal() {
+        let strUrl = NSBundle(forClass: ParsingTests.classForCoder()).URLForResource("teststring", withExtension: "txt", subdirectory: nil)
+        let str = try! String(contentsOfURL: strUrl!)
+        measureBlock {
+            let reader = TestReader(content: str)
+            let (_, _) = try! InitialParser().parse([], reader: reader)
+        }
+    }
+    
     func testParsingArray_TwoString() {
         
         let reader = TestReader(content: "*2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n")

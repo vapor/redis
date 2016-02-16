@@ -12,7 +12,7 @@ Redis + Swift. Red Is Swift. Swift is a bird. Redbird.
 
 > Attempt at a pure-Swift implementation of a Redis client from the original protocol spec.
 
-Redis protocol specification: [http://redis.io/topics/protocol](http://redis.io/topics/protocol)
+Redis communication protocol specification: [http://redis.io/topics/protocol](http://redis.io/topics/protocol)
 
 # :question: Why?
 When I write servers for my apps, I usually use 1) Linux servers, 2) Redis as my database/cache. Now I also want to write everything in Swift. I looked through the existing Swift Redis wrappers and unfortunately all of them just wrapped a C library, which had to be installed externally (yuck). Thus I decided to throw all that away, go back to the Redis protocol specification and build up a Swift client without any dependencies, so that it can be used both on OS X and Linux just by adding a Swift Package Manager entry, without the need to install anything extra.
@@ -59,10 +59,10 @@ Instead of handling the `RespObject` types directly, you can also use the follow
 
 ## Pipelining
 
-Command pipelining is also supported. Just ask for a `Multi` object, `enqueue` commands on it and then call `execute()` to send commands to the server. You receive an array of response objects, which respect the enqueing order of your commands.
+Command [pipelining](http://redis.io/topics/pipelining) is supported. Just ask for a `Pipeline` object, `enqueue` commands on it and then call `execute()` to send commands to the server. You receive an array of response objects, which respect the enqueing order of your commands.
 
 ```swift
-let responses = try client.multi()
+let responses = try client.pipeline()
     .enqueue("PING")
     .enqueue("SET", params: ["test", "Me_llamo_test"])
     .enqueue("GET", params: ["test"])
@@ -72,6 +72,12 @@ let responses = try client.multi()
 ```
 
 All of the above converters throw an error if invoked on a non-compatible type (like calling `toArray()` on an `Integer`).
+
+## Missing features?
+
+At the moment the design philosophy of Redbird is to provide a 0-dependency, minimal Swift Redis client. Features such as easier wrappers for things that can be done with standard commands (like [transactions](http://redis.io/topics/transactions)) are not on the roadmap at the moment (with the notable exception of [`AUTH`](http://redis.io/commands/auth), which is too common to not make easier to do). I want to make sure Redbird **allows** you to use **all** of Redis's features. However the aim is *not* to make it *easy*, just *simple*. 
+
+That being said, if Redbird *doesn't* support a fundamental feature that you'd like to use, please create an issue and I'll do my best to add it. Thanks for helping out! 🎉
 
 :gift_heart: Contributing
 ------------
