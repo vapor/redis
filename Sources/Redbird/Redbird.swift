@@ -55,16 +55,16 @@ public class Redbird {
         return responseObject
     }
     
-    public func multi() -> Multi {
-        return Multi(socket: self.socket)
+    public func pipeline() -> Pipeline {
+        return Pipeline(socket: self.socket)
     }
 }
 
-public class Multi: Redbird {
+public class Pipeline: Redbird {
     
     private var commands = [String]()
     
-    public func enqueue(name: String, params: [String] = []) throws -> Multi {
+    public func enqueue(name: String, params: [String] = []) throws -> Pipeline {
         let formatted = try self.formatCommand(name, params: params)
         self.commands.append(formatted)
         return self
@@ -72,7 +72,7 @@ public class Multi: Redbird {
     
     public func execute() throws -> [RespObject] {
         guard self.commands.count > 0 else {
-            throw RedbirdError.MultiNoCommandProvided
+            throw RedbirdError.PipelineNoCommandProvided
         }
         let formatted = self.commands.reduce("", combine: +)
         

@@ -103,8 +103,8 @@ class RedbirdTests: XCTestCase {
     
     func testPipelining_PingSetGetUnknownPing() {
         live { (client) in
-            let multi = client.multi()
-            let responses = try multi
+            let pip = client.pipeline()
+            let responses = try pip
                 .enqueue("PING")
                 .enqueue("SET", params: ["test", "Me_llamo_test"])
                 .enqueue("GET", params: ["test"])
