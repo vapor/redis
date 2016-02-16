@@ -1,5 +1,23 @@
 # Change Log
 
+## [0.2.0](https://github.com/czechboy0/Redbird/tree/0.2.0) (2016-02-16)
+[Full Changelog](https://github.com/czechboy0/Redbird/compare/0.1.0...0.2.0)
+
+**Implemented enhancements:**
+
+- Performance tests  [\#7](https://github.com/czechboy0/Redbird/issues/7)
+- Support Pipelining [\#5](https://github.com/czechboy0/Redbird/issues/5)
+- Convenience wrappers for commands [\#4](https://github.com/czechboy0/Redbird/issues/4)
+
+**Closed issues:**
+
+- Timeout & automatic reconnect [\#12](https://github.com/czechboy0/Redbird/issues/12)
+
+**Merged pull requests:**
+
+- Performance tests [\#14](https://github.com/czechboy0/Redbird/pull/14) ([czechboy0](https://github.com/czechboy0))
+- Pipelining support [\#13](https://github.com/czechboy0/Redbird/pull/13) ([czechboy0](https://github.com/czechboy0))
+
 ## [0.1.0](https://github.com/czechboy0/Redbird/tree/0.1.0) (2016-02-14)
 [Full Changelog](https://github.com/czechboy0/Redbird/compare/0.0.3...0.1.0)
 
