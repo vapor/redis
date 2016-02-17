@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.2.1](https://github.com/czechboy0/Redbird/tree/0.2.1) (2016-02-17)
+[Full Changelog](https://github.com/czechboy0/Redbird/compare/0.2.0...0.2.1)
+
+**Closed issues:**
+
+- Add Swift & Redis to Travis cache to speed up build/tests [\#15](https://github.com/czechboy0/Redbird/issues/15)
+
 ## [0.2.0](https://github.com/czechboy0/Redbird/tree/0.2.0) (2016-02-16)
 [Full Changelog](https://github.com/czechboy0/Redbird/compare/0.1.0...0.2.0)
 
