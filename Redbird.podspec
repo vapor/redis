@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Redbird"
-  s.version      = "0.2.0"
+  s.version      = "0.2.1"
   s.summary      = "Pure-Swift Redis client. OS X and Linux ready."
 
   s.description  = <<-DESC

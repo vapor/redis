@@ -27,8 +27,6 @@ extension RespObject {
         switch self.respType {
         case .SimpleString: return (self as! SimpleString).content
         case .BulkString: return (self as! BulkString).content
-        case .Error: return (self as! Error).content
-        case .Integer: return String((self as! Integer).intContent)
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "String")
         }
     }
@@ -37,8 +35,6 @@ extension RespObject {
         switch self.respType {
         case .SimpleString: return (self as! SimpleString).content
         case .BulkString: return (self as! BulkString).content
-        case .Error: return (self as! Error).content
-        case .Integer: return String((self as! Integer).intContent)
         case .NullBulkString: return nil
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "MaybeString")
         }
