@@ -6,7 +6,7 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-public struct SimpleString: RespObject {
+public struct RespSimpleString: RespObject {
     static var signature: String = "+"
     public let respType: RespType = .SimpleString
     
@@ -21,8 +21,8 @@ public struct SimpleString: RespObject {
 }
 
 //equatable
-extension SimpleString: Equatable {}
-public func ==(lhs: SimpleString, rhs: SimpleString) -> Bool {
+extension RespSimpleString: Equatable {}
+public func ==(lhs: RespSimpleString, rhs: RespSimpleString) -> Bool {
     return lhs.content == rhs.content
 }
 

@@ -25,16 +25,16 @@ extension RespObject {
     
     public func toString() throws -> String {
         switch self.respType {
-        case .SimpleString: return (self as! SimpleString).content
-        case .BulkString: return (self as! BulkString).content
+        case .SimpleString: return (self as! RespSimpleString).content
+        case .BulkString: return (self as! RespBulkString).content
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "String")
         }
     }
 
     public func toMaybeString() throws -> String? {
         switch self.respType {
-        case .SimpleString: return (self as! SimpleString).content
-        case .BulkString: return (self as! BulkString).content
+        case .SimpleString: return (self as! RespSimpleString).content
+        case .BulkString: return (self as! RespBulkString).content
         case .NullBulkString: return nil
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "MaybeString")
         }
@@ -42,21 +42,21 @@ extension RespObject {
     
     public func toInt() throws -> Int {
         switch self.respType {
-        case .Integer: return Int((self as! Integer).intContent)
+        case .Integer: return Int((self as! RespInteger).intContent)
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "Int")
         }
     }
     
     public func toBool() throws -> Bool {
         switch self.respType {
-        case .Integer: return (self as! Integer).boolContent
+        case .Integer: return (self as! RespInteger).boolContent
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "Bool")
         }
     }
     
-    public func toError() throws -> Error {
+    public func toError() throws -> RespError {
         switch self.respType {
-        case .Error: return (self as! Error)
+        case .Error: return (self as! RespError)
         default: throw RedbirdError.WrongNativeTypeUnboxing(self, "Error")
         }
     }

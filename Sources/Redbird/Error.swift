@@ -6,7 +6,7 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-public struct Error: RespObject, ErrorType {
+public struct RespError: RespObject, ErrorType {
     static var signature: String = "-"
     public let respType: RespType = .Error
     
@@ -26,8 +26,8 @@ public struct Error: RespObject, ErrorType {
 }
 
 //equatable
-extension Error: Equatable {}
-public func ==(lhs: Error, rhs: Error) -> Bool {
+extension RespError: Equatable {}
+public func ==(lhs: RespError, rhs: RespError) -> Bool {
     return lhs.content == rhs.content
 }
 

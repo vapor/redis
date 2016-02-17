@@ -38,7 +38,7 @@ struct NullBulkStringFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
         
-        return NullBulkString.signature
+        return RespNullBulkString.signature
     }
 }
 
@@ -46,7 +46,7 @@ struct NullArrayFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
 
-        return NullArray.signature
+        return RespNullArray.signature
     }
 }
 
@@ -54,9 +54,9 @@ struct ErrorFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
 
-        let str = (object as! Error)
+        let str = (object as! RespError)
             .content
-            .wrappedInitialSignatureAndTrailingTerminator(Error.signature)
+            .wrappedInitialSignatureAndTrailingTerminator(RespError.signature)
         return str
     }
 }
@@ -65,9 +65,9 @@ struct SimpleStringFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
 
-        let str = (object as! SimpleString)
+        let str = (object as! RespSimpleString)
             .content
-            .wrappedInitialSignatureAndTrailingTerminator(SimpleString.signature)
+            .wrappedInitialSignatureAndTrailingTerminator(RespSimpleString.signature)
         return str
     }
 }
@@ -76,8 +76,8 @@ struct IntegerFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
  
-        let str = String((object as! Integer).intContent)
-            .wrappedInitialSignatureAndTrailingTerminator(Integer.signature)
+        let str = String((object as! RespInteger).intContent)
+            .wrappedInitialSignatureAndTrailingTerminator(RespInteger.signature)
         return str
     }
 }
@@ -86,14 +86,14 @@ struct BulkStringFormatter: Formatter {
     
     func format(object: RespObject) throws -> String {
         
-        let content = (object as! BulkString).content
+        let content = (object as! RespBulkString).content
         
         //first count the number of bytes of the string
         let byteCount = content.ccharArrayView().count
         
         //format the outgoing string
         let prefix = String(byteCount)
-            .wrappedInitialSignatureAndTrailingTerminator(BulkString.signature)
+            .wrappedInitialSignatureAndTrailingTerminator(RespBulkString.signature)
         let suffix = content.wrappedTrailingTerminator()
         let str = prefix + suffix
         return str

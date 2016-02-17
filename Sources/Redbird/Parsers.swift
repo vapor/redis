@@ -45,10 +45,10 @@ struct InitialParser: Parser {
         
         let parser: Parser
         switch signature {
-        case Error.signature: parser = ErrorParser()
-        case SimpleString.signature: parser = SimpleStringParser()
-        case Integer.signature: parser = IntegerParser()
-        case BulkString.signature: parser = BulkStringParser()
+        case RespError.signature: parser = ErrorParser()
+        case RespSimpleString.signature: parser = SimpleStringParser()
+        case RespInteger.signature: parser = IntegerParser()
+        case RespBulkString.signature: parser = BulkStringParser()
         case RespArray.signature: parser = ArrayParser()
         default:
             throw RedbirdError.ParsingStringNotThisType(try alreadyRead.stringView(), nil)
@@ -66,7 +66,7 @@ struct ErrorParser: Parser {
         let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         let readString = try head.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
-        let parsed = Error(content: inner)
+        let parsed = RespError(content: inner)
         return (parsed, tail ?? [])
     }
 }
@@ -79,7 +79,7 @@ struct SimpleStringParser: Parser {
         let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         let readString = try head.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
-        let parsed = try SimpleString(content: inner)
+        let parsed = try RespSimpleString(content: inner)
         return (parsed, tail ?? [])
     }
 }
@@ -92,7 +92,7 @@ struct IntegerParser: Parser {
         let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         let readString = try head.stringView()
         let inner = readString.strippedInitialSignatureAndTrailingTerminator()
-        let parsed = try Integer(content: inner)
+        let parsed = try RespInteger(content: inner)
         return (parsed, tail ?? [])
     }
 }
@@ -116,7 +116,7 @@ struct BulkStringParser: Parser {
         
         //if byte count is -1, then return a null string
         if byteCount == -1 {
-            return (NullBulkString(), tail)
+            return (RespNullBulkString(), tail)
         }
         
         //now read the exact number of bytes + 2 for the terminator string
@@ -145,7 +145,7 @@ struct BulkStringParser: Parser {
         
         let allString = try neededChars.stringView()
         let parsedBulk = allString.strippedTrailingTerminator()
-        return (BulkString(content: parsedBulk), suffixTail)
+        return (RespBulkString(content: parsedBulk), suffixTail)
     }
 }
 
@@ -168,7 +168,7 @@ struct ArrayParser: Parser {
         
         //if byte count is -1, then return a null array
         if count == -1 {
-            return (NullArray(), tail)
+            return (RespNullArray(), tail)
         }
         
         //now read in a for loop that many elements,

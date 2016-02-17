@@ -6,7 +6,7 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-public struct Integer: RespObject {
+public struct RespInteger: RespObject {
     static var signature: String = ":"
     public let respType: RespType = .Integer
     
@@ -23,8 +23,8 @@ public struct Integer: RespObject {
 }
 
 //equatable
-extension Integer: Equatable {}
-public func ==(lhs: Integer, rhs: Integer) -> Bool {
+extension RespInteger: Equatable {}
+public func ==(lhs: RespInteger, rhs: RespInteger) -> Bool {
     return lhs.intContent == rhs.intContent
 }
 

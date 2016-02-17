@@ -75,7 +75,7 @@ class RedbirdTests: XCTestCase {
         live { (client) in
             let response = try client.command("PING")
             XCTAssertEqual(response.respType, RespType.SimpleString)
-            XCTAssertEqual(response as? SimpleString, try? SimpleString(content: "PONG"))
+            XCTAssertEqual(response as? RespSimpleString, try? RespSimpleString(content: "PONG"))
         }
     }
     
@@ -84,7 +84,7 @@ class RedbirdTests: XCTestCase {
         live { (client) in
             let response = try client.command("BLAH")
             XCTAssertEqual(response.respType, RespType.Error)
-            XCTAssertEqual((response as? Error)?.kind, "ERR")
+            XCTAssertEqual((response as? RespError)?.kind, "ERR")
         }
     }
     
@@ -95,9 +95,9 @@ class RedbirdTests: XCTestCase {
             let getResponse = try client.command("GET", params: ["test"])
             
             XCTAssertEqual(setResponse.respType, RespType.SimpleString)
-            XCTAssertEqual(setResponse as? SimpleString, try? SimpleString(content: "OK"))
+            XCTAssertEqual(setResponse as? RespSimpleString, try? RespSimpleString(content: "OK"))
             XCTAssertEqual(getResponse.respType, RespType.BulkString)
-            XCTAssertEqual(getResponse as? BulkString, BulkString(content: "Me_llamo_test"))
+            XCTAssertEqual(getResponse as? RespBulkString, RespBulkString(content: "Me_llamo_test"))
         }
     }
     

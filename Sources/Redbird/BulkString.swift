@@ -6,7 +6,7 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-public struct BulkString: RespObject {
+public struct RespBulkString: RespObject {
     static var signature: String = "$"
     public let respType: RespType = .BulkString
     
@@ -14,7 +14,7 @@ public struct BulkString: RespObject {
 }
 
 //equatable
-extension BulkString: Equatable {}
-public func ==(lhs: BulkString, rhs: BulkString) -> Bool {
+extension RespBulkString: Equatable {}
+public func ==(lhs: RespBulkString, rhs: RespBulkString) -> Bool {
     return lhs.content == rhs.content
 }

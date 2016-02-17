@@ -25,12 +25,12 @@ public func ==(lhs: RespArray, rhs: RespArray) -> Bool {
         guard l.respType == r.respType else { return false }
         switch l.respType {
         case .Array: guard l as! RespArray == r as! RespArray else { return false }
-        case .BulkString: guard l as! BulkString == r as! BulkString else { return false }
-        case .Error: guard l as! Error == r as! Error else { return false }
-        case .Integer: guard l as! Integer == r as! Integer else { return false }
-        case .NullArray: guard l as! NullArray == r as! NullArray else { return false }
-        case .NullBulkString: guard l as! NullBulkString == r as! NullBulkString else { return false }
-        case .SimpleString: guard l as! SimpleString == r as! SimpleString else { return false }
+        case .BulkString: guard l as! RespBulkString == r as! RespBulkString else { return false }
+        case .Error: guard l as! RespError == r as! RespError else { return false }
+        case .Integer: guard l as! RespInteger == r as! RespInteger else { return false }
+        case .NullArray: guard l as! RespNullArray == r as! RespNullArray else { return false }
+        case .NullBulkString: guard l as! RespNullBulkString == r as! RespNullBulkString else { return false }
+        case .SimpleString: guard l as! RespSimpleString == r as! RespSimpleString else { return false }
         }
     }
     

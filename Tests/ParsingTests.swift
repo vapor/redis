@@ -34,7 +34,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.Error)
         XCTAssertEqual(leftovers, [])
-        let err = obj as! Error
+        let err = obj as! RespError
         XCTAssertEqual(err.content, "WAAAT unknown command 'BLAH'")
         XCTAssertEqual(err.kind, "WAAAT")
         XCTAssertEqual(err.message, "unknown command 'BLAH'")
@@ -46,7 +46,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse("-".ccharArrayView(), reader: reader)
         XCTAssertEqual(obj.respType, RespType.Error)
         XCTAssertEqual(leftovers, [])
-        let err = obj as! Error
+        let err = obj as! RespError
         XCTAssertEqual(err.content, "WAAAT unknown command 'BLAH'")
         XCTAssertEqual(err.kind, "WAAAT")
         XCTAssertEqual(err.message, "unknown command 'BLAH'")
@@ -58,7 +58,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.SimpleString)
         XCTAssertEqual(leftovers, [])
-        let simpleString = obj as! SimpleString
+        let simpleString = obj as! RespSimpleString
         XCTAssertEqual(simpleString.content, "OK")
     }
     
@@ -70,7 +70,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.SimpleString)
         XCTAssertEqual(leftovers, "leftover".ccharArrayView())
-        let simpleString = obj as! SimpleString
+        let simpleString = obj as! RespSimpleString
         XCTAssertEqual(simpleString.content, "OK")
     }
 
@@ -80,7 +80,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.Integer)
         XCTAssertEqual(leftovers, [])
-        let int = obj as! Integer
+        let int = obj as! RespInteger
         XCTAssertEqual(int.intContent, 1000)
         XCTAssertEqual(int.boolContent, true)
     }
@@ -91,7 +91,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.BulkString)
         XCTAssertEqual(leftovers, [])
-        let bulkString = obj as! BulkString
+        let bulkString = obj as! RespBulkString
         XCTAssertEqual(bulkString.content, "foobar")
     }
     
@@ -101,7 +101,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.BulkString)
         XCTAssertEqual(leftovers, "leftover".ccharArrayView())
-        let bulkString = obj as! BulkString
+        let bulkString = obj as! RespBulkString
         XCTAssertEqual(bulkString.content, "foobar")
     }
     
@@ -111,7 +111,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.BulkString)
         XCTAssertEqual(leftovers, [])
-        let bulkString = obj as! BulkString
+        let bulkString = obj as! RespBulkString
         XCTAssertEqual(bulkString.content, "")
     }
 
@@ -121,7 +121,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.NullBulkString)
         XCTAssertEqual(leftovers, [])
-        XCTAssertNotNil(obj as? NullBulkString)
+        XCTAssertNotNil(obj as? RespNullBulkString)
     }
     
     func testParsingArray_Null() {
@@ -130,7 +130,7 @@ class ParsingTests: XCTestCase {
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.NullArray)
         XCTAssertEqual(leftovers, [])
-        XCTAssertNotNil(obj as? NullArray)
+        XCTAssertNotNil(obj as? RespNullArray)
     }
     
     func testParsingArray_Empty() {
@@ -152,11 +152,11 @@ class ParsingTests: XCTestCase {
         let array = obj as! RespArray
         do {
             let expected: [RespObject] = [
-                try Integer(content: "1"),
-                try Integer(content: "205"),
-                try Integer(content: "0"),
-                try Integer(content: "-1"),
-                BulkString(content: "foobar")
+                try RespInteger(content: "1"),
+                try RespInteger(content: "205"),
+                try RespInteger(content: "0"),
+                try RespInteger(content: "-1"),
+                RespBulkString(content: "foobar")
             ]
             XCTAssertEqual(array, RespArray(content: expected))
         } catch {
@@ -181,8 +181,8 @@ class ParsingTests: XCTestCase {
         XCTAssertEqual(leftovers, [])
         let array = obj as! RespArray
         let expected: [RespObject] = [
-            BulkString(content: "foo"),
-            BulkString(content: "bar")
+            RespBulkString(content: "foo"),
+            RespBulkString(content: "bar")
         ]
         XCTAssertEqual(array, RespArray(content: expected))
     }
@@ -196,13 +196,13 @@ class ParsingTests: XCTestCase {
         let array = obj as! RespArray
         let expected: [RespObject] = [
             RespArray(content: [
-                try! Integer(content: "1"),
-                try! Integer(content: "2"),
-                try! Integer(content: "3"),
+                try! RespInteger(content: "1"),
+                try! RespInteger(content: "2"),
+                try! RespInteger(content: "3"),
                 ]),
             RespArray(content: [
-                try! SimpleString(content: "Foo"),
-                Error(content: "Bar")
+                try! RespSimpleString(content: "Foo"),
+                RespError(content: "Bar")
                 ])
         ]
         XCTAssertEqual(array, RespArray(content: expected))

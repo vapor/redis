@@ -98,7 +98,7 @@ struct CommandFormatter {
     
     func commandToString(command: String, params: [String]) throws -> String {
         
-        let comps = ([command] + params).map { BulkString(content: $0) as RespObject }
+        let comps = ([command] + params).map { RespBulkString(content: $0) as RespObject }
         let formatted = try ArrayFormatter().format(RespArray(content: comps))
         return formatted
     }

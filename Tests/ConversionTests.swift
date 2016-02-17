@@ -12,14 +12,14 @@ class ConversionTests: XCTestCase {
 
     func testArray_Ok() {
         assertNoThrow {
-            let orig = RespArray(content: [try SimpleString(content: "yo")])
+            let orig = RespArray(content: [try RespSimpleString(content: "yo")])
             let ret = try orig.toArray()
             XCTAssertEqual(ret.count, 1)
         }
     }
     
     func testArray_NullThrows() {
-        let orig = NullArray()
+        let orig = RespNullArray()
         assertThrow(.WrongNativeTypeUnboxing(orig, "Array")) {
             _ = try orig.toArray()
         }
@@ -27,7 +27,7 @@ class ConversionTests: XCTestCase {
     
     func testMaybeArray_Ok() {
         assertNoThrow {
-            let orig = RespArray(content: [try SimpleString(content: "yo")])
+            let orig = RespArray(content: [try RespSimpleString(content: "yo")])
             let ret = try orig.toMaybeArray()
             XCTAssertNotNil(ret)
             XCTAssertEqual(ret!.count, 1)
@@ -35,7 +35,7 @@ class ConversionTests: XCTestCase {
     }
     
     func testMaybeArray_NullOk() {
-        let orig = NullArray()
+        let orig = RespNullArray()
         assertNoThrow {
             let ret = try orig.toMaybeArray()
             XCTAssertNil(ret)
@@ -44,7 +44,7 @@ class ConversionTests: XCTestCase {
     
     func testSimpleString_Ok() {
         assertNoThrow {
-            let orig = try SimpleString(content: "yo")
+            let orig = try RespSimpleString(content: "yo")
             let ret = try orig.toString()
             XCTAssertEqual(ret, "yo")
         }
@@ -52,14 +52,14 @@ class ConversionTests: XCTestCase {
     
     func testBulkString_Ok() {
         assertNoThrow {
-            let orig = BulkString(content: "yo")
+            let orig = RespBulkString(content: "yo")
             let ret = try orig.toString()
             XCTAssertEqual(ret, "yo")
         }
     }
 
     func testString_NullThrows() {
-        let orig = NullBulkString()
+        let orig = RespNullBulkString()
         assertThrow(.WrongNativeTypeUnboxing(orig, "String")) {
             _ = try orig.toString()
         }
@@ -67,14 +67,14 @@ class ConversionTests: XCTestCase {
     
     func testMaybeString_Ok() {
         assertNoThrow {
-            let orig = BulkString(content: "yo")
+            let orig = RespBulkString(content: "yo")
             let ret = try orig.toMaybeString()
             XCTAssertEqual(ret, "yo")
         }
     }
 
     func testMaybeString_NullOk() {
-        let orig = NullBulkString()
+        let orig = RespNullBulkString()
         assertNoThrow {
             let ret = try orig.toMaybeString()
             XCTAssertNil(ret)
@@ -83,7 +83,7 @@ class ConversionTests: XCTestCase {
     
     func testInt_Ok() {
         assertNoThrow {
-            let orig = try Integer(content: "12")
+            let orig = try RespInteger(content: "12")
             let ret = try orig.toInt()
             XCTAssertEqual(ret, 12)
         }
@@ -91,7 +91,7 @@ class ConversionTests: XCTestCase {
 
     func testBool_Ok() {
         assertNoThrow {
-            let orig = try Integer(content: "0")
+            let orig = try RespInteger(content: "0")
             let ret = try orig.toBool()
             XCTAssertEqual(ret, false)
         }
@@ -99,7 +99,7 @@ class ConversionTests: XCTestCase {
     
     func testError_Ok() {
         assertNoThrow {
-            let orig = Error(content: "NOAUTH Password required")
+            let orig = RespError(content: "NOAUTH Password required")
             let ret = try orig.toError()
             XCTAssertEqual(ret.content, "NOAUTH Password required")
         }
