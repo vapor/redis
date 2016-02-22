@@ -19,6 +19,7 @@
     private let s_read = Glibc.read
     private let s_write = Glibc.write
     private let s_alarm = Glibc.alarm
+    private let s_gethostbyname = Glibc.gethostbyname
 #else
     import Darwin.C
     
@@ -29,6 +30,7 @@
     private let s_read = Darwin.read
     private let s_write = Darwin.write
     private let s_alarm = Darwin.alarm
+    private let s_gethostbyname = Darwin.gethostbyname
 #endif
 
 public enum SocketErrorType {
@@ -37,6 +39,7 @@ public enum SocketErrorType {
     case ReadFailed
     case ConnectFailed
     case UnparsableChars([CChar])
+    case FailedToGetIPFromHostname(String)
 }
 
 //see error codes: https://gist.github.com/gabrielfalcao/4216897
@@ -97,19 +100,40 @@ class ClientSocket {
 
     //MARK: Private utils
 
-    private var _address: in_addr {
-        return in_addr(s_addr: self.address.withCString { inet_addr($0) })
-    }
-    
     private var _port: in_port_t {
         return in_port_t(htons(in_port_t(self.port)))
     }
     
+    private func getAddrFromHostname(hostname: String) throws -> in_addr {
+        
+        let _hostInfo = s_gethostbyname(hostname)
+        guard _hostInfo != nil else {
+            throw SocketError(.FailedToGetIPFromHostname(self.address))
+        }
+        let hostInfo = _hostInfo.memory
+        guard hostInfo.h_addrtype == AF_INET else {
+            throw SocketError(.FailedToGetIPFromHostname("No IPv4 address"))
+        }
+        guard hostInfo.h_addr_list != nil else {
+            throw SocketError(.FailedToGetIPFromHostname("List is empty"))
+        }
+        
+        let addrStruct = sockadd_list_cast(hostInfo.h_addr_list)[0].memory
+        return addrStruct
+    }
+    
     func connect() throws {
         
+        //decide whether we have an ip address or a hostname
         var addr = sockaddr_in()
+        if inet_pton(AF_INET, self.address, &addr.sin_addr) == 1 {
+            //valid ip address, it's already assigned
+        } else {
+            //hostname must be converted to ip
+            addr.sin_addr = try self.getAddrFromHostname(self.address)
+        }
+
         addr.sin_family = sa_family_t(AF_INET)
-        addr.sin_addr = self._address
         addr.sin_port = self._port
         addr.sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
         
@@ -123,6 +147,10 @@ class ClientSocket {
     
     private func sockaddr_cast(p: UnsafeMutablePointer<Void>) -> UnsafeMutablePointer<sockaddr> {
         return UnsafeMutablePointer<sockaddr>(p)
+    }
+    
+    private func sockadd_list_cast(p: UnsafeMutablePointer<UnsafeMutablePointer<Int8>>) -> UnsafeMutablePointer<UnsafeMutablePointer<in_addr>> {
+        return UnsafeMutablePointer<UnsafeMutablePointer<in_addr>>(p)
     }
     
     //convert little-endian to big-endian for network transfer
