@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import Redbird
 
 func assertNoThrow(@noescape block: () throws -> ()) {
     do {
@@ -25,6 +26,25 @@ func assertThrow(@autoclosure errorType: () -> RedbirdError, @noescape block: ()
         XCTAssertEqual(String(errorType()), String(error as! RedbirdError))
     }
 }
+
+#if os(Linux)
+    extension RedbirdTests: XCTestCaseProvider {
+        var allTests : [(String, () throws -> Void)] {
+            return [
+                ("testServersideKilledSocket_Reconnected", testServersideKilledSocket_Reconnected),
+                ("testServersideTimeout", testServersideTimeout),
+                ("testSimpleString_Ping", testSimpleString_Ping),
+                ("testError_UnknownCommand", testError_UnknownCommand),
+                ("testBulkString_SetGet", testBulkString_SetGet),
+                ("testPipelining_PingSetGetUnknownPing", testPipelining_PingSetGetUnknownPing),
+                ("testCommandReconnectFailsOnFailed", testCommandReconnectFailsOnFailed),
+                ("testPipelineReconnectFailsOnFailed", testPipelineReconnectFailsOnFailed),
+                ("testCommandReconnectSucceedsTheSecondTime", testCommandReconnectSucceedsTheSecondTime),
+                ("testPipelineReconnectSucceedsTheSecondTime", testPipelineReconnectSucceedsTheSecondTime)
+            ]
+        }
+    }
+#endif
 
 class RedbirdTests: XCTestCase {
     

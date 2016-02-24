@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import Redbird
 
 class TestReader: SocketReader {
     
@@ -25,6 +26,29 @@ class TestReader: SocketReader {
         return head
     }
 }
+
+#if os(Linux)
+    extension ParsingTests: XCTestCaseProvider {
+        var allTests : [(String, () throws -> Void)] {
+            return [
+                ("testParsingError_NothingReadYet", testParsingError_NothingReadYet),
+                ("testParsingError_FirstReadChar", testParsingError_FirstReadChar),
+                ("testParsingSimpleString", testParsingSimpleString),
+                ("testParsingSimpleString_WithLeftover", testParsingSimpleString_WithLeftover),
+                ("testParsingInteger", testParsingInteger),
+                ("testParsingBulkString_Normal", testParsingBulkString_Normal),
+                ("testParsingBulkString_Normal_WithLeftover", testParsingBulkString_Normal_WithLeftover),
+                ("testParsingBulkString_Empty", testParsingBulkString_Empty),
+                ("testParsingBulkString_Null", testParsingBulkString_Null),
+                ("testParsingArray_Null", testParsingArray_Null),
+                ("testParsingArray_Empty", testParsingArray_Empty),
+                ("testParsingArray_Normal", testParsingArray_Normal),
+                ("testParsingArray_TwoString", testParsingArray_TwoString),
+                ("testParsingArray_ArrayOfArrays", testParsingArray_ArrayOfArrays)
+            ]
+        }
+    }
+#endif
 
 class ParsingTests: XCTestCase {
 
@@ -161,15 +185,6 @@ class ParsingTests: XCTestCase {
             XCTAssertEqual(array, RespArray(content: expected))
         } catch {
             XCTFail("\(error)")
-        }
-    }
-    
-    func testPerf_ParsingArray_Normal() {
-        let strUrl = NSBundle(forClass: ParsingTests.classForCoder()).URLForResource("teststring", withExtension: "txt", subdirectory: nil)
-        let str = try! String(contentsOfURL: strUrl!)
-        measureBlock {
-            let reader = TestReader(content: str)
-            let (_, _) = try! InitialParser().parse([], reader: reader)
         }
     }
     

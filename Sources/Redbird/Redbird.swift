@@ -11,7 +11,7 @@ public struct RedbirdConfig {
     var port: Int
     var password: String?
     
-    init(address: String = "127.0.0.1", port: Int = 6379, password: String? = nil) {
+    public init(address: String = "127.0.0.1", port: Int = 6379, password: String? = nil) {
         self.address = address
         self.port = port
         self.password = password

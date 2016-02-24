@@ -15,7 +15,7 @@
 extension String {
     
     func strippedTrailingTerminator() -> String {
-        guard self.hasSuffix(RespTerminator) else { return self }
+        guard self.hasSuffixStr(RespTerminator) else { return self }
         return String(self.characters.dropLast(RespTerminator.characters.count))
     }
     
@@ -58,11 +58,11 @@ extension String {
             .joinWithSeparator(String(separator))
     }
     
-    func hasPrefix(prefix: String) -> Bool {
+    func hasPrefixStr(prefix: String) -> Bool {
         return self.characters.startsWith(prefix.characters)
     }
     
-    func hasSuffix(suffix: String) -> Bool {
+    func hasSuffixStr(suffix: String) -> Bool {
         return self.characters.reverse().startsWith(suffix.characters.reverse())
     }
     
