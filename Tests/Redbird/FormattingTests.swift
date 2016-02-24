@@ -24,8 +24,7 @@ import XCTest
                 ("testArray_Empty", testArray_Empty),
                 ("testArray_Null", testArray_Null),
                 ("testArray_TwoStrings", testArray_TwoStrings),
-                ("testArray_ArrayOfArrays", testArray_ArrayOfArrays),
-                ("testPerf_LargeArray", testPerf_LargeArray)
+                ("testArray_ArrayOfArrays", testArray_ArrayOfArrays)
             ]
         }
     }

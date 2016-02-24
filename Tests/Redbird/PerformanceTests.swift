@@ -13,7 +13,8 @@ import XCTest
 //    extension PerformanceTests: XCTestCaseProvider {
 //        var allTests : [(String, () throws -> Void)] {
 //            return [
-//                ("testPerf_ParsingArray_Normal", testPerf_ParsingArray_Normal)
+//                ("testPerf_ParsingArray_Normal", testPerf_ParsingArray_Normal),
+//                ("testPerf_LargeArray", testPerf_LargeArray)
 //            ]
 //        }
 //    }
