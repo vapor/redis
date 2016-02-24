@@ -25,6 +25,9 @@ extension Parser {
         
         let leftToRead = min - alreadyRead.count
         let readChars = try reader.read(leftToRead)
+        guard readChars.count > 0 else {
+            throw RedbirdError.NoDataFromSocket
+        }
         guard readChars.count == leftToRead else {
             throw RedbirdError.NotEnoughCharactersToReadFromSocket(leftToRead, alreadyRead)
         }

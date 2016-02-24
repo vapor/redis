@@ -58,10 +58,21 @@ public struct SocketError : ErrorType, CustomStringConvertible {
     }
 }
 
-class ClientSocket {
+protocol Socket: SocketReader {
+    func write(string: String) throws
+    func read(bytes: Int) throws -> [CChar]
+    static func newWithConfig(config: RedbirdConfig) throws -> Socket
+}
+
+extension Socket {
+    func read() throws -> [CChar] {
+        return try self.read(BufferCapacity)
+    }
+}
+
+class ClientSocket: Socket {
     
     typealias Descriptor = Int32
-    typealias Port = UInt16
     
     private let descriptor: Descriptor
     
@@ -80,6 +91,10 @@ class ClientSocket {
 
     deinit {
         self.disconnect()
+    }
+    
+    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+        return try ClientSocket(address: config.address, port: config.port)
     }
     
     //MARK: Actual functionality

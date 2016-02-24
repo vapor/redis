@@ -47,26 +47,28 @@ class RedbirdTests: XCTestCase {
         }
     }
     
-    func testServersideKilledSocket() {
-        liveShouldThrow { (client) in
+    func testServersideKilledSocket_Reconnected() {
+        live { (client) in
             
             //kill our connection, simulating e.g. server disconnecting us/crashing
             try client.command("CLIENT", params: ["KILL", "SKIPME", "NO"])
             
-            //try to ping, expected to throw
-            _ = try client.command("PING")
+            //try to ping, expected to reconnect
+            let resp = try client.command("PING")
+            XCTAssertEqual(try? resp.toString(), "PONG")
         }
     }
     
     func testServersideTimeout() {
-        liveShouldThrow { (client) in
+        live { (client) in
             
             //set timeout to 1 sec
             try client.command("CONFIG", params: ["SET", "timeout", "1"])
             sleep(2)
             
-            //try to ping, expected to throw
-            _ = try client.command("PING")
+            //try to ping, expected to reconnect
+            let resp = try client.command("PING")
+            XCTAssertEqual(try? resp.toString(), "PONG")
         }
     }
     
@@ -120,6 +122,106 @@ class RedbirdTests: XCTestCase {
         }
     }
 
+    func shouldThrow(@noescape block: () throws -> ()) {
+        do {
+            try block()
+            XCTFail("Should have thrown")
+        } catch {
+            //all good
+        }
+    }
+    
+    func testCommandReconnectFailsOnFailed() {
+        
+        let socket = DeadSocket()
+        let client = Redbird(config: RedbirdConfig(), socket: socket)
+        
+        //dead socket, fails both times
+        shouldThrow {
+            try client.command("PING")
+        }
+    }
+    
+    func testPipelineReconnectFailsOnFailed() {
+        
+        let socket = DeadSocket()
+        let client = Redbird(config: RedbirdConfig(), socket: socket)
+        
+        //dead socket, fails both times
+        shouldThrow {
+            try client.pipeline().enqueue("PING").execute()
+        }
+    }
+    
+    func testCommandReconnectSucceedsTheSecondTime() {
+        
+        let socket = ReconnectableSocket()
+        let client = Redbird(config: RedbirdConfig(), socket: socket)
+        
+        //reconnects
+        let resp = try! client.command("PING")
+        XCTAssertEqual(try? resp.toString(), "PONG")
+    }
+    
+    func testPipelineReconnectSucceedsTheSecondTime() {
+        
+        let socket = ReconnectableSocket()
+        let client = Redbird(config: RedbirdConfig(), socket: socket)
+        
+        //reconnects
+        let resp = try! client.pipeline().enqueue("PING").execute()
+        XCTAssertEqual(try? resp.first!.toString(), "PONG")
+    }
 
     
 }
+
+class GoodSocket: Socket {
+    
+    let testReader: TestReader = TestReader(content: "+PONG\r\n")
+    
+    func write(string: String) throws {
+        //
+    }
+    
+    func read(bytes: Int) throws -> [CChar] {
+        return try self.testReader.read(bytes)
+    }
+    
+    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+        return GoodSocket()
+    }
+}
+
+class DeadSocket: Socket {
+    
+    func write(string: String) throws {
+        //
+    }
+    
+    func read(bytes: Int) throws -> [CChar] {
+        return []
+    }
+    
+    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+        return DeadSocket()
+    }
+}
+
+class ReconnectableSocket: Socket {
+    
+    func write(string: String) throws {
+        //
+    }
+    
+    func read(bytes: Int) throws -> [CChar] {
+        return []
+    }
+    
+    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+        return GoodSocket()
+    }
+}
+
+
+

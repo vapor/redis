@@ -6,20 +6,58 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
+public struct RedbirdConfig {
+    var address: String
+    var port: Int
+    var password: String?
+    
+    init(address: String = "127.0.0.1", port: Int = 6379, password: String? = nil) {
+        self.address = address
+        self.port = port
+        self.password = password
+    }
+}
+
 ///Redis client object
 public class Redbird {
     
-    let socket: ClientSocket
+    private(set) var socket: Socket
+    let config: RedbirdConfig
 
-    public var address: String { return self.socket.address }
-    public var port: Int { return self.socket.port }
+    public var address: String { return self.config.address }
+    public var port: Int { return self.config.port }
     
-    public init(address: String = "127.0.0.1", port: Int = 6379) throws {
+    public init(config: RedbirdConfig = RedbirdConfig()) throws {
 		
-        self.socket = try ClientSocket(address: address, port: port)
+        self.config = config
+        self.socket = try Redbird.createSocket(ClientSocket.self, config: config)
+        try self.preflight()
 	}
     
-    init(socket: ClientSocket) {
+    private static func createSocket(socketType: Socket.Type, config: RedbirdConfig) throws -> Socket {
+        
+        let socket: Socket
+        do {
+            socket = try socketType.newWithConfig(config)
+        } catch {
+            throw RedbirdError.FailedToCreateSocket(error)
+        }
+        return socket
+    }
+    
+    private func preflight() throws {
+        try self.authIfNeeded()
+    }
+    
+    private func authIfNeeded() throws {
+        //if we have a password, immediately try to authenticate
+        if let password = self.config.password {
+            try self.auth(password: password)
+        }
+    }
+    
+    init(config: RedbirdConfig, socket: Socket) {
+        self.config = config
         self.socket = socket
     }
     
@@ -36,33 +74,56 @@ public class Redbird {
         return formatted
     }
     
+    func handleComms(@noescape comms: () throws -> ()) throws {
+        //we inspect all thrown errors and try to handle certain ones
+        do {
+            try comms()
+        } catch RedbirdError.NoDataFromSocket {
+            
+            //try to reconnect with a new socket
+            self.socket = try Redbird.createSocket(self.socket.dynamicType, config: self.config)
+            try self.preflight()
+            
+            //rerun this command
+            try comms()
+        }
+    }
+    
     public func command(name: String, params: [String] = []) throws -> RespObject {
         
         let formatted = try self.formatCommand(name, params: params)
+        var ret: RespObject?
         
-        //send the command string
-        try self.socket.write(formatted)
-
-        //delegate reading to parsers
-        let reader: SocketReader = self.socket
-        
-        //try to parse the string into a Resp object, fail if no parser accepts it
-        let (responseObject, _) = try InitialParser().parse([], reader: reader)
-        
-        //TODO: read up on whether potential leftover characters from
-        //parsing should be treated as error or not, for now ignore them.
-        
-        return responseObject
+        try self.handleComms {
+            
+            //send the command string
+            try self.socket.write(formatted)
+            
+            //delegate reading to parsers
+            let reader: SocketReader = self.socket
+            
+            //try to parse the string into a Resp object, fail if no parser accepts it
+            let (responseObject, _) = try InitialParser().parse([], reader: reader)
+            
+            //TODO: read up on whether potential leftover characters from
+            //parsing should be treated as error or not, for now ignore them.
+            ret = responseObject
+        }
+        return ret!
     }
     
     public func pipeline() -> Pipeline {
-        return Pipeline(socket: self.socket)
+        return Pipeline(config: self.config, socket: self.socket)
     }
 }
 
 public class Pipeline: Redbird {
     
     private var commands = [String]()
+    
+    public override func command(name: String, params: [String]) throws -> RespObject {
+        fatalError("You must call enqueue on a Pipeline instance")
+    }
     
     public func enqueue(name: String, params: [String] = []) throws -> Pipeline {
         let formatted = try self.formatCommand(name, params: params)
@@ -75,22 +136,27 @@ public class Pipeline: Redbird {
             throw RedbirdError.PipelineNoCommandProvided
         }
         let formatted = self.commands.reduce("", combine: +)
+        var ret: [RespObject]?
         
-        //send the command string
-        try self.socket.write(formatted)
-        
-        //delegate reading to parsers
-        let reader: SocketReader = self.socket
-
-        var leftovers = [CChar]()
-        var responses = [RespObject]()
-        for _ in self.commands {
-            //try to parse the string into a Resp object, fail if no parser accepts it
-            let (responseObject, los) = try InitialParser().parse(leftovers, reader: reader)
-            leftovers = los
-            responses.append(responseObject)
+        try self.handleComms {
+            
+            //send the command string
+            try self.socket.write(formatted)
+            
+            //delegate reading to parsers
+            let reader: SocketReader = self.socket
+            
+            var leftovers = [CChar]()
+            var responses = [RespObject]()
+            for _ in self.commands {
+                //try to parse the string into a Resp object, fail if no parser accepts it
+                let (responseObject, los) = try InitialParser().parse(leftovers, reader: reader)
+                leftovers = los
+                responses.append(responseObject)
+            }
+            ret = responses
         }
-        return responses
+        return ret!
     }
 }
 
