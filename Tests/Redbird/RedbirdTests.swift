@@ -9,6 +9,12 @@
 import XCTest
 @testable import Redbird
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
+
 func assertNoThrow(@noescape block: () throws -> ()) {
     do {
         try block()

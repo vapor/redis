@@ -44,6 +44,22 @@ class PerformanceTests: XCTestCase {
             let (_, _) = try! InitialParser().parse([], reader: reader)
         }
     }
+    
+    func testPerf_LargeArray() {
+        let subinput: [RespObject] = [
+            RespBulkString(content: "large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here"),
+            try! RespInteger(content: "1234567"),
+            RespError(content: "ERR Something went mildly wrong"),
+            RespNullArray(),
+            try! RespSimpleString(content: "Jokes"),
+            RespNullBulkString()
+        ]
+        let content: [RespObject] = Array(1..<100).map { _ in RespArray(content: subinput) }
+        let input = RespArray(content: content)
+        measureBlock {
+            _ = try! InitialFormatter().format(input)
+        }
+    }
 
 }
 #endif
