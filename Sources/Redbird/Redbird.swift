@@ -30,20 +30,9 @@ public class Redbird {
     public init(config: RedbirdConfig = RedbirdConfig()) throws {
 		
         self.config = config
-        self.socket = try Redbird.createSocket(ClientSocket.self, config: config)
+        self.socket = try ClientSocket(address: config.address, port: config.port)
         try self.preflight()
 	}
-    
-    private static func createSocket(socketType: Socket.Type, config: RedbirdConfig) throws -> Socket {
-        
-        let socket: Socket
-        do {
-            socket = try socketType.newWithConfig(config)
-        } catch {
-            throw RedbirdError.FailedToCreateSocket(error)
-        }
-        return socket
-    }
     
     private func preflight() throws {
         try self.authIfNeeded()
@@ -81,7 +70,7 @@ public class Redbird {
         } catch RedbirdError.NoDataFromSocket {
             
             //try to reconnect with a new socket
-            self.socket = try Redbird.createSocket(self.socket.dynamicType, config: self.config)
+            self.socket = try self.socket.newWithConfig(self.config)
             try self.preflight()
             
             //rerun this command

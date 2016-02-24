@@ -214,7 +214,7 @@ class GoodSocket: Socket {
         return try self.testReader.read(bytes)
     }
     
-    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+    func newWithConfig(config: RedbirdConfig) throws -> Socket {
         return GoodSocket()
     }
 }
@@ -229,7 +229,7 @@ class DeadSocket: Socket {
         return []
     }
     
-    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+    func newWithConfig(config: RedbirdConfig) throws -> Socket {
         return DeadSocket()
     }
 }
@@ -244,7 +244,7 @@ class ReconnectableSocket: Socket {
         return []
     }
     
-    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+    func newWithConfig(config: RedbirdConfig) throws -> Socket {
         return GoodSocket()
     }
 }

@@ -58,10 +58,10 @@ public struct SocketError : ErrorType, CustomStringConvertible {
     }
 }
 
-protocol Socket: SocketReader {
+protocol Socket: class, SocketReader {
     func write(string: String) throws
     func read(bytes: Int) throws -> [CChar]
-    static func newWithConfig(config: RedbirdConfig) throws -> Socket
+    func newWithConfig(config: RedbirdConfig) throws -> Socket
 }
 
 extension Socket {
@@ -93,7 +93,7 @@ class ClientSocket: Socket {
         self.disconnect()
     }
     
-    static func newWithConfig(config: RedbirdConfig) throws -> Socket {
+    func newWithConfig(config: RedbirdConfig) throws -> Socket {
         return try ClientSocket(address: config.address, port: config.port)
     }
     

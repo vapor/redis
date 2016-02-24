@@ -15,9 +15,9 @@
             hideIssues = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3A96DE691C7E5EFB0000535A"
-               BuildableName = "Redbird.framework"
-               BlueprintName = "Redbird"
+               BlueprintIdentifier = "3A4B6D5D1C6BDC79001E1469"
+               BuildableName = "RedbirdExe"
+               BlueprintName = "RedbirdExe"
                ReferencedContainer = "container:Redbird.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,6 +30,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "3A4B6D5D1C6BDC79001E1469"
+            BuildableName = "RedbirdExe"
+            BlueprintName = "RedbirdExe"
+            ReferencedContainer = "container:Redbird.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -43,15 +52,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3A96DE691C7E5EFB0000535A"
-            BuildableName = "Redbird.framework"
-            BlueprintName = "Redbird"
+            BlueprintIdentifier = "3A4B6D5D1C6BDC79001E1469"
+            BuildableName = "RedbirdExe"
+            BlueprintName = "RedbirdExe"
             ReferencedContainer = "container:Redbird.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -61,15 +71,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3A96DE691C7E5EFB0000535A"
-            BuildableName = "Redbird.framework"
-            BlueprintName = "Redbird"
+            BlueprintIdentifier = "3A4B6D5D1C6BDC79001E1469"
+            BuildableName = "RedbirdExe"
+            BlueprintName = "RedbirdExe"
             ReferencedContainer = "container:Redbird.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
