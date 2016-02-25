@@ -38,7 +38,8 @@ Create a Redbird instance, which opens a socket to the specified Redis server. T
 
 ```swift
 do {
-	let client = try Redbird(config: RedbirdConfig(address: "127.0.0.1", port: 6379, password: "foopass"))
+	let config = RedbirdConfig(address: "127.0.0.1", port: 6379, password: "foopass")
+	let client = try Redbird(config: config)
 	let response = try client.command("SET", params: ["mykey", "hello_redis"]).toString() //"OK"
 } catch {
 	print("Redis error: \(error)")
