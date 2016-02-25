@@ -67,7 +67,25 @@ public class Redbird {
         //we inspect all thrown errors and try to handle certain ones
         do {
             try comms()
-        } catch RedbirdError.NoDataFromSocket {
+        } catch {
+            
+            var retry = false
+            if case RedbirdError.NoDataFromSocket = error {
+                retry = true
+            }
+            if let e = error as? SocketError {
+                switch e.type {
+                case .WriteFailedToSendAllBytes: fallthrough
+                case .ReadFailed:
+                    retry = true
+                default: break
+                }
+            }
+            
+            guard retry else { throw error } //rethrow
+            
+            //first close the old socket properly
+            self.socket.close()
             
             //try to reconnect with a new socket
             self.socket = try self.socket.newWithConfig(self.config)
