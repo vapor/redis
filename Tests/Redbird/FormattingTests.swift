@@ -7,6 +7,28 @@
 //
 
 import XCTest
+@testable import Redbird
+
+#if os(Linux)
+    extension FormattingTests: XCTestCaseProvider {
+        var allTests : [(String, () throws -> Void)] {
+            return [
+                ("testInitialFormatter_Integer", testInitialFormatter_Integer),
+                ("testError", testError),
+                ("testSimpleString", testSimpleString),
+                ("testInteger", testInteger),
+                ("testBulkString_Normal", testBulkString_Normal),
+                ("testBulkString_Empty", testBulkString_Empty),
+                ("testBulkString_Null", testBulkString_Null),
+                ("testArray_Normal", testArray_Normal),
+                ("testArray_Empty", testArray_Empty),
+                ("testArray_Null", testArray_Null),
+                ("testArray_TwoStrings", testArray_TwoStrings),
+                ("testArray_ArrayOfArrays", testArray_ArrayOfArrays)
+            ]
+        }
+    }
+#endif
 
 class FormattingTests: XCTestCase {
 
@@ -115,21 +137,5 @@ class FormattingTests: XCTestCase {
         let obj = RespArray(content: input)
         let str = try! InitialFormatter().format(obj)
         XCTAssertEqual(str, "*2\r\n*3\r\n:1\r\n:2\r\n:3\r\n*2\r\n+Foo\r\n-Bar\r\n")
-    }
-    
-    func testPerf_LargeArray() {
-        let subinput: [RespObject] = [
-            RespBulkString(content: "large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here, large text right here"),
-            try! RespInteger(content: "1234567"),
-            RespError(content: "ERR Something went mildly wrong"),
-            RespNullArray(),
-            try! RespSimpleString(content: "Jokes"),
-            RespNullBulkString()
-        ]
-        let content: [RespObject] = Array(1..<100).map { _ in RespArray(content: subinput) }
-        let input = RespArray(content: content)
-        measureBlock {
-            _ = try! InitialFormatter().format(input)
-        }
     }
 }

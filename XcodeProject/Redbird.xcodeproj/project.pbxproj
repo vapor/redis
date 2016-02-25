@@ -7,86 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A0C1E6A1C6F9FB900201A9D /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5D1C6F9FB900201A9D /* Array.swift */; };
-		3A0C1E6B1C6F9FB900201A9D /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */; };
-		3A0C1E6C1C6F9FB900201A9D /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */; };
-		3A0C1E6D1C6F9FB900201A9D /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E601C6F9FB900201A9D /* Error.swift */; };
-		3A0C1E6E1C6F9FB900201A9D /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E611C6F9FB900201A9D /* Errors.swift */; };
-		3A0C1E6F1C6F9FB900201A9D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E621C6F9FB900201A9D /* Extensions.swift */; };
-		3A0C1E701C6F9FB900201A9D /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E631C6F9FB900201A9D /* Formatters.swift */; };
-		3A0C1E711C6F9FB900201A9D /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E641C6F9FB900201A9D /* Integer.swift */; };
-		3A0C1E721C6F9FB900201A9D /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E651C6F9FB900201A9D /* Null.swift */; };
-		3A0C1E731C6F9FB900201A9D /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E661C6F9FB900201A9D /* Parsers.swift */; };
-		3A0C1E741C6F9FB900201A9D /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E671C6F9FB900201A9D /* Redbird.swift */; };
-		3A0C1E751C6F9FB900201A9D /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E681C6F9FB900201A9D /* SimpleString.swift */; };
-		3A0C1E761C6F9FB900201A9D /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
 		3A0C1E781C6F9FFB00201A9D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E771C6F9FFB00201A9D /* main.swift */; };
-		3A0C1E791C6FA04800201A9D /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5D1C6F9FB900201A9D /* Array.swift */; };
-		3A0C1E7A1C6FA04800201A9D /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */; };
-		3A0C1E7B1C6FA04800201A9D /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */; };
-		3A0C1E7C1C6FA04800201A9D /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E601C6F9FB900201A9D /* Error.swift */; };
-		3A0C1E7D1C6FA04800201A9D /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E611C6F9FB900201A9D /* Errors.swift */; };
-		3A0C1E7E1C6FA04800201A9D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E621C6F9FB900201A9D /* Extensions.swift */; };
-		3A0C1E7F1C6FA04800201A9D /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E631C6F9FB900201A9D /* Formatters.swift */; };
-		3A0C1E801C6FA04800201A9D /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E641C6F9FB900201A9D /* Integer.swift */; };
-		3A0C1E811C6FA04800201A9D /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E651C6F9FB900201A9D /* Null.swift */; };
-		3A0C1E821C6FA04800201A9D /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E661C6F9FB900201A9D /* Parsers.swift */; };
-		3A0C1E831C6FA04800201A9D /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E671C6F9FB900201A9D /* Redbird.swift */; };
-		3A0C1E841C6FA04800201A9D /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E681C6F9FB900201A9D /* SimpleString.swift */; };
-		3A0C1E851C6FA04800201A9D /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
-		3A0C1E871C6FA9E800201A9D /* RedbirdExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */; };
-		3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED061C6C17330095A34C /* FormattingTests.swift */; };
-		3A7015BA1C6FF091001C9511 /* ConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7015B91C6FF091001C9511 /* ConversionTests.swift */; };
-		3A9259471C70EE7E00C65A9C /* RedbirdExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */; };
-		3A9259481C70EE7F00C65A9C /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5D1C6F9FB900201A9D /* Array.swift */; };
-		3A9259491C70EE7F00C65A9C /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */; };
-		3A92594A1C70EE7F00C65A9C /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */; };
-		3A92594B1C70EE7F00C65A9C /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E601C6F9FB900201A9D /* Error.swift */; };
-		3A92594C1C70EE7F00C65A9C /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E611C6F9FB900201A9D /* Errors.swift */; };
-		3A92594D1C70EE7F00C65A9C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E621C6F9FB900201A9D /* Extensions.swift */; };
-		3A92594E1C70EE7F00C65A9C /* ExternalTypeConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */; };
-		3A92594F1C70EE7F00C65A9C /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E631C6F9FB900201A9D /* Formatters.swift */; };
-		3A9259501C70EE7F00C65A9C /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E641C6F9FB900201A9D /* Integer.swift */; };
-		3A9259511C70EE7F00C65A9C /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E651C6F9FB900201A9D /* Null.swift */; };
-		3A9259521C70EE7F00C65A9C /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E661C6F9FB900201A9D /* Parsers.swift */; };
-		3A9259531C70EE7F00C65A9C /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E671C6F9FB900201A9D /* Redbird.swift */; };
-		3A9259541C70EE7F00C65A9C /* RedbirdExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */; };
-		3A9259551C70EE7F00C65A9C /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E681C6F9FB900201A9D /* SimpleString.swift */; };
-		3A9259561C70EE7F00C65A9C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
-		3A9259631C70EEE000C65A9C /* ConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7015B91C6FF091001C9511 /* ConversionTests.swift */; };
-		3A9259641C70EEE000C65A9C /* FormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED061C6C17330095A34C /* FormattingTests.swift */; };
-		3A9259651C70EEE000C65A9C /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */; };
-		3A9259661C70EEE000C65A9C /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */; };
-		3A9259671C70EEE000C65A9C /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */; };
-		3A9259681C70EEE000C65A9C /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5D1C6F9FB900201A9D /* Array.swift */; };
-		3A9259691C70EEE000C65A9C /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */; };
-		3A92596A1C70EEE000C65A9C /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */; };
-		3A92596B1C70EEE000C65A9C /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E601C6F9FB900201A9D /* Error.swift */; };
-		3A92596C1C70EEE000C65A9C /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E611C6F9FB900201A9D /* Errors.swift */; };
-		3A92596D1C70EEE000C65A9C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E621C6F9FB900201A9D /* Extensions.swift */; };
-		3A92596E1C70EEE000C65A9C /* ExternalTypeConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */; };
-		3A92596F1C70EEE000C65A9C /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E631C6F9FB900201A9D /* Formatters.swift */; };
-		3A9259701C70EEE000C65A9C /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E641C6F9FB900201A9D /* Integer.swift */; };
-		3A9259711C70EEE000C65A9C /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E651C6F9FB900201A9D /* Null.swift */; };
-		3A9259721C70EEE000C65A9C /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E661C6F9FB900201A9D /* Parsers.swift */; };
-		3A9259731C70EEE000C65A9C /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E671C6F9FB900201A9D /* Redbird.swift */; };
-		3A9259741C70EEE000C65A9C /* RedbirdExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */; };
-		3A9259751C70EEE000C65A9C /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E681C6F9FB900201A9D /* SimpleString.swift */; };
-		3A9259761C70EEE000C65A9C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
-		3A9259771C70EEE000C65A9C /* ConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7015B91C6FF091001C9511 /* ConversionTests.swift */; };
-		3A9259781C70EEE000C65A9C /* FormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61ED061C6C17330095A34C /* FormattingTests.swift */; };
-		3A9259791C70EEE000C65A9C /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */; };
-		3A92597A1C70EEE000C65A9C /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */; };
-		3A92597B1C70EEE000C65A9C /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */; };
-		3AACBA0C1C7260A600EA5BCB /* teststring.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3AACBA0B1C7260A600EA5BCB /* teststring.txt */; };
-		3AACBA0D1C7260AB00EA5BCB /* teststring.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3AACBA0B1C7260A600EA5BCB /* teststring.txt */; };
-		3AACBA0E1C7260AB00EA5BCB /* teststring.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3AACBA0B1C7260A600EA5BCB /* teststring.txt */; };
-		3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */; };
-		3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */; };
-		3AFD5E5B1C6BFD2B0083B467 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */; };
-		3AFDE20D1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */; };
-		3AFDE20E1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */; };
+		3A96DE571C7E5DD00000535A /* ConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96DE511C7E5DD00000535A /* ConversionTests.swift */; };
+		3A96DE581C7E5DD00000535A /* FormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96DE521C7E5DD00000535A /* FormattingTests.swift */; };
+		3A96DE591C7E5DD00000535A /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96DE531C7E5DD00000535A /* ParsingTests.swift */; };
+		3A96DE5A1C7E5DD00000535A /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96DE541C7E5DD00000535A /* RedbirdTests.swift */; };
+		3A96DE5B1C7E5DD00000535A /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96DE551C7E5DD00000535A /* StringTests.swift */; };
+		3A96DE5C1C7E5DD00000535A /* teststring.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3A96DE561C7E5DD00000535A /* teststring.txt */; };
+		3A96DE621C7E5E2E0000535A /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96DE611C7E5E2E0000535A /* PerformanceTests.swift */; };
+		3A96DE6D1C7E5EFC0000535A /* Redbird.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A96DE6C1C7E5EFC0000535A /* Redbird.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A96DE721C7E5F080000535A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5D1C6F9FB900201A9D /* Array.swift */; };
+		3A96DE731C7E5F080000535A /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */; };
+		3A96DE741C7E5F080000535A /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */; };
+		3A96DE751C7E5F080000535A /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E601C6F9FB900201A9D /* Error.swift */; };
+		3A96DE761C7E5F080000535A /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E611C6F9FB900201A9D /* Errors.swift */; };
+		3A96DE771C7E5F080000535A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E621C6F9FB900201A9D /* Extensions.swift */; };
+		3A96DE781C7E5F080000535A /* ExternalTypeConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */; };
+		3A96DE791C7E5F080000535A /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E631C6F9FB900201A9D /* Formatters.swift */; };
+		3A96DE7A1C7E5F080000535A /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E641C6F9FB900201A9D /* Integer.swift */; };
+		3A96DE7B1C7E5F080000535A /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E651C6F9FB900201A9D /* Null.swift */; };
+		3A96DE7C1C7E5F080000535A /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E661C6F9FB900201A9D /* Parsers.swift */; };
+		3A96DE7D1C7E5F080000535A /* Redbird.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E671C6F9FB900201A9D /* Redbird.swift */; };
+		3A96DE7E1C7E5F080000535A /* RedbirdExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */; };
+		3A96DE7F1C7E5F080000535A /* SimpleString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E681C6F9FB900201A9D /* SimpleString.swift */; };
+		3A96DE801C7E5F080000535A /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C1E691C6F9FB900201A9D /* Types.swift */; };
+		3A96DE841C7E5F560000535A /* Redbird.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A96DE6A1C7E5EFB0000535A /* Redbird.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3A96DE821C7E5F520000535A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A4B6D561C6BDC79001E1469 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A96DE691C7E5EFB0000535A;
+			remoteInfo = Redbird;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		3A4B6D5C1C6BDC79001E1469 /* CopyFiles */ = {
@@ -116,19 +72,21 @@
 		3A0C1E691C6F9FB900201A9D /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Types.swift; path = ../Sources/Redbird/Types.swift; sourceTree = SOURCE_ROOT; };
 		3A0C1E771C6F9FFB00201A9D /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = ../Sources/RedbirdExample/main.swift; sourceTree = SOURCE_ROOT; };
 		3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RedbirdExtensions.swift; path = ../Sources/Redbird/RedbirdExtensions.swift; sourceTree = SOURCE_ROOT; };
-		3A4B6D5E1C6BDC79001E1469 /* Redbird */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Redbird; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A61ED061C6C17330095A34C /* FormattingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FormattingTests.swift; path = ../../Tests/FormattingTests.swift; sourceTree = "<group>"; };
-		3A7015B91C6FF091001C9511 /* ConversionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversionTests.swift; path = ../../Tests/ConversionTests.swift; sourceTree = "<group>"; };
-		3A92593F1C70EE7100C65A9C /* RedbirdTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RedbirdTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A4B6D5E1C6BDC79001E1469 /* RedbirdExe */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RedbirdExe; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9259431C70EE7100C65A9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3A92595B1C70EED100C65A9C /* RedbirdTests-tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RedbirdTests-tvOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A92595F1C70EED100C65A9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3AACBA0B1C7260A600EA5BCB /* teststring.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = teststring.txt; path = ../../Tests/teststring.txt; sourceTree = "<group>"; };
+		3A96DE511C7E5DD00000535A /* ConversionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversionTests.swift; path = ../../Tests/Redbird/ConversionTests.swift; sourceTree = "<group>"; };
+		3A96DE521C7E5DD00000535A /* FormattingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FormattingTests.swift; path = ../../Tests/Redbird/FormattingTests.swift; sourceTree = "<group>"; };
+		3A96DE531C7E5DD00000535A /* ParsingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParsingTests.swift; path = ../../Tests/Redbird/ParsingTests.swift; sourceTree = "<group>"; };
+		3A96DE541C7E5DD00000535A /* RedbirdTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RedbirdTests.swift; path = ../../Tests/Redbird/RedbirdTests.swift; sourceTree = "<group>"; };
+		3A96DE551C7E5DD00000535A /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringTests.swift; path = ../../Tests/Redbird/StringTests.swift; sourceTree = "<group>"; };
+		3A96DE561C7E5DD00000535A /* teststring.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = teststring.txt; path = ../../Tests/Redbird/teststring.txt; sourceTree = "<group>"; };
+		3A96DE611C7E5E2E0000535A /* PerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PerformanceTests.swift; path = ../../Tests/Redbird/PerformanceTests.swift; sourceTree = "<group>"; };
+		3A96DE6A1C7E5EFB0000535A /* Redbird.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Redbird.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A96DE6C1C7E5EFC0000535A /* Redbird.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Redbird.h; sourceTree = "<group>"; };
+		3A96DE6E1C7E5EFC0000535A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3AFD5E3F1C6BF4390083B467 /* RedbirdTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedbirdTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RedbirdTests.swift; path = ../Tests/RedbirdTests.swift; sourceTree = SOURCE_ROOT; };
 		3AFD5E431C6BF4390083B467 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParsingTests.swift; path = ../../Tests/ParsingTests.swift; sourceTree = "<group>"; };
-		3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringTests.swift; path = ../../Tests/StringTests.swift; sourceTree = "<group>"; };
 		3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExternalTypeConversions.swift; path = ../Sources/Redbird/ExternalTypeConversions.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -140,14 +98,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A92593C1C70EE7100C65A9C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A9259581C70EED100C65A9C /* Frameworks */ = {
+		3A96DE661C7E5EFB0000535A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -158,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A96DE841C7E5F560000535A /* Redbird.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +123,7 @@
 				3AFD5E401C6BF4390083B467 /* RedbirdTests */,
 				3A9259401C70EE7100C65A9C /* RedbirdTests-iOS */,
 				3A92595C1C70EED100C65A9C /* RedbirdTests-tvOS */,
+				3A96DE6B1C7E5EFC0000535A /* Redbird */,
 				3A4B6D5F1C6BDC79001E1469 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -178,10 +131,9 @@
 		3A4B6D5F1C6BDC79001E1469 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A4B6D5E1C6BDC79001E1469 /* Redbird */,
+				3A4B6D5E1C6BDC79001E1469 /* RedbirdExe */,
 				3AFD5E3F1C6BF4390083B467 /* RedbirdTests.xctest */,
-				3A92593F1C70EE7100C65A9C /* RedbirdTests-iOS.xctest */,
-				3A92595B1C70EED100C65A9C /* RedbirdTests-tvOS.xctest */,
+				3A96DE6A1C7E5EFB0000535A /* Redbird.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,22 +141,8 @@
 		3A4B6D601C6BDC79001E1469 /* Redbird */ = {
 			isa = PBXGroup;
 			children = (
-				3A0C1E5D1C6F9FB900201A9D /* Array.swift */,
-				3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */,
-				3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */,
-				3A0C1E601C6F9FB900201A9D /* Error.swift */,
-				3A0C1E611C6F9FB900201A9D /* Errors.swift */,
-				3A0C1E621C6F9FB900201A9D /* Extensions.swift */,
-				3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */,
-				3A0C1E631C6F9FB900201A9D /* Formatters.swift */,
-				3A0C1E641C6F9FB900201A9D /* Integer.swift */,
 				3A0C1E771C6F9FFB00201A9D /* main.swift */,
-				3A0C1E651C6F9FB900201A9D /* Null.swift */,
-				3A0C1E661C6F9FB900201A9D /* Parsers.swift */,
-				3A0C1E671C6F9FB900201A9D /* Redbird.swift */,
-				3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */,
-				3A0C1E681C6F9FB900201A9D /* SimpleString.swift */,
-				3A0C1E691C6F9FB900201A9D /* Types.swift */,
+				3A96DE811C7E5F150000535A /* Lib */,
 			);
 			path = Redbird;
 			sourceTree = "<group>";
@@ -225,26 +163,69 @@
 			path = "RedbirdTests-tvOS";
 			sourceTree = "<group>";
 		};
+		3A96DE6B1C7E5EFC0000535A /* Redbird */ = {
+			isa = PBXGroup;
+			children = (
+				3A96DE6C1C7E5EFC0000535A /* Redbird.h */,
+				3A96DE6E1C7E5EFC0000535A /* Info.plist */,
+			);
+			path = Redbird;
+			sourceTree = "<group>";
+		};
+		3A96DE811C7E5F150000535A /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				3A0C1E5D1C6F9FB900201A9D /* Array.swift */,
+				3A0C1E5E1C6F9FB900201A9D /* BulkString.swift */,
+				3A0C1E5F1C6F9FB900201A9D /* ClientSocket.swift */,
+				3A0C1E601C6F9FB900201A9D /* Error.swift */,
+				3A0C1E611C6F9FB900201A9D /* Errors.swift */,
+				3A0C1E621C6F9FB900201A9D /* Extensions.swift */,
+				3AFDE20C1C6FEB5E00975090 /* ExternalTypeConversions.swift */,
+				3A0C1E631C6F9FB900201A9D /* Formatters.swift */,
+				3A0C1E641C6F9FB900201A9D /* Integer.swift */,
+				3A0C1E651C6F9FB900201A9D /* Null.swift */,
+				3A0C1E661C6F9FB900201A9D /* Parsers.swift */,
+				3A0C1E671C6F9FB900201A9D /* Redbird.swift */,
+				3A0C1E861C6FA9E800201A9D /* RedbirdExtensions.swift */,
+				3A0C1E681C6F9FB900201A9D /* SimpleString.swift */,
+				3A0C1E691C6F9FB900201A9D /* Types.swift */,
+			);
+			name = Lib;
+			sourceTree = "<group>";
+		};
 		3AFD5E401C6BF4390083B467 /* RedbirdTests */ = {
 			isa = PBXGroup;
 			children = (
-				3AACBA0B1C7260A600EA5BCB /* teststring.txt */,
 				3AFD5E431C6BF4390083B467 /* Info.plist */,
-				3A7015B91C6FF091001C9511 /* ConversionTests.swift */,
-				3A61ED061C6C17330095A34C /* FormattingTests.swift */,
-				3AFD5E581C6BF5FE0083B467 /* ParsingTests.swift */,
-				3AFD5E411C6BF4390083B467 /* RedbirdTests.swift */,
-				3AFD5E5A1C6BFD2B0083B467 /* StringTests.swift */,
+				3A96DE511C7E5DD00000535A /* ConversionTests.swift */,
+				3A96DE521C7E5DD00000535A /* FormattingTests.swift */,
+				3A96DE531C7E5DD00000535A /* ParsingTests.swift */,
+				3A96DE611C7E5E2E0000535A /* PerformanceTests.swift */,
+				3A96DE541C7E5DD00000535A /* RedbirdTests.swift */,
+				3A96DE551C7E5DD00000535A /* StringTests.swift */,
+				3A96DE561C7E5DD00000535A /* teststring.txt */,
 			);
 			path = RedbirdTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		3A96DE671C7E5EFB0000535A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A96DE6D1C7E5EFC0000535A /* Redbird.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		3A4B6D5D1C6BDC79001E1469 /* Redbird */ = {
+		3A4B6D5D1C6BDC79001E1469 /* RedbirdExe */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A4B6D651C6BDC79001E1469 /* Build configuration list for PBXNativeTarget "Redbird" */;
+			buildConfigurationList = 3A4B6D651C6BDC79001E1469 /* Build configuration list for PBXNativeTarget "RedbirdExe" */;
 			buildPhases = (
 				3A4B6D5A1C6BDC79001E1469 /* Sources */,
 				3A4B6D5B1C6BDC79001E1469 /* Frameworks */,
@@ -254,44 +235,28 @@
 			);
 			dependencies = (
 			);
-			name = Redbird;
+			name = RedbirdExe;
 			productName = Redbird;
-			productReference = 3A4B6D5E1C6BDC79001E1469 /* Redbird */;
+			productReference = 3A4B6D5E1C6BDC79001E1469 /* RedbirdExe */;
 			productType = "com.apple.product-type.tool";
 		};
-		3A92593E1C70EE7100C65A9C /* RedbirdTests-iOS */ = {
+		3A96DE691C7E5EFB0000535A /* Redbird */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A9259461C70EE7100C65A9C /* Build configuration list for PBXNativeTarget "RedbirdTests-iOS" */;
+			buildConfigurationList = 3A96DE6F1C7E5EFC0000535A /* Build configuration list for PBXNativeTarget "Redbird" */;
 			buildPhases = (
-				3A92593B1C70EE7100C65A9C /* Sources */,
-				3A92593C1C70EE7100C65A9C /* Frameworks */,
-				3A92593D1C70EE7100C65A9C /* Resources */,
+				3A96DE651C7E5EFB0000535A /* Sources */,
+				3A96DE661C7E5EFB0000535A /* Frameworks */,
+				3A96DE671C7E5EFB0000535A /* Headers */,
+				3A96DE681C7E5EFB0000535A /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "RedbirdTests-iOS";
-			productName = "RedbirdTests-iOS";
-			productReference = 3A92593F1C70EE7100C65A9C /* RedbirdTests-iOS.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		3A92595A1C70EED100C65A9C /* RedbirdTests-tvOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3A9259601C70EED100C65A9C /* Build configuration list for PBXNativeTarget "RedbirdTests-tvOS" */;
-			buildPhases = (
-				3A9259571C70EED100C65A9C /* Sources */,
-				3A9259581C70EED100C65A9C /* Frameworks */,
-				3A9259591C70EED100C65A9C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "RedbirdTests-tvOS";
-			productName = "RedbirdTests-tvOS";
-			productReference = 3A92595B1C70EED100C65A9C /* RedbirdTests-tvOS.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
+			name = Redbird;
+			productName = Redbird;
+			productReference = 3A96DE6A1C7E5EFB0000535A /* Redbird.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		3AFD5E3E1C6BF4390083B467 /* RedbirdTests */ = {
 			isa = PBXNativeTarget;
@@ -304,6 +269,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3A96DE831C7E5F520000535A /* PBXTargetDependency */,
 			);
 			name = RedbirdTests;
 			productName = RedbirdTests;
@@ -323,10 +289,7 @@
 					3A4B6D5D1C6BDC79001E1469 = {
 						CreatedOnToolsVersion = 7.3;
 					};
-					3A92593E1C70EE7100C65A9C = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					3A92595A1C70EED100C65A9C = {
+					3A96DE691C7E5EFB0000535A = {
 						CreatedOnToolsVersion = 7.3;
 					};
 					3AFD5E3E1C6BF4390083B467 = {
@@ -346,28 +309,18 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3A4B6D5D1C6BDC79001E1469 /* Redbird */,
+				3A4B6D5D1C6BDC79001E1469 /* RedbirdExe */,
+				3A96DE691C7E5EFB0000535A /* Redbird */,
 				3AFD5E3E1C6BF4390083B467 /* RedbirdTests */,
-				3A92593E1C70EE7100C65A9C /* RedbirdTests-iOS */,
-				3A92595A1C70EED100C65A9C /* RedbirdTests-tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3A92593D1C70EE7100C65A9C /* Resources */ = {
+		3A96DE681C7E5EFB0000535A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AACBA0D1C7260AB00EA5BCB /* teststring.txt in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A9259591C70EED100C65A9C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3AACBA0E1C7260AB00EA5BCB /* teststring.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,7 +328,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AACBA0C1C7260A600EA5BCB /* teststring.txt in Resources */,
+				3A96DE5C1C7E5DD00000535A /* teststring.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,76 +339,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A0C1E6D1C6F9FB900201A9D /* Error.swift in Sources */,
-				3A0C1E6F1C6F9FB900201A9D /* Extensions.swift in Sources */,
-				3A0C1E6E1C6F9FB900201A9D /* Errors.swift in Sources */,
-				3A0C1E721C6F9FB900201A9D /* Null.swift in Sources */,
-				3A0C1E6B1C6F9FB900201A9D /* BulkString.swift in Sources */,
-				3A0C1E6C1C6F9FB900201A9D /* ClientSocket.swift in Sources */,
-				3AFDE20D1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */,
-				3A0C1E871C6FA9E800201A9D /* RedbirdExtensions.swift in Sources */,
-				3A0C1E6A1C6F9FB900201A9D /* Array.swift in Sources */,
-				3A0C1E711C6F9FB900201A9D /* Integer.swift in Sources */,
 				3A0C1E781C6F9FFB00201A9D /* main.swift in Sources */,
-				3A0C1E761C6F9FB900201A9D /* Types.swift in Sources */,
-				3A0C1E741C6F9FB900201A9D /* Redbird.swift in Sources */,
-				3A0C1E731C6F9FB900201A9D /* Parsers.swift in Sources */,
-				3A0C1E751C6F9FB900201A9D /* SimpleString.swift in Sources */,
-				3A0C1E701C6F9FB900201A9D /* Formatters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A92593B1C70EE7100C65A9C /* Sources */ = {
+		3A96DE651C7E5EFB0000535A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A92594A1C70EE7F00C65A9C /* ClientSocket.swift in Sources */,
-				3A9259491C70EE7F00C65A9C /* BulkString.swift in Sources */,
-				3A92594F1C70EE7F00C65A9C /* Formatters.swift in Sources */,
-				3A9259631C70EEE000C65A9C /* ConversionTests.swift in Sources */,
-				3A9259521C70EE7F00C65A9C /* Parsers.swift in Sources */,
-				3A92594B1C70EE7F00C65A9C /* Error.swift in Sources */,
-				3A92594C1C70EE7F00C65A9C /* Errors.swift in Sources */,
-				3A9259531C70EE7F00C65A9C /* Redbird.swift in Sources */,
-				3A9259651C70EEE000C65A9C /* ParsingTests.swift in Sources */,
-				3A9259671C70EEE000C65A9C /* StringTests.swift in Sources */,
-				3A9259511C70EE7F00C65A9C /* Null.swift in Sources */,
-				3A9259501C70EE7F00C65A9C /* Integer.swift in Sources */,
-				3A9259661C70EEE000C65A9C /* RedbirdTests.swift in Sources */,
-				3A9259551C70EE7F00C65A9C /* SimpleString.swift in Sources */,
-				3A9259561C70EE7F00C65A9C /* Types.swift in Sources */,
-				3A9259481C70EE7F00C65A9C /* Array.swift in Sources */,
-				3A92594E1C70EE7F00C65A9C /* ExternalTypeConversions.swift in Sources */,
-				3A9259541C70EE7F00C65A9C /* RedbirdExtensions.swift in Sources */,
-				3A9259641C70EEE000C65A9C /* FormattingTests.swift in Sources */,
-				3A92594D1C70EE7F00C65A9C /* Extensions.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A9259571C70EED100C65A9C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3A92596A1C70EEE000C65A9C /* ClientSocket.swift in Sources */,
-				3A9259691C70EEE000C65A9C /* BulkString.swift in Sources */,
-				3A92596F1C70EEE000C65A9C /* Formatters.swift in Sources */,
-				3A9259771C70EEE000C65A9C /* ConversionTests.swift in Sources */,
-				3A9259721C70EEE000C65A9C /* Parsers.swift in Sources */,
-				3A92596B1C70EEE000C65A9C /* Error.swift in Sources */,
-				3A92596C1C70EEE000C65A9C /* Errors.swift in Sources */,
-				3A9259731C70EEE000C65A9C /* Redbird.swift in Sources */,
-				3A9259791C70EEE000C65A9C /* ParsingTests.swift in Sources */,
-				3A92597B1C70EEE000C65A9C /* StringTests.swift in Sources */,
-				3A9259711C70EEE000C65A9C /* Null.swift in Sources */,
-				3A9259701C70EEE000C65A9C /* Integer.swift in Sources */,
-				3A92597A1C70EEE000C65A9C /* RedbirdTests.swift in Sources */,
-				3A9259751C70EEE000C65A9C /* SimpleString.swift in Sources */,
-				3A9259761C70EEE000C65A9C /* Types.swift in Sources */,
-				3A9259681C70EEE000C65A9C /* Array.swift in Sources */,
-				3A92596E1C70EEE000C65A9C /* ExternalTypeConversions.swift in Sources */,
-				3A9259741C70EEE000C65A9C /* RedbirdExtensions.swift in Sources */,
-				3A9259781C70EEE000C65A9C /* FormattingTests.swift in Sources */,
-				3A92596D1C70EEE000C65A9C /* Extensions.swift in Sources */,
+				3A96DE751C7E5F080000535A /* Error.swift in Sources */,
+				3A96DE771C7E5F080000535A /* Extensions.swift in Sources */,
+				3A96DE7C1C7E5F080000535A /* Parsers.swift in Sources */,
+				3A96DE801C7E5F080000535A /* Types.swift in Sources */,
+				3A96DE7B1C7E5F080000535A /* Null.swift in Sources */,
+				3A96DE7E1C7E5F080000535A /* RedbirdExtensions.swift in Sources */,
+				3A96DE791C7E5F080000535A /* Formatters.swift in Sources */,
+				3A96DE7A1C7E5F080000535A /* Integer.swift in Sources */,
+				3A96DE761C7E5F080000535A /* Errors.swift in Sources */,
+				3A96DE7F1C7E5F080000535A /* SimpleString.swift in Sources */,
+				3A96DE731C7E5F080000535A /* BulkString.swift in Sources */,
+				3A96DE7D1C7E5F080000535A /* Redbird.swift in Sources */,
+				3A96DE741C7E5F080000535A /* ClientSocket.swift in Sources */,
+				3A96DE781C7E5F080000535A /* ExternalTypeConversions.swift in Sources */,
+				3A96DE721C7E5F080000535A /* Array.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,30 +369,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A0C1E7C1C6FA04800201A9D /* Error.swift in Sources */,
-				3AFD5E421C6BF4390083B467 /* RedbirdTests.swift in Sources */,
-				3A0C1E821C6FA04800201A9D /* Parsers.swift in Sources */,
-				3A0C1E851C6FA04800201A9D /* Types.swift in Sources */,
-				3A0C1E7F1C6FA04800201A9D /* Formatters.swift in Sources */,
-				3A0C1E7B1C6FA04800201A9D /* ClientSocket.swift in Sources */,
-				3A9259471C70EE7E00C65A9C /* RedbirdExtensions.swift in Sources */,
-				3A0C1E791C6FA04800201A9D /* Array.swift in Sources */,
-				3AFD5E5B1C6BFD2B0083B467 /* StringTests.swift in Sources */,
-				3A0C1E801C6FA04800201A9D /* Integer.swift in Sources */,
-				3A0C1E831C6FA04800201A9D /* Redbird.swift in Sources */,
-				3A0C1E7E1C6FA04800201A9D /* Extensions.swift in Sources */,
-				3AFD5E591C6BF5FE0083B467 /* ParsingTests.swift in Sources */,
-				3AFDE20E1C6FEB5E00975090 /* ExternalTypeConversions.swift in Sources */,
-				3A0C1E7A1C6FA04800201A9D /* BulkString.swift in Sources */,
-				3A0C1E7D1C6FA04800201A9D /* Errors.swift in Sources */,
-				3A61ED071C6C17330095A34C /* FormattingTests.swift in Sources */,
-				3A0C1E841C6FA04800201A9D /* SimpleString.swift in Sources */,
-				3A7015BA1C6FF091001C9511 /* ConversionTests.swift in Sources */,
-				3A0C1E811C6FA04800201A9D /* Null.swift in Sources */,
+				3A96DE5A1C7E5DD00000535A /* RedbirdTests.swift in Sources */,
+				3A96DE5B1C7E5DD00000535A /* StringTests.swift in Sources */,
+				3A96DE591C7E5DD00000535A /* ParsingTests.swift in Sources */,
+				3A96DE571C7E5DD00000535A /* ConversionTests.swift in Sources */,
+				3A96DE621C7E5E2E0000535A /* PerformanceTests.swift in Sources */,
+				3A96DE581C7E5DD00000535A /* FormattingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3A96DE831C7E5F520000535A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A96DE691C7E5EFB0000535A /* Redbird */;
+			targetProxy = 3A96DE821C7E5F520000535A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3A4B6D631C6BDC79001E1469 /* Debug */ = {
@@ -590,72 +490,67 @@
 			};
 			name = Release;
 		};
-		3A9259441C70EE7100C65A9C /* Debug */ = {
+		3A96DE701C7E5EFC0000535A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = "RedbirdTests-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.honzadvorsky.RedbirdTests-iOS";
+				CLANG_ANALYZER_NONNULL = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Redbird/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.honzadvorsky.Redbird;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		3A9259451C70EE7100C65A9C /* Release */ = {
+		3A96DE711C7E5EFC0000535A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = "RedbirdTests-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.honzadvorsky.RedbirdTests-iOS";
+				CLANG_ANALYZER_NONNULL = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Redbird/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.honzadvorsky.Redbird;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		3A9259611C70EED100C65A9C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = "RedbirdTests-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.honzadvorsky.RedbirdTests-tvOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		3A9259621C70EED100C65A9C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = "RedbirdTests-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.honzadvorsky.RedbirdTests-tvOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-				VALIDATE_PRODUCT = YES;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
 		3AFD5E451C6BF4390083B467 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = RedbirdTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.honzadvorsky.RedbirdTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		3AFD5E461C6BF4390083B467 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = RedbirdTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -676,7 +571,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A4B6D651C6BDC79001E1469 /* Build configuration list for PBXNativeTarget "Redbird" */ = {
+		3A4B6D651C6BDC79001E1469 /* Build configuration list for PBXNativeTarget "RedbirdExe" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A4B6D661C6BDC79001E1469 /* Debug */,
@@ -685,23 +580,13 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A9259461C70EE7100C65A9C /* Build configuration list for PBXNativeTarget "RedbirdTests-iOS" */ = {
+		3A96DE6F1C7E5EFC0000535A /* Build configuration list for PBXNativeTarget "Redbird" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3A9259441C70EE7100C65A9C /* Debug */,
-				3A9259451C70EE7100C65A9C /* Release */,
+				3A96DE701C7E5EFC0000535A /* Debug */,
+				3A96DE711C7E5EFC0000535A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3A9259601C70EED100C65A9C /* Build configuration list for PBXNativeTarget "RedbirdTests-tvOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3A9259611C70EED100C65A9C /* Debug */,
-				3A9259621C70EED100C65A9C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 		3AFD5E441C6BF4390083B467 /* Build configuration list for PBXNativeTarget "RedbirdTests" */ = {
 			isa = XCConfigurationList;

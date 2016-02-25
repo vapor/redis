@@ -7,6 +7,30 @@
 //
 
 import XCTest
+@testable import Redbird
+
+#if os(Linux)
+    extension StringTests: XCTestCaseProvider {
+        var allTests : [(String, () throws -> Void)] {
+            return [
+                ("testStrippingTrailingTerminator", testStrippingTrailingTerminator),
+                ("testStrippingSignature", testStrippingSignature),
+                ("testStrippingSignatureAndTrailingTerminator", testStrippingSignatureAndTrailingTerminator),
+                ("testWrappingTrailingTerminator", testWrappingTrailingTerminator),
+                ("testWrappingSignature", testWrappingSignature),
+                ("testWrappingSignatureAndTrailingTerminator", testWrappingSignatureAndTrailingTerminator),
+                ("testHasPrefix", testHasPrefix),
+                ("testHasSuffix", testHasSuffix),
+                ("testContainsCharacter", testContainsCharacter),
+                ("testCCharArrayView", testCCharArrayView),
+                ("testSplitAround_NotFound", testSplitAround_NotFound),
+                ("testSplitAround_Middle", testSplitAround_Middle),
+                ("testSplitAround_Start", testSplitAround_Start),
+                ("testSplitAround_End", testSplitAround_End)
+            ]
+        }
+    }
+#endif
 
 class StringTests: XCTestCase {
 
@@ -48,13 +72,13 @@ class StringTests: XCTestCase {
     
     func testHasPrefix() {
         
-        let has = "Hello World".hasPrefix("Hell")
+        let has = "Hello World".hasPrefixStr("Hell")
         XCTAssertTrue(has)
     }
     
     func testHasSuffix() {
         
-        let has = "Hello World".hasSuffix("rld")
+        let has = "Hello World".hasSuffixStr("rld")
         XCTAssertTrue(has)
     }
     

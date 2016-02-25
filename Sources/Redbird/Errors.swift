@@ -14,6 +14,7 @@ public enum RedbirdError: ErrorType {
     case FormatterNotForThisType(RespObject, RespType?)
     case ReceivedStringNotTerminatedByRespTerminator(String)
     case StringNotConvertibleToCChar(String)
+    case NoDataFromSocket
     case NotEnoughCharactersToReadFromSocket(Int, [CChar])
     case BulkStringProvidedUnparseableByteCount(String)
     case ArrayProvidedUnparseableCount(String)
@@ -22,4 +23,5 @@ public enum RedbirdError: ErrorType {
     case WrongNativeTypeUnboxing(RespObject, String)
     case UnexpectedReturnedObject(RespObject)
     case PipelineNoCommandProvided
+    case FailedToCreateSocket(ErrorType)
 }

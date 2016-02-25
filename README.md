@@ -38,13 +38,16 @@ Create a Redbird instance, which opens a socket to the specified Redis server. T
 
 ```swift
 do {
-	let client = try Redbird(address: "127.0.0.1", port: 6379)
-	try client.auth(password: "mypass1") // call .auth once after creation if your Redis requires a password
+	let client = try Redbird(config: RedbirdConfig(address: "127.0.0.1", port: 6379, password: "foopass"))
 	let response = try client.command("SET", params: ["mykey", "hello_redis"]).toString() //"OK"
 } catch {
 	print("Redis error: \(error)")
 }
 ```
+
+Redbird automatically:
+- authenticates if you pass it a password during initialization
+- attempts one reconnect if the socket was dropped for whatever reason (handy for servers with idle timeouts)
 
 ## Easy conversion back
 

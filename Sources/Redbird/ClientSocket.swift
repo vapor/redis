@@ -58,19 +58,30 @@ public struct SocketError : ErrorType, CustomStringConvertible {
     }
 }
 
-class ClientSocket {
+protocol Socket: class, SocketReader {
+    func write(string: String) throws
+    func read(bytes: Int) throws -> [CChar]
+    func newWithConfig(config: RedbirdConfig) throws -> Socket
+    func close()
+}
+
+extension Socket {
+    func read() throws -> [CChar] {
+        return try self.read(BufferCapacity)
+    }
+}
+
+class ClientSocket: Socket {
     
-    typealias Descriptor = Int32
-    typealias Port = UInt16
-    
-    private let descriptor: Descriptor
+    private var descriptor: Int32 = -1
     
     let address: String
     let port: Int
     
     init(address: String, port: Int) throws {
         
-        self.descriptor = socket(AF_INET, sock_stream, Int32(IPPROTO_TCP))
+        let desc = socket(AF_INET, sock_stream, Int32(IPPROTO_TCP))
+        self.descriptor = desc
         guard self.descriptor > 0 else { throw SocketError(.CreateSocketFailed) }
         
         self.address = address
@@ -80,6 +91,14 @@ class ClientSocket {
 
     deinit {
         self.disconnect()
+    }
+    
+    func close() {
+        self.disconnect()
+    }
+    
+    func newWithConfig(config: RedbirdConfig) throws -> Socket {
+        return try ClientSocket(address: config.address, port: config.port)
     }
     
     //MARK: Actual functionality
@@ -142,7 +161,12 @@ class ClientSocket {
     }
     
     func disconnect() {
+        //we need to guard here otherwise when reconnecting and creating
+        //a new socket, it gets the same description, which we'd close here
+        //even though our original socket had already been closed.
+        guard self.descriptor > -1 else { return }
         s_close(self.descriptor)
+        self.descriptor = -1
     }
     
     private func sockaddr_cast(p: UnsafeMutablePointer<Void>) -> UnsafeMutablePointer<sockaddr> {
