@@ -38,7 +38,6 @@ func assertThrow(@autoclosure errorType: () -> RedbirdError, @noescape block: ()
         var allTests : [(String, () throws -> Void)] {
             return [
                 ("testServersideKilledSocket_Reconnected", testServersideKilledSocket_Reconnected),
-                ("testServersideTimeout", testServersideTimeout),
                 ("testSimpleString_Ping", testSimpleString_Ping),
                 ("testError_UnknownCommand", testError_UnknownCommand),
                 ("testBulkString_SetGet", testBulkString_SetGet),
@@ -78,19 +77,6 @@ class RedbirdTests: XCTestCase {
             
             //kill our connection, simulating e.g. server disconnecting us/crashing
             try client.command("CLIENT", params: ["KILL", "SKIPME", "NO"])
-            
-            //try to ping, expected to reconnect
-            let resp = try client.command("PING")
-            XCTAssertEqual(try? resp.toString(), "PONG")
-        }
-    }
-    
-    func testServersideTimeout() {
-        live { (client) in
-            
-            //set timeout to 1 sec
-            try client.command("CONFIG", params: ["SET", "timeout", "1"])
-            sleep(2)
             
             //try to ping, expected to reconnect
             let resp = try client.command("PING")
