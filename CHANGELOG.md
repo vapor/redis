@@ -1,5 +1,16 @@
 # Change Log
 
+## [0.3.0](https://github.com/czechboy0/Redbird/tree/0.3.0) (2016-02-25)
+[Full Changelog](https://github.com/czechboy0/Redbird/compare/0.2.3...0.3.0)
+
+**Closed issues:**
+
+- Auto-connect to a server with idle-timeout [\#17](https://github.com/czechboy0/Redbird/issues/17)
+
+**Merged pull requests:**
+
+- Auto reconnect, easier auth [\#18](https://github.com/czechboy0/Redbird/pull/18) ([czechboy0](https://github.com/czechboy0))
+
 ## [0.2.3](https://github.com/czechboy0/Redbird/tree/0.2.3) (2016-02-22)
 [Full Changelog](https://github.com/czechboy0/Redbird/compare/0.2.2...0.2.3)
 
