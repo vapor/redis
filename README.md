@@ -83,6 +83,10 @@ At the moment the design philosophy of Redbird is to provide a 0-dependency, min
 
 That being said, if Redbird *doesn't* support a fundamental feature that you'd like to use, please create an issue and I'll do my best to add it. Thanks for helping out! 🎉
 
+:blue_heart: Code of Conduct
+------------
+Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
 :gift_heart: Contributing
 ------------
 Please create an issue with a description of your problem or open a pull request with a fix.
