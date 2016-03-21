@@ -85,14 +85,14 @@ extension SocketReader {
             lastReadCount = readChars.count
             
             //append received chars before delimiter
-            totalBuffer.appendContentsOf(readChars)
+            totalBuffer.append(contentsOf: readChars)
         }
     }
 }
 
 extension ClientSocket: SocketReader {}
 
-extension CollectionType where Generator.Element == CChar {
+extension Collection where Iterator.Element == CChar {
     
     func stringView() throws -> String {
         return try self.toString()

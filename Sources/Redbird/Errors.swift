@@ -6,7 +6,7 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-public enum RedbirdError: ErrorType {
+public enum RedbirdError: ErrorProtocol {
     case ParsingGeneric(String)
     case ParsingStringNotThisType(String, RespType?)
     case SimpleStringInvalidInput(String)
@@ -23,5 +23,5 @@ public enum RedbirdError: ErrorType {
     case WrongNativeTypeUnboxing(RespObject, String)
     case UnexpectedReturnedObject(RespObject)
     case PipelineNoCommandProvided
-    case FailedToCreateSocket(ErrorType)
+    case FailedToCreateSocket(ErrorProtocol)
 }

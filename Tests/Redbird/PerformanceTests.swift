@@ -25,9 +25,9 @@ import XCTest
 class PerformanceTests: XCTestCase {
 
     func urlForFixture(name: String) -> NSURL {
-        let parent = #file.characters.split("/").map(String.init).dropLast()
+        let parent = #file.characters.split(separator: "/").map(String.init).dropLast()
         let path = Array(parent) + ["\(name).txt"]
-        let urlString = "file:///\(path.joinWithSeparator("/"))"
+        let urlString = "file:///\(path.joined(separator: "/"))"
         let url = NSURL(string: urlString)!
         print("Loading fixture from url \(url)")
         return url
@@ -36,8 +36,8 @@ class PerformanceTests: XCTestCase {
     func testPerf_ParsingArray_Normal() {
         
         let strUrl = urlForFixture("teststring")
-        let str = try! String(contentsOfURL: strUrl)
-        measureBlock {
+        let str = try! String(contentsOf: strUrl, encoding: NSUTF8StringEncoding)
+        measure {
             let reader = TestReader(content: str)
             let (_, _) = try! InitialParser().parse([], reader: reader)
         }
@@ -54,7 +54,7 @@ class PerformanceTests: XCTestCase {
         ]
         let content: [RespObject] = Array(1..<100).map { _ in RespArray(content: subinput) }
         let input = RespArray(content: content)
-        measureBlock {
+        measure {
             _ = try! InitialFormatter().format(input)
         }
     }
