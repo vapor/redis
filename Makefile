@@ -10,34 +10,8 @@ build-release:
 	@echo "Building Redbird in Release"
 	@swift build --configuration release
 
-xctest: redis xctest-osx xctest-ios xctest-tvos #TODO: watchOS when test bundles are available
-
-xctest-osx:
-	set -o pipefail && \
-	xcodebuild \
-	  -project XcodeProject/Redbird.xcodeproj \
-	  -scheme RedbirdTests \
-	  -destination 'platform=OS X,arch=x86_64' \
-	  test \
-	| xcpretty
-
-xctest-ios:
-	set -o pipefail && \
-	xcodebuild \
-	  -project XcodeProject/Redbird.xcodeproj \
-	  -scheme RedbirdTests-iOS \
-	  -destination 'platform=iOS Simulator,name=iPhone 6s,OS=9.3' \
-	  test \
-	| xcpretty
-
-xctest-tvos:
-	set -o pipefail && \
-	xcodebuild \
-	  -project XcodeProject/Redbird.xcodeproj \
-	  -scheme RedbirdTests-tvOS \
-	  -destination 'platform=tvOS Simulator,name=Apple TV 1080p,OS=9.2' \
-	  test \
-	| xcpretty
+test: redis
+	@swift test
 
 example: redis build-release
 	@echo "Running example client"
