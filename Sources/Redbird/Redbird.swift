@@ -75,7 +75,7 @@ public class Redbird {
             }
             if let e = error as? SocketError {
                 switch e.type {
-                case .WriteFailedToSendAllBytes: fallthrough
+                case .SendFailedToSendAllBytes: fallthrough
                 case .ReadFailed:
                     retry = true
                 default: break

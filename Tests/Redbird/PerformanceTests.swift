@@ -25,13 +25,10 @@ import XCTest
 class PerformanceTests: XCTestCase {
 
     func urlForFixture(name: String) -> NSURL {
-        let url: NSURL
-        //if we're running from CLI, use SPM_INSTALL_PATH to find fixtures, otherwise bundle
-        if let path = NSProcessInfo().environment["SPM_INSTALL_PATH"] {
-            url = NSURL(string: "file://\(path)/../Tests/Redbird/\(name).txt")!
-        } else {
-            url = NSBundle(forClass: PerformanceTests.classForCoder()).URLForResource(name, withExtension: "txt")!
-        }
+        let parent = #file.characters.split("/").map(String.init).dropLast()
+        let path = Array(parent) + ["\(name).txt"]
+        let urlString = "file:///\(path.joinWithSeparator("/"))"
+        let url = NSURL(string: urlString)!
         print("Loading fixture from url \(url)")
         return url
     }
