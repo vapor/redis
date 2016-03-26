@@ -43,7 +43,7 @@ public enum SocketErrorType {
 }
 
 //see error codes: https://gist.github.com/gabrielfalcao/4216897
-public struct SocketError : ErrorType, CustomStringConvertible {
+public struct SocketError : ErrorProtocol, CustomStringConvertible {
     
     public let type: SocketErrorType
     public let number: Int32
@@ -129,7 +129,7 @@ class ClientSocket: Socket {
         guard _hostInfo != nil else {
             throw SocketError(.FailedToGetIPFromHostname(self.address))
         }
-        let hostInfo = _hostInfo.memory
+        let hostInfo = _hostInfo.pointee
         guard hostInfo.h_addrtype == AF_INET else {
             throw SocketError(.FailedToGetIPFromHostname("No IPv4 address"))
         }
@@ -137,7 +137,7 @@ class ClientSocket: Socket {
             throw SocketError(.FailedToGetIPFromHostname("List is empty"))
         }
         
-        let addrStruct = sockadd_list_cast(hostInfo.h_addr_list)[0].memory
+        let addrStruct = sockadd_list_cast(hostInfo.h_addr_list)[0].pointee
         return addrStruct
     }
     
@@ -216,18 +216,18 @@ extension SocketReader {
             lastReadCount = readChars.count
             
             //append received chars before delimiter
-            totalBuffer.appendContentsOf(readChars)
+            totalBuffer.append(contentsOf: readChars)
         }
     }
 }
 
 extension ClientSocket: SocketReader {}
 
-extension CollectionType where Generator.Element == CChar {
+extension Collection where Iterator.Element == CChar {
     
     func stringView() throws -> String {
         let selfArray = Array(self) + [0]
-        guard let string = String.fromCString(selfArray) else {
+        guard let string = String(validatingUTF8: selfArray) else {
             throw SocketError(.UnparsableChars(selfArray))
         }
         return string
@@ -256,7 +256,7 @@ class Data {
     }
     
     var characters: [CChar] {
-        var data = [CChar](count: self.capacity, repeatedValue: 0)
+        var data = [CChar](repeating: 0, count: self.capacity)
         memcpy(&data, self.bytes, data.count)
         return data
     }

@@ -6,7 +6,7 @@
 //  Copyright © 2016 Honza Dvorsky. All rights reserved.
 //
 
-public struct RespError: RespObject, ErrorType {
+public struct RespError: RespObject, ErrorProtocol {
     static var signature: String = "-"
     public let respType: RespType = .Error
     

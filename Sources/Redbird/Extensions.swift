@@ -47,7 +47,7 @@ extension String {
     func subwords(separator: Character = " ") -> [String] {
         return self
             .characters
-            .split(separator)
+            .split(separator: separator)
             .map(String.init)
     }
     
@@ -55,15 +55,15 @@ extension String {
         return self
             .subwords(separator)
             .dropFirst(dropCount)
-            .joinWithSeparator(String(separator))
+            .joined(separator: String(separator))
     }
     
     func hasPrefixStr(prefix: String) -> Bool {
-        return self.characters.startsWith(prefix.characters)
+        return self.characters.starts(with: prefix.characters)
     }
     
     func hasSuffixStr(suffix: String) -> Bool {
-        return self.characters.reverse().startsWith(suffix.characters.reverse())
+        return self.characters.reversed().starts(with: suffix.characters.reversed())
     }
     
     func containsCharacter(other: Character) -> Bool {
@@ -74,7 +74,7 @@ extension String {
         return self.withCString { ptr in
             let count = Int(strlen(ptr))
             var idx = 0
-            var out = Array<CChar>(count: count, repeatedValue: 0)
+            var out = Array<CChar>(repeating: 0, count: count)
             while idx < count { out[idx] = ptr[idx]; idx += 1 }
             return out
         }
@@ -91,7 +91,7 @@ extension String {
     }
 }
 
-extension CollectionType where Generator.Element == CChar {
+extension Collection where Iterator.Element == CChar {
     
     /// Splits string around a delimiter, returns the first subarray
     /// as the first return value (including the delimiter) and the rest
