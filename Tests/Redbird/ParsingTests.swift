@@ -27,29 +27,6 @@ class TestReader: SocketReader {
     }
 }
 
-#if os(Linux)
-    extension ParsingTests: XCTestCaseProvider {
-        var allTests : [(String, () throws -> Void)] {
-            return [
-                ("testParsingError_NothingReadYet", testParsingError_NothingReadYet),
-                ("testParsingError_FirstReadChar", testParsingError_FirstReadChar),
-                ("testParsingSimpleString", testParsingSimpleString),
-                ("testParsingSimpleString_WithLeftover", testParsingSimpleString_WithLeftover),
-                ("testParsingInteger", testParsingInteger),
-                ("testParsingBulkString_Normal", testParsingBulkString_Normal),
-                ("testParsingBulkString_Normal_WithLeftover", testParsingBulkString_Normal_WithLeftover),
-                ("testParsingBulkString_Empty", testParsingBulkString_Empty),
-                ("testParsingBulkString_Null", testParsingBulkString_Null),
-                ("testParsingArray_Null", testParsingArray_Null),
-                ("testParsingArray_Empty", testParsingArray_Empty),
-                ("testParsingArray_Normal", testParsingArray_Normal),
-                ("testParsingArray_TwoString", testParsingArray_TwoString),
-                ("testParsingArray_ArrayOfArrays", testParsingArray_ArrayOfArrays)
-            ]
-        }
-    }
-#endif
-
 class ParsingTests: XCTestCase {
 
     func testParsingError_NothingReadYet() {
