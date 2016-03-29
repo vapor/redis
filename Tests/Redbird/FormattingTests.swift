@@ -9,27 +9,6 @@
 import XCTest
 @testable import Redbird
 
-#if os(Linux)
-    extension FormattingTests: XCTestCaseProvider {
-        var allTests : [(String, () throws -> Void)] {
-            return [
-                ("testInitialFormatter_Integer", testInitialFormatter_Integer),
-                ("testError", testError),
-                ("testSimpleString", testSimpleString),
-                ("testInteger", testInteger),
-                ("testBulkString_Normal", testBulkString_Normal),
-                ("testBulkString_Empty", testBulkString_Empty),
-                ("testBulkString_Null", testBulkString_Null),
-                ("testArray_Normal", testArray_Normal),
-                ("testArray_Empty", testArray_Empty),
-                ("testArray_Null", testArray_Null),
-                ("testArray_TwoStrings", testArray_TwoStrings),
-                ("testArray_ArrayOfArrays", testArray_ArrayOfArrays)
-            ]
-        }
-    }
-#endif
-
 class FormattingTests: XCTestCase {
 
     func testInitialFormatter_Integer() {

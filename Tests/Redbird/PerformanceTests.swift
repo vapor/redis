@@ -25,13 +25,9 @@ import XCTest
 class PerformanceTests: XCTestCase {
 
     func urlForFixture(name: String) -> NSURL {
-        let url: NSURL
-        //if we're running from CLI, use SPM_INSTALL_PATH to find fixtures, otherwise bundle
-        if let path = NSProcessInfo().environment["SPM_INSTALL_PATH"] {
-            url = NSURL(string: "file://\(path)/../Tests/Redbird/\(name).txt")!
-        } else {
-            url = NSBundle(forClass: PerformanceTests.classForCoder()).URLForResource(name, withExtension: "txt")!
-        }
+
+        let parent = (#file).componentsSeparated(by: "/").dropLast().joined(separator: "/")
+        let url = NSURL(string: "file://\(parent)/\(name).txt")!
         print("Loading fixture from url \(url)")
         return url
     }
@@ -39,8 +35,8 @@ class PerformanceTests: XCTestCase {
     func testPerf_ParsingArray_Normal() {
         
         let strUrl = urlForFixture("teststring")
-        let str = try! String(contentsOfURL: strUrl)
-        measureBlock {
+        let str = try! String(contentsOf: strUrl)
+        measure {
             let reader = TestReader(content: str)
             let (_, _) = try! InitialParser().parse([], reader: reader)
         }
@@ -57,7 +53,7 @@ class PerformanceTests: XCTestCase {
         ]
         let content: [RespObject] = Array(1..<100).map { _ in RespArray(content: subinput) }
         let input = RespArray(content: content)
-        measureBlock {
+        measure {
             _ = try! InitialFormatter().format(input)
         }
     }

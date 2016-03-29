@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0730"
+   LastUpgradeVersion = "9999"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -11,13 +11,26 @@
             buildForRunning = "YES"
             buildForProfiling = "YES"
             buildForArchiving = "YES"
-            buildForAnalyzing = "YES"
-            hideIssues = "NO">
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3A96DE691C7E5EFB0000535A"
-               BuildableName = "Redbird.framework"
+               BlueprintIdentifier = "______Target_Redbird"
+               BuildableName = "libRedbird.dylib"
                BlueprintName = "Redbird"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_RedbirdExample"
+               BuildableName = "RedbirdExample"
+               BlueprintName = "RedbirdExample"
                ReferencedContainer = "container:Redbird.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,6 +42,16 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_RedbirdTestSuite"
+               BuildableName = "Redbird.testsuite.xctest"
+               BlueprintName = "Redbird.testsuite"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <AdditionalOptions>
       </AdditionalOptions>
@@ -46,8 +69,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3A96DE691C7E5EFB0000535A"
-            BuildableName = "Redbird.framework"
+            BlueprintIdentifier = "______Target_Redbird"
+            BuildableName = "libRedbird.dylib"
             BlueprintName = "Redbird"
             ReferencedContainer = "container:Redbird.xcodeproj">
          </BuildableReference>
@@ -61,15 +84,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3A96DE691C7E5EFB0000535A"
-            BuildableName = "Redbird.framework"
-            BlueprintName = "Redbird"
-            ReferencedContainer = "container:Redbird.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

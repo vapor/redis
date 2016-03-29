@@ -9,27 +9,6 @@
 import XCTest
 @testable import Redbird
 
-#if os(Linux)
-    extension ConversionTests: XCTestCaseProvider {
-        var allTests : [(String, () throws -> Void)] {
-            return [
-                ("testArray_Ok", testArray_Ok),
-                ("testArray_NullThrows", testArray_NullThrows),
-                ("testMaybeArray_Ok", testMaybeArray_Ok),
-                ("testMaybeArray_NullOk", testMaybeArray_NullOk),
-                ("testSimpleString_Ok", testSimpleString_Ok),
-                ("testBulkString_Ok", testBulkString_Ok),
-                ("testString_NullThrows", testString_NullThrows),
-                ("testMaybeString_Ok", testMaybeString_Ok),
-                ("testMaybeString_NullOk", testMaybeString_NullOk),
-                ("testInt_Ok", testInt_Ok),
-                ("testBool_Ok", testBool_Ok),
-                ("testError_Ok", testError_Ok)
-            ]
-        }
-    }
-#endif
-
 class ConversionTests: XCTestCase {
 
     func testArray_Ok() {
