@@ -25,10 +25,9 @@ import XCTest
 class PerformanceTests: XCTestCase {
 
     func urlForFixture(name: String) -> NSURL {
-        let parent = #file.characters.split(separator: "/").map(String.init).dropLast()
-        let path = Array(parent) + ["\(name).txt"]
-        let urlString = "file:///\(path.joined(separator: "/"))"
-        let url = NSURL(string: urlString)!
+
+        let parent = (#file).componentsSeparated(by: "/").dropLast().joined(separator: "/")
+        let url = NSURL(string: "file://\(parent)/\(name).txt")!
         print("Loading fixture from url \(url)")
         return url
     }

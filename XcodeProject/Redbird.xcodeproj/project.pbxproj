@@ -7,18 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A3807871CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3A3807881CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3A3807891CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3A38078A1CA013DF00C175F5 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3A38078B1CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3A38078C1CA013DF00C175F5 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3A38078D1CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3A38078E1CA013DF00C175F5 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3A38078F1CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3A3807901CA013DF00C175F5 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3A3807911CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3A3807921CA013DF00C175F5 /* libRedbird.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Redbird" /* libRedbird.dylib */; };
+		3A9972761CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A9972771CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A9972781CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A9972791CB3D284007D4AB8 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A99727A1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A99727B1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A99727C1CB3D284007D4AB8 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A99727D1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A99727E1CB3D284007D4AB8 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A99727F1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A9972801CB3D284007D4AB8 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A9972811CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A9972821CB3D284007D4AB8 /* libRedbird.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Redbird" /* libRedbird.dylib */; };
 		_LinkFileRef_Redbird /* libRedbird.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Redbird" /* libRedbird.dylib */; };
 		_LinkFileRef_Socks /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
 		_LinkFileRef_SocksCore /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
@@ -49,6 +50,9 @@
 		"__src_cc_ref_Packages/Socks-0.0.3/Sources/SocksCoreExampleServer/main.swift" /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/Socks-0.0.3/Sources/SocksCoreExampleServer/main.swift" /* main.swift */; };
 		"__src_cc_ref_Packages/Socks-0.0.3/Sources/SocksExampleClient/main.swift" /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/Socks-0.0.3/Sources/SocksExampleClient/main.swift" /* main.swift */; };
 		"__src_cc_ref_Packages/Socks-0.0.3/Sources/SocksExampleServer/main.swift" /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/Socks-0.0.3/Sources/SocksExampleServer/main.swift" /* main.swift */; };
+		"__src_cc_ref_Packages/Socks-0.0.3/Tests/SocksCore/ConversionTests.swift" /* ConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/ConversionTests.swift" /* ConversionTests.swift */; };
+		"__src_cc_ref_Packages/Socks-0.0.3/Tests/SocksCore/LiveTests.swift" /* LiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/LiveTests.swift" /* LiveTests.swift */; };
+		"__src_cc_ref_Packages/Socks-0.0.3/Tests/SocksCore/XCTestManifests.swift" /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/XCTestManifests.swift" /* XCTestManifests.swift */; };
 		__src_cc_ref_Sources/Redbird/Array.swift /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/Redbird/Array.swift /* Array.swift */; };
 		__src_cc_ref_Sources/Redbird/BulkString.swift /* BulkString.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/Redbird/BulkString.swift /* BulkString.swift */; };
 		__src_cc_ref_Sources/Redbird/ClientSocket.swift /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/Redbird/ClientSocket.swift /* ClientSocket.swift */; };
@@ -71,24 +75,25 @@
 		__src_cc_ref_Tests/Redbird/PerformanceTests.swift /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Tests/Redbird/PerformanceTests.swift /* PerformanceTests.swift */; };
 		__src_cc_ref_Tests/Redbird/RedbirdTests.swift /* RedbirdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Tests/Redbird/RedbirdTests.swift /* RedbirdTests.swift */; };
 		__src_cc_ref_Tests/Redbird/StringTests.swift /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Tests/Redbird/StringTests.swift /* StringTests.swift */; };
+		__src_cc_ref_Tests/Redbird/XCTestManifests.swift /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Tests/Redbird/XCTestManifests.swift /* XCTestManifests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3A3807931CA013E000C175F5 /* PBXContainerItemProxy */ = {
+		3A9972831CB3D285007D4AB8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_SocksCore";
 			remoteInfo = SocksCore;
 		};
-		3A3807941CA013E000C175F5 /* PBXContainerItemProxy */ = {
+		3A9972841CB3D285007D4AB8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Socks";
 			remoteInfo = Socks;
 		};
-		3A3807951CA013E000C175F5 /* PBXContainerItemProxy */ = {
+		3A9972851CB3D285007D4AB8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
@@ -98,6 +103,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		__PBXFileRef_Package.swift /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = /Users/honzadvorsky/Documents/Redbird/Package.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/Socks-0.0.3/Sources/Socks/Actor.swift" /* Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/Socks-0.0.3/Sources/Socks/Client.swift" /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/Socks-0.0.3/Sources/Socks/ClientConnection.swift" /* ClientConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientConnection.swift; sourceTree = "<group>"; };
@@ -125,6 +131,9 @@
 		"__PBXFileRef_Packages/Socks-0.0.3/Sources/SocksCoreExampleServer/main.swift" /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/Socks-0.0.3/Sources/SocksExampleClient/main.swift" /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/Socks-0.0.3/Sources/SocksExampleServer/main.swift" /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		"__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/ConversionTests.swift" /* ConversionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionTests.swift; sourceTree = "<group>"; };
+		"__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/LiveTests.swift" /* LiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTests.swift; sourceTree = "<group>"; };
+		"__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/XCTestManifests.swift" /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
 		__PBXFileRef_Sources/Redbird/Array.swift /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		__PBXFileRef_Sources/Redbird/BulkString.swift /* BulkString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkString.swift; sourceTree = "<group>"; };
 		__PBXFileRef_Sources/Redbird/ClientSocket.swift /* ClientSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSocket.swift; sourceTree = "<group>"; };
@@ -147,13 +156,15 @@
 		__PBXFileRef_Tests/Redbird/PerformanceTests.swift /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		__PBXFileRef_Tests/Redbird/RedbirdTests.swift /* RedbirdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedbirdTests.swift; sourceTree = "<group>"; };
 		__PBXFileRef_Tests/Redbird/StringTests.swift /* StringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
+		__PBXFileRef_Tests/Redbird/XCTestManifests.swift /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
 		"_____Product_Redbird" /* libRedbird.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libRedbird.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_RedbirdExample" /* RedbirdExample */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = RedbirdExample; sourceTree = BUILT_PRODUCTS_DIR; };
-		"_____Product_RedbirdTestSuite" /* RedbirdTestSuite.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; name = RedbirdTestSuite.xctest; path = Redbird.testsuite.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		"_____Product_RedbirdTestSuite" /* Redbird.testsuite.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = Redbird.testsuite.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_Socks" /* libSocks.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libSocks.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_SocksCore" /* libSocksCore.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libSocksCore.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_SocksCoreExampleClient" /* SocksCoreExampleClient */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = SocksCoreExampleClient; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_SocksCoreExampleServer" /* SocksCoreExampleServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = SocksCoreExampleServer; sourceTree = BUILT_PRODUCTS_DIR; };
+		"_____Product_SocksCoreTestSuite" /* SocksCore.testsuite.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = SocksCore.testsuite.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_SocksExampleClient" /* SocksExampleClient */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = SocksExampleClient; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_SocksExampleServer" /* SocksExampleServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = SocksExampleServer; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -163,8 +174,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3A38078C1CA013DF00C175F5 /* libSocks.dylib in Frameworks */,
-				3A38078D1CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */,
+				3A99727C1CB3D284007D4AB8 /* libSocks.dylib in Frameworks */,
+				3A99727D1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,8 +183,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3A38078E1CA013DF00C175F5 /* libSocks.dylib in Frameworks */,
-				3A38078F1CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */,
+				3A99727E1CB3D284007D4AB8 /* libSocks.dylib in Frameworks */,
+				3A99727F1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
 				_LinkFileRef_Redbird /* libRedbird.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -182,9 +193,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3A3807901CA013DF00C175F5 /* libSocks.dylib in Frameworks */,
-				3A3807911CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */,
-				3A3807921CA013DF00C175F5 /* libRedbird.dylib in Frameworks */,
+				3A9972801CB3D284007D4AB8 /* libSocks.dylib in Frameworks */,
+				3A9972811CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
+				3A9972821CB3D284007D4AB8 /* libRedbird.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,7 +218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3A3807871CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */,
+				3A9972761CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +226,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3A3807881CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */,
+				3A9972771CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		"___LinkPhase_SocksCoreTestSuite" /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+				3A99727B1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,7 +243,7 @@
 			buildActionMask = 0;
 			files = (
 				_LinkFileRef_Socks /* libSocks.dylib in Frameworks */,
-				3A3807891CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */,
+				3A9972781CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,8 +251,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3A38078A1CA013DF00C175F5 /* libSocks.dylib in Frameworks */,
-				3A38078B1CA013DF00C175F5 /* libSocksCore.dylib in Frameworks */,
+				3A9972791CB3D284007D4AB8 /* libSocks.dylib in Frameworks */,
+				3A99727A1CB3D284007D4AB8 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,7 +262,8 @@
 		TestProducts_ /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				"_____Product_RedbirdTestSuite" /* RedbirdTestSuite.xctest */,
+				"_____Product_SocksCoreTestSuite" /* SocksCore.testsuite.xctest */,
+				"_____Product_RedbirdTestSuite" /* Redbird.testsuite.xctest */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -251,6 +271,7 @@
 		"___RootGroup_" = {
 			isa = PBXGroup;
 			children = (
+				__PBXFileRef_Package.swift /* Package.swift */,
 				"_____Sources_" /* Sources */,
 				"_______Tests_" /* Tests */,
 				"____Products_" /* Products */,
@@ -329,6 +350,7 @@
 				__PBXFileRef_Tests/Redbird/PerformanceTests.swift /* PerformanceTests.swift */,
 				__PBXFileRef_Tests/Redbird/RedbirdTests.swift /* RedbirdTests.swift */,
 				__PBXFileRef_Tests/Redbird/StringTests.swift /* StringTests.swift */,
+				__PBXFileRef_Tests/Redbird/XCTestManifests.swift /* XCTestManifests.swift */,
 			);
 			name = Redbird.testsuite;
 			path = ../Tests/Redbird;
@@ -391,6 +413,17 @@
 			path = "../Packages/Socks-0.0.3/Sources/SocksCoreExampleServer";
 			sourceTree = "<group>";
 		};
+		"_______Group_SocksCoreTestSuite" /* SocksCore.testsuite */ = {
+			isa = PBXGroup;
+			children = (
+				"__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/ConversionTests.swift" /* ConversionTests.swift */,
+				"__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/LiveTests.swift" /* LiveTests.swift */,
+				"__PBXFileRef_Packages/Socks-0.0.3/Tests/SocksCore/XCTestManifests.swift" /* XCTestManifests.swift */,
+			);
+			name = SocksCore.testsuite;
+			path = "../Packages/Socks-0.0.3/Tests/SocksCore";
+			sourceTree = "<group>";
+		};
 		"_______Group_SocksExampleClient" /* SocksExampleClient */ = {
 			isa = PBXGroup;
 			children = (
@@ -412,6 +445,7 @@
 		"_______Tests_" /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				"_______Group_SocksCoreTestSuite" /* SocksCore.testsuite */,
 				"_______Group_RedbirdTestSuite" /* Redbird.testsuite */,
 			);
 			name = Tests;
@@ -473,7 +507,7 @@
 			);
 			name = Redbird.testsuite;
 			productName = RedbirdTestSuite;
-			productReference = "_____Product_RedbirdTestSuite" /* RedbirdTestSuite.xctest */;
+			productReference = "_____Product_RedbirdTestSuite" /* Redbird.testsuite.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		"______Target_Socks" /* Socks */ = {
@@ -543,6 +577,23 @@
 			productReference = "_____Product_SocksCoreExampleServer" /* SocksCoreExampleServer */;
 			productType = "com.apple.product-type.tool";
 		};
+		"______Target_SocksCoreTestSuite" /* SocksCore.testsuite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = "_______Confs_SocksCoreTestSuite" /* Build configuration list for PBXNativeTarget "SocksCore.testsuite" */;
+			buildPhases = (
+				CompilePhase_SocksCoreTestSuite /* Sources */,
+				"___LinkPhase_SocksCoreTestSuite" /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				__Dependency_SocksCore /* PBXTargetDependency */,
+			);
+			name = SocksCore.testsuite;
+			productName = SocksCoreTestSuite;
+			productReference = "_____Product_SocksCoreTestSuite" /* SocksCore.testsuite.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		"______Target_SocksExampleClient" /* SocksExampleClient */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = "_______Confs_SocksExampleClient" /* Build configuration list for PBXNativeTarget "SocksExampleClient" */;
@@ -603,6 +654,7 @@
 				"______Target_SocksCoreExampleServer" /* SocksCoreExampleServer */,
 				"______Target_SocksExampleClient" /* SocksExampleClient */,
 				"______Target_SocksExampleServer" /* SocksExampleServer */,
+				"______Target_SocksCoreTestSuite" /* SocksCore.testsuite */,
 				"______Target_Redbird" /* Redbird */,
 				"______Target_RedbirdExample" /* RedbirdExample */,
 				"______Target_RedbirdTestSuite" /* Redbird.testsuite */,
@@ -651,6 +703,7 @@
 				__src_cc_ref_Tests/Redbird/PerformanceTests.swift /* PerformanceTests.swift in Sources */,
 				__src_cc_ref_Tests/Redbird/RedbirdTests.swift /* RedbirdTests.swift in Sources */,
 				__src_cc_ref_Tests/Redbird/StringTests.swift /* StringTests.swift in Sources */,
+				__src_cc_ref_Tests/Redbird/XCTestManifests.swift /* XCTestManifests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,6 +760,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CompilePhase_SocksCoreTestSuite /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				"__src_cc_ref_Packages/Socks-0.0.3/Tests/SocksCore/ConversionTests.swift" /* ConversionTests.swift in Sources */,
+				"__src_cc_ref_Packages/Socks-0.0.3/Tests/SocksCore/LiveTests.swift" /* LiveTests.swift in Sources */,
+				"__src_cc_ref_Packages/Socks-0.0.3/Tests/SocksCore/XCTestManifests.swift" /* XCTestManifests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CompilePhase_SocksExampleClient /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
@@ -729,17 +792,17 @@
 		__Dependency_Redbird /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Redbird" /* Redbird */;
-			targetProxy = 3A3807951CA013E000C175F5 /* PBXContainerItemProxy */;
+			targetProxy = 3A9972851CB3D285007D4AB8 /* PBXContainerItemProxy */;
 		};
 		__Dependency_Socks /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Socks" /* Socks */;
-			targetProxy = 3A3807941CA013E000C175F5 /* PBXContainerItemProxy */;
+			targetProxy = 3A9972841CB3D285007D4AB8 /* PBXContainerItemProxy */;
 		};
 		__Dependency_SocksCore /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_SocksCore" /* SocksCore */;
-			targetProxy = 3A3807931CA013E000C175F5 /* PBXContainerItemProxy */;
+			targetProxy = 3A9972831CB3D285007D4AB8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -750,7 +813,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "$(CONFIGURATION_BUILD_DIR)";
 				ENABLE_TESTABILITY = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = Redbird;
@@ -762,7 +825,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = RedbirdExample;
@@ -791,7 +854,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "$(CONFIGURATION_BUILD_DIR)";
 				ENABLE_TESTABILITY = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = Socks;
@@ -805,7 +868,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "$(CONFIGURATION_BUILD_DIR)";
 				ENABLE_TESTABILITY = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksCore;
@@ -817,7 +880,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksCoreExampleClient;
@@ -831,7 +894,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksCoreExampleServer;
@@ -841,11 +904,24 @@
 			};
 			name = Release;
 		};
+		_ReleaseConf_SocksCoreTestSuite /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_MODULE_NAME = SocksCoreTestSuite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		_ReleaseConf_SocksExampleClient /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksExampleClient;
@@ -859,7 +935,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksExampleServer;
@@ -875,7 +951,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "$(CONFIGURATION_BUILD_DIR)";
 				ENABLE_TESTABILITY = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = Redbird;
@@ -888,7 +964,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = RedbirdExample;
@@ -919,7 +995,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "$(CONFIGURATION_BUILD_DIR)";
 				ENABLE_TESTABILITY = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = Socks;
@@ -934,7 +1010,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "$(CONFIGURATION_BUILD_DIR)";
 				ENABLE_TESTABILITY = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksCore;
@@ -947,7 +1023,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksCoreExampleClient;
@@ -962,7 +1038,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksCoreExampleServer;
@@ -973,11 +1049,25 @@
 			};
 			name = Debug;
 		};
+		"___DebugConf_SocksCoreTestSuite" /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_MODULE_NAME = SocksCoreTestSuite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
 		"___DebugConf_SocksExampleClient" /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksExampleClient;
@@ -992,7 +1082,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "/Users/honzadvorsky/Documents/swift-repos/build/Ninja-DebugAssert/usr/lib/swift/macosx";
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_MODULE_NAME = SocksExampleServer;
@@ -1086,6 +1176,15 @@
 			buildConfigurations = (
 				"___DebugConf_SocksCoreExampleServer" /* Debug */,
 				_ReleaseConf_SocksCoreExampleServer /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		"_______Confs_SocksCoreTestSuite" /* Build configuration list for PBXNativeTarget "SocksCore.testsuite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				"___DebugConf_SocksCoreTestSuite" /* Debug */,
+				_ReleaseConf_SocksCoreTestSuite /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

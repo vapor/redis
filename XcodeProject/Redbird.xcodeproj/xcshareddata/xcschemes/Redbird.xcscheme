@@ -130,6 +130,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_SocksCoreTestSuite"
+               BuildableName = "SocksCore.testsuite.xctest"
+               BlueprintName = "SocksCore.testsuite"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "______Target_RedbirdTestSuite"
                BuildableName = "Redbird.testsuite.xctest"
                BlueprintName = "Redbird.testsuite"

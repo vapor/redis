@@ -1,10 +1,10 @@
 import XCTest
-@testable import Redbirdtest
+@testable import RedbirdTestSuite
 
 XCTMain([
-	ConversionTests(),
-	FormattingTests(),
-	ParsingTests(),
-	RedbirdTests(),
-	StringTests()
+	testCase(ConversionTests.allTests),
+	testCase(FormattingTests.allTests),
+	testCase(ParsingTests.allTests),
+	testCase(RedbirdTests.allTests),
+	testCase(StringTests.allTests)
 ])
