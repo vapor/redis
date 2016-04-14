@@ -26,7 +26,7 @@ class PerformanceTests: XCTestCase {
 
     func urlForFixture(name: String) -> NSURL {
 
-        let parent = (#file).componentsSeparated(by: "/").dropLast().joined(separator: "/")
+        let parent = (#file).components(separatedBy: "/").dropLast().joined(separator: "/")
         let url = NSURL(string: "file://\(parent)/\(name).txt")!
         print("Loading fixture from url \(url)")
         return url
@@ -34,7 +34,7 @@ class PerformanceTests: XCTestCase {
     
     func testPerf_ParsingArray_Normal() {
         
-        let strUrl = urlForFixture("teststring")
+        let strUrl = urlForFixture(name: "teststring")
         let str = try! String(contentsOf: strUrl, encoding: NSUTF8StringEncoding)
         measure {
             let reader = TestReader(content: str)

@@ -61,7 +61,7 @@ class StringTests: XCTestCase {
     
     func testContainsCharacter() {
         
-        let does = "Hello World".containsCharacter("W")
+        let does = "Hello World".contains(character: "W")
         XCTAssertTrue(does)
     }
     
@@ -74,28 +74,28 @@ class StringTests: XCTestCase {
     
     func testSplitAround_NotFound() {
         
-        let split = try! "Hello World".splitAround("Meh")
+        let split = try! "Hello World".splitAround(delimiter: "Meh")
         XCTAssertEqual(split.0, "Hello World")
         XCTAssertNil(split.1)
     }
     
     func testSplitAround_Middle() {
         
-        let split = try! "Hello World".splitAround("Wor")
+        let split = try! "Hello World".splitAround(delimiter: "Wor")
         XCTAssertEqual(split.0, "Hello Wor")
         XCTAssertEqual(split.1, "ld")
     }
     
     func testSplitAround_Start() {
         
-        let split = try! "Hello World".splitAround("H")
+        let split = try! "Hello World".splitAround(delimiter: "H")
         XCTAssertEqual(split.0, "H")
         XCTAssertEqual(split.1, "ello World")
     }
     
     func testSplitAround_End() {
         
-        let split = try! "Hello World".splitAround("rld")
+        let split = try! "Hello World".splitAround(delimiter: "rld")
         XCTAssertEqual(split.0, "Hello World")
         XCTAssertEqual(split.1, "")
     }

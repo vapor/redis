@@ -10,7 +10,7 @@
 
 extension Redbird {
     
-    public func auth(password password: String) throws {
+    public func auth(password: String) throws {
         let ret = try self.command("AUTH", params: [password])
         switch ret.respType {
         case .Error: throw try ret.toError()

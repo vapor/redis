@@ -20,7 +20,7 @@ protocol Socket: class, SocketReader {
 
 extension Socket {
     func read() throws -> [CChar] {
-        return try self.read(BufferCapacity)
+        return try self.read(bytes: BufferCapacity)
     }
 }
 
@@ -43,11 +43,11 @@ class ClientSocket: Socket {
     //MARK: Actual functionality
     
     func write(string: String) throws {
-        try self.client.write(string)
+        try self.client.write(data: string)
     }
     
     func read(bytes: Int = BufferCapacity) throws -> [CChar] {
-        return try self.client.read(bytes).map { CChar($0) }
+        return try self.client.read(maxBytes: bytes).map { CChar($0) }
     }
 }
 
@@ -61,7 +61,7 @@ extension SocketReader {
 
     /// Reads until 1) we run out of characters or 2) we detect the delimiter
     /// whichever happens first.
-    func readUntilDelimiter(alreadyRead alreadyRead: [CChar], delimiter: String) throws -> ([CChar], [CChar]?) {
+    func readUntilDelimiter(alreadyRead: [CChar], delimiter: String) throws -> ([CChar], [CChar]?) {
         
         var totalBuffer = alreadyRead
         let delimiterChars = delimiter.ccharArrayView()
@@ -70,7 +70,7 @@ extension SocketReader {
         while true {
             
             //test whether the incoming chars contain the delimiter
-            let (head, tail) = totalBuffer.splitAround(delimiterChars)
+            let (head, tail) = totalBuffer.splitAround(delimiter: delimiterChars)
             
             //if we have a tail, we found the delimiter in the buffer,
             //or if there's no more data to read
@@ -81,7 +81,7 @@ extension SocketReader {
             }
             
             //read more characters from the reader
-            let readChars = try self.read(BufferCapacity)
+            let readChars = try self.read(bytes: BufferCapacity)
             lastReadCount = readChars.count
             
             //append received chars before delimiter

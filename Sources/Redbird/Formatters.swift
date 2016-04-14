@@ -7,7 +7,7 @@
 //
 
 protocol Formatter {
-    func format(object: RespObject) throws -> String
+    func format(_ object: RespObject) throws -> String
 }
 
 let formatters: [RespType: Formatter] = [
@@ -22,7 +22,7 @@ let formatters: [RespType: Formatter] = [
 
 struct InitialFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
         
         //find the appropriate formatter for this type
         guard let formatter = formatters[object.respType] else {
@@ -36,7 +36,7 @@ struct InitialFormatter: Formatter {
 
 struct NullBulkStringFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
         
         return RespNullBulkString.signature
     }
@@ -44,7 +44,7 @@ struct NullBulkStringFormatter: Formatter {
 
 struct NullArrayFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
 
         return RespNullArray.signature
     }
@@ -52,7 +52,7 @@ struct NullArrayFormatter: Formatter {
 
 struct ErrorFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
 
         let str = (object as! RespError)
             .content
@@ -63,7 +63,7 @@ struct ErrorFormatter: Formatter {
 
 struct SimpleStringFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
 
         let str = (object as! RespSimpleString)
             .content
@@ -74,7 +74,7 @@ struct SimpleStringFormatter: Formatter {
 
 struct IntegerFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
  
         let str = String((object as! RespInteger).intContent)
             .wrappedInitialSignatureAndTrailingTerminator(RespInteger.signature)
@@ -84,7 +84,7 @@ struct IntegerFormatter: Formatter {
 
 struct BulkStringFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
         
         let content = (object as! RespBulkString).content
         
@@ -102,7 +102,7 @@ struct BulkStringFormatter: Formatter {
 
 struct ArrayFormatter: Formatter {
     
-    func format(object: RespObject) throws -> String {
+    func format(_ object: RespObject) throws -> String {
         
         let content = (object as! RespArray).content
         
