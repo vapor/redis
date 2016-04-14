@@ -23,7 +23,7 @@ func assertNoThrow(@noescape block: () throws -> ()) {
     }
 }
 
-func assertThrow(@autoclosure errorType: () -> RedbirdError, @noescape block: () throws -> ()) {
+func assertThrow(@autoclosure _ errorType: () -> RedbirdError, @noescape block: () throws -> ()) {
     do {
         try block()
         XCTFail("Should have thrown an error, but didn't")
@@ -194,7 +194,7 @@ class GoodSocket: Socket {
     func close() {}
     
     func read(bytes: Int) throws -> [CChar] {
-        return try self.testReader.read(bytes)
+        return try self.testReader.read(bytes: bytes)
     }
     
     func newWithConfig(config: RedbirdConfig) throws -> Socket {

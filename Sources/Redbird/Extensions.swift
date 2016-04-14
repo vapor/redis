@@ -28,7 +28,7 @@ extension String {
         return String(self.characters.dropFirst(1))
     }
     
-    func wrappedSingleInitialCharacterSignature(signature: String) -> String {
+    func wrappedSingleInitialCharacterSignature(_ signature: String) -> String {
         return signature + self
     }
     
@@ -38,7 +38,7 @@ extension String {
             .strippedTrailingTerminator()
     }
     
-    func wrappedInitialSignatureAndTrailingTerminator(signature: String) -> String {
+    func wrappedInitialSignatureAndTrailingTerminator(_ signature: String) -> String {
         return self
             .wrappedSingleInitialCharacterSignature(signature)
             .wrappedTrailingTerminator()
@@ -53,21 +53,21 @@ extension String {
     
     func stringWithDroppedFirstWord(separator: Character = " ", dropCount: Int = 1) -> String {
         return self
-            .subwords(separator)
+            .subwords(separator: separator)
             .dropFirst(dropCount)
             .joined(separator: String(separator))
     }
     
-    func hasPrefixStr(prefix: String) -> Bool {
+    func hasPrefixStr(_ prefix: String) -> Bool {
         return self.characters.starts(with: prefix.characters)
     }
     
-    func hasSuffixStr(suffix: String) -> Bool {
+    func hasSuffixStr(_ suffix: String) -> Bool {
         return self.characters.reversed().starts(with: suffix.characters.reversed())
     }
     
-    func containsCharacter(other: Character) -> Bool {
-        return self.characters.contains(other)
+    func contains(character: Character) -> Bool {
+        return self.characters.contains(character)
     }
     
     func ccharArrayView() -> [CChar] {
@@ -82,8 +82,8 @@ extension String {
     
     func splitAround(delimiter: String) throws -> (String, String?) {
         
-        let split = self.ccharArrayView().splitAround(delimiter.ccharArrayView())
-        let first = try split.0.stringView()
+        let split = self.ccharArrayView().splitAround(delimiter: delimiter.ccharArrayView())
+        let first = try split.0.toString()
         if let second = split.1 {
             return (first, try second.stringView())
         }

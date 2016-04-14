@@ -13,7 +13,7 @@ public struct RespSimpleString: RespObject {
     public let content: String
     
     init(content: String) throws {
-        if content.containsCharacter("\r") || content.containsCharacter("\n") {
+        if content.contains(character: "\r") || content.contains(character: "\n") {
             throw RedbirdError.SimpleStringInvalidInput(content)
         }
         self.content = content

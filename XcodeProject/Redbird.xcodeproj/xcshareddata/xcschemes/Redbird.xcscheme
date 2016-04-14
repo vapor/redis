@@ -14,6 +14,90 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_Socks"
+               BuildableName = "libSocks.dylib"
+               BlueprintName = "Socks"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_SocksCore"
+               BuildableName = "libSocksCore.dylib"
+               BlueprintName = "SocksCore"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_SocksCoreExampleClient"
+               BuildableName = "SocksCoreExampleClient"
+               BlueprintName = "SocksCoreExampleClient"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_SocksCoreExampleServer"
+               BuildableName = "SocksCoreExampleServer"
+               BlueprintName = "SocksCoreExampleServer"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_SocksExampleClient"
+               BuildableName = "SocksExampleClient"
+               BlueprintName = "SocksExampleClient"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_SocksExampleServer"
+               BuildableName = "SocksExampleServer"
+               BlueprintName = "SocksExampleServer"
+               ReferencedContainer = "container:Redbird.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "______Target_Redbird"
                BuildableName = "libRedbird.dylib"
                BlueprintName = "Redbird"
@@ -69,9 +153,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_Redbird"
-            BuildableName = "libRedbird.dylib"
-            BlueprintName = "Redbird"
+            BlueprintIdentifier = "______Target_Socks"
+            BuildableName = "libSocks.dylib"
+            BlueprintName = "Socks"
             ReferencedContainer = "container:Redbird.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

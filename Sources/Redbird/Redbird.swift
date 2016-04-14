@@ -59,7 +59,7 @@ public class Redbird {
         }
         
         //format the outgoing command into a Resp string
-        let formatted = try CommandFormatter().commandToString(name, params: params)
+        let formatted = try CommandFormatter().commandToString(command: name, params: params)
         return formatted
     }
     
@@ -75,7 +75,7 @@ public class Redbird {
             }
             if let e = error as? SocketError {
                 switch e.type {
-                case .WriteFailedToSendAllBytes: fallthrough
+                case .SendFailedToSendAllBytes: fallthrough
                 case .ReadFailed:
                     retry = true
                 default: break
@@ -88,7 +88,7 @@ public class Redbird {
             self.socket.close()
             
             //try to reconnect with a new socket
-            self.socket = try self.socket.newWithConfig(self.config)
+            self.socket = try self.socket.newWithConfig(config: self.config)
             try self.preflight()
             
             //rerun this command
@@ -96,15 +96,15 @@ public class Redbird {
         }
     }
     
-    public func command(name: String, params: [String] = []) throws -> RespObject {
+    public func command(_ name: String, params: [String] = []) throws -> RespObject {
         
-        let formatted = try self.formatCommand(name, params: params)
+        let formatted = try self.formatCommand(name: name, params: params)
         var ret: RespObject?
         
         try self.handleComms {
             
             //send the command string
-            try self.socket.write(formatted)
+            try self.socket.write(string: formatted)
             
             //delegate reading to parsers
             let reader: SocketReader = self.socket
@@ -128,12 +128,12 @@ public class Pipeline: Redbird {
     
     private var commands = [String]()
     
-    public override func command(name: String, params: [String]) throws -> RespObject {
+    public override func command(_ name: String, params: [String]) throws -> RespObject {
         fatalError("You must call enqueue on a Pipeline instance")
     }
     
-    public func enqueue(name: String, params: [String] = []) throws -> Pipeline {
-        let formatted = try self.formatCommand(name, params: params)
+    public func enqueue(_ name: String, params: [String] = []) throws -> Pipeline {
+        let formatted = try self.formatCommand(name: name, params: params)
         self.commands.append(formatted)
         return self
     }
@@ -148,7 +148,7 @@ public class Pipeline: Redbird {
         try self.handleComms {
             
             //send the command string
-            try self.socket.write(formatted)
+            try self.socket.write(string: formatted)
             
             //delegate reading to parsers
             let reader: SocketReader = self.socket
