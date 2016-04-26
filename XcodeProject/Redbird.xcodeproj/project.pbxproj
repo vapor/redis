@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3AABF8F51CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3AABF8F61CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3AABF8F71CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3AABF8F81CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3AABF8F91CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3AABF8FA1CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3AABF8FB1CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3AABF8FC1CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3AABF8FD1CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3AABF8FE1CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
-		3AABF8FF1CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
-		3AABF9001CBFD2B90022EAC1 /* libRedbird.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Redbird" /* libRedbird.dylib */; };
+		3A21EB531CCF659E00319206 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A21EB541CCF659E00319206 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A21EB551CCF659E00319206 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A21EB561CCF659E00319206 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A21EB571CCF659E00319206 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A21EB581CCF659E00319206 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A21EB591CCF659E00319206 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A21EB5A1CCF659E00319206 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A21EB5B1CCF659E00319206 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A21EB5C1CCF659E00319206 /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
+		3A21EB5D1CCF659E00319206 /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
+		3A21EB5E1CCF659E00319206 /* libRedbird.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Redbird" /* libRedbird.dylib */; };
 		_LinkFileRef_Redbird /* libRedbird.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Redbird" /* libRedbird.dylib */; };
 		_LinkFileRef_Socks /* libSocks.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socks" /* libSocks.dylib */; };
 		_LinkFileRef_SocksCore /* libSocksCore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SocksCore" /* libSocksCore.dylib */; };
@@ -75,21 +75,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3AABF9011CBFD2BB0022EAC1 /* PBXContainerItemProxy */ = {
+		3A21EB5F1CCF65A000319206 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_SocksCore";
 			remoteInfo = SocksCore;
 		};
-		3AABF9021CBFD2BB0022EAC1 /* PBXContainerItemProxy */ = {
+		3A21EB601CCF65A000319206 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Socks";
 			remoteInfo = Socks;
 		};
-		3AABF9031CBFD2BB0022EAC1 /* PBXContainerItemProxy */ = {
+		3A21EB611CCF65A000319206 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
@@ -166,8 +166,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3AABF8FA1CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */,
-				3AABF8FB1CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */,
+				3A21EB581CCF659E00319206 /* libSocks.dylib in Frameworks */,
+				3A21EB591CCF659E00319206 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,8 +175,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3AABF8FC1CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */,
-				3AABF8FD1CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */,
+				3A21EB5A1CCF659E00319206 /* libSocks.dylib in Frameworks */,
+				3A21EB5B1CCF659E00319206 /* libSocksCore.dylib in Frameworks */,
 				_LinkFileRef_Redbird /* libRedbird.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -185,9 +185,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3AABF8FE1CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */,
-				3AABF8FF1CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */,
-				3AABF9001CBFD2B90022EAC1 /* libRedbird.dylib in Frameworks */,
+				3A21EB5C1CCF659E00319206 /* libSocks.dylib in Frameworks */,
+				3A21EB5D1CCF659E00319206 /* libSocksCore.dylib in Frameworks */,
+				3A21EB5E1CCF659E00319206 /* libRedbird.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +210,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3AABF8F51CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */,
+				3A21EB531CCF659E00319206 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3AABF8F61CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */,
+				3A21EB541CCF659E00319206 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +227,7 @@
 			buildActionMask = 0;
 			files = (
 				_LinkFileRef_Socks /* libSocks.dylib in Frameworks */,
-				3AABF8F71CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */,
+				3A21EB551CCF659E00319206 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,8 +235,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				3AABF8F81CBFD2B90022EAC1 /* libSocks.dylib in Frameworks */,
-				3AABF8F91CBFD2B90022EAC1 /* libSocksCore.dylib in Frameworks */,
+				3A21EB561CCF659E00319206 /* libSocks.dylib in Frameworks */,
+				3A21EB571CCF659E00319206 /* libSocksCore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,17 +743,17 @@
 		__Dependency_Redbird /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Redbird" /* Redbird */;
-			targetProxy = 3AABF9031CBFD2BB0022EAC1 /* PBXContainerItemProxy */;
+			targetProxy = 3A21EB611CCF65A000319206 /* PBXContainerItemProxy */;
 		};
 		__Dependency_Socks /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Socks" /* Socks */;
-			targetProxy = 3AABF9021CBFD2BB0022EAC1 /* PBXContainerItemProxy */;
+			targetProxy = 3A21EB601CCF65A000319206 /* PBXContainerItemProxy */;
 		};
 		__Dependency_SocksCore /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_SocksCore" /* SocksCore */;
-			targetProxy = 3AABF9011CBFD2BB0022EAC1 /* PBXContainerItemProxy */;
+			targetProxy = 3A21EB5F1CCF65A000319206 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

@@ -15,7 +15,7 @@ import XCTest
     import Darwin
 #endif
 
-func assertNoThrow(@noescape block: () throws -> ()) {
+func assertNoThrow(block: @noescape () throws -> ()) {
     do {
         try block()
     } catch {
@@ -23,7 +23,7 @@ func assertNoThrow(@noescape block: () throws -> ()) {
     }
 }
 
-func assertThrow(@autoclosure _ errorType: () -> RedbirdError, @noescape block: () throws -> ()) {
+func assertThrow(_ errorType: @autoclosure () -> RedbirdError, block: @noescape () throws -> ()) {
     do {
         try block()
         XCTFail("Should have thrown an error, but didn't")
@@ -35,7 +35,7 @@ func assertThrow(@autoclosure _ errorType: () -> RedbirdError, @noescape block: 
 
 class RedbirdTests: XCTestCase {
     
-    func live(@noescape block: (client: Redbird) throws -> ()) {
+    func live(block: @noescape (client: Redbird) throws -> ()) {
         do {
             let client = try Redbird()
             try block(client: client)
@@ -44,7 +44,7 @@ class RedbirdTests: XCTestCase {
         }
     }
     
-    func liveShouldThrow(@noescape block: (client: Redbird) throws -> ()) {
+    func liveShouldThrow(block: @noescape (client: Redbird) throws -> ()) {
         do {
             let client = try Redbird()
             try block(client: client)
@@ -129,7 +129,7 @@ class RedbirdTests: XCTestCase {
         }
     }
 
-    func shouldThrow(@noescape block: () throws -> ()) {
+    func shouldThrow(block: @noescape () throws -> ()) {
         do {
             try block()
             XCTFail("Should have thrown")

@@ -63,7 +63,7 @@ public class Redbird {
         return formatted
     }
     
-    func handleComms(@noescape comms: () throws -> ()) throws {
+    func handleComms(comms: @noescape () throws -> ()) throws {
         //we inspect all thrown errors and try to handle certain ones
         do {
             try comms()
