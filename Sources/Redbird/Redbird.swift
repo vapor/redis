@@ -8,10 +8,10 @@
 
 public struct RedbirdConfig {
     var address: String
-    var port: Int
+    var port: UInt16
     var password: String?
     
-    public init(address: String = "127.0.0.1", port: Int = 6379, password: String? = nil) {
+    public init(address: String = "127.0.0.1", port: UInt16 = 6379, password: String? = nil) {
         self.address = address
         self.port = port
         self.password = password
@@ -25,7 +25,7 @@ public class Redbird {
     let config: RedbirdConfig
 
     public var address: String { return self.config.address }
-    public var port: Int { return self.config.port }
+    public var port: UInt16 { return self.config.port }
     
     public init(config: RedbirdConfig = RedbirdConfig()) throws {
 		
