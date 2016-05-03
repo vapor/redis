@@ -28,8 +28,9 @@ class ClientSocket: Socket {
     
     let client: TCPClient
     
-    init(address: String, port: Int) throws {
-        self.client = try TCPClient(hostname: address, port: port)
+    init(address: String, port: UInt16) throws {
+        let addr = InternetAddress(hostname: address, port: .PortNumber(port))
+        self.client = try TCPClient(internetAddress: addr)
     }
 
     func close() {
