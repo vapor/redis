@@ -71,13 +71,7 @@ extension String {
     }
     
     func byteArrayView() -> [Byte] {
-        return self.withCString { ptr in
-            let count = Int(strlen(ptr))
-            var idx = 0
-            var out = Array<Byte>(repeating: 0, count: count)
-            while idx < count { out[idx] = Byte(ptr[idx]); idx += 1 }
-            return out
-        }
+        return Array(self.utf8)
     }
     
     func splitAround(delimiter: String) throws -> (String, String?) {
