@@ -65,10 +65,10 @@ class StringTests: XCTestCase {
         XCTAssertTrue(does)
     }
     
-    func testCCharArrayView() {
+    func testByteArrayView() {
         
-        let chars = "Yol lo".ccharArrayView()
-        let exp = [89, 111, 108, 32, 108, 111].map { CChar($0) }
+        let chars = "Yol lo".byteArrayView()
+        let exp: [Byte] = [89, 111, 108, 32, 108, 111]
         XCTAssertEqual(chars, exp)
     }
     

@@ -11,13 +11,13 @@ import XCTest
 
 class TestReader: SocketReader {
     
-    var content: [CChar]
+    var content: [Byte]
     
     init(content: String) {
-        self.content = content.ccharArrayView()
+        self.content = content.byteArrayView()
     }
     
-    func read(bytes: Int) throws -> [CChar] {
+    func read(bytes: Int) throws -> [Byte] {
         
         precondition(bytes > 0)
         let toReadCount = min(bytes, self.content.count)
@@ -44,7 +44,7 @@ class ParsingTests: XCTestCase {
     func testParsingError_FirstReadChar() {
         
         let reader = TestReader(content: "WAAAT unknown command 'BLAH'\r\n")
-        let (obj, leftovers) = try! InitialParser().parse("-".ccharArrayView(), reader: reader)
+        let (obj, leftovers) = try! InitialParser().parse("-".byteArrayView(), reader: reader)
         XCTAssertEqual(obj.respType, RespType.Error)
         XCTAssertEqual(leftovers, [])
         let err = obj as! RespError
@@ -70,7 +70,7 @@ class ParsingTests: XCTestCase {
         let reader = TestReader(content: "+OK\r\nleftover")
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.SimpleString)
-        XCTAssertEqual(leftovers, "leftover".ccharArrayView())
+        XCTAssertEqual(leftovers, "leftover".byteArrayView())
         let simpleString = obj as! RespSimpleString
         XCTAssertEqual(simpleString.content, "OK")
     }
@@ -101,7 +101,7 @@ class ParsingTests: XCTestCase {
         let reader = TestReader(content: "$6\r\nfoobar\r\nleftover")
         let (obj, leftovers) = try! InitialParser().parse([], reader: reader)
         XCTAssertEqual(obj.respType, RespType.BulkString)
-        XCTAssertEqual(leftovers, "leftover".ccharArrayView())
+        XCTAssertEqual(leftovers, "leftover".byteArrayView())
         let bulkString = obj as! RespBulkString
         XCTAssertEqual(bulkString.content, "foobar")
     }

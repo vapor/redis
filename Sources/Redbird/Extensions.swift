@@ -70,19 +70,19 @@ extension String {
         return self.characters.contains(character)
     }
     
-    func ccharArrayView() -> [CChar] {
+    func byteArrayView() -> [Byte] {
         return self.withCString { ptr in
             let count = Int(strlen(ptr))
             var idx = 0
-            var out = Array<CChar>(repeating: 0, count: count)
-            while idx < count { out[idx] = ptr[idx]; idx += 1 }
+            var out = Array<Byte>(repeating: 0, count: count)
+            while idx < count { out[idx] = Byte(ptr[idx]); idx += 1 }
             return out
         }
     }
     
     func splitAround(delimiter: String) throws -> (String, String?) {
         
-        let split = self.ccharArrayView().splitAround(delimiter: delimiter.ccharArrayView())
+        let split = self.byteArrayView().splitAround(delimiter: delimiter.byteArrayView())
         let first = try split.0.toString()
         if let second = split.1 {
             return (first, try second.stringView())
@@ -91,14 +91,14 @@ extension String {
     }
 }
 
-extension Collection where Iterator.Element == CChar {
+extension Collection where Iterator.Element == Byte {
     
     /// Splits string around a delimiter, returns the first subarray
     /// as the first return value (including the delimiter) and the rest
     /// as the second, if found (empty array if found at the end). 
     /// Otherwise first array contains the original
     /// collection and the second is nil.
-    func splitAround(delimiter: [CChar]) -> ([CChar], [CChar]?) {
+    func splitAround(delimiter: [Byte]) -> ([Byte], [Byte]?) {
         
         let orig = Array(self)
         let end = orig.endIndex

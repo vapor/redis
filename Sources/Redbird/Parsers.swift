@@ -10,12 +10,12 @@ protocol Parser {
     
     /// takes already read chars and the reader, returns the parsed response
     /// object and the read, but unused trailing characters
-    func parse(_ alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar])
+    func parse(_ alreadyRead: [Byte], reader: SocketReader) throws -> (RespObject, [Byte])
 }
 
 extension Parser {
     
-    func ensureReadElements(min: Int, alreadyRead: [CChar], reader: SocketReader) throws -> [CChar] {
+    func ensureReadElements(min: Int, alreadyRead: [Byte], reader: SocketReader) throws -> [Byte] {
         
         precondition(min > 0)
         
@@ -39,7 +39,7 @@ extension Parser {
 /// to the specific parser.
 struct InitialParser: Parser {
 
-    func parse(_ alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
+    func parse(_ alreadyRead: [Byte], reader: SocketReader) throws -> (RespObject, [Byte]) {
         
         let read = try self.ensureReadElements(min: 1, alreadyRead: alreadyRead, reader: reader)
 
@@ -64,7 +64,7 @@ struct InitialParser: Parser {
 /// Parses the Error type
 struct ErrorParser: Parser {
     
-    func parse(_ alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
+    func parse(_ alreadyRead: [Byte], reader: SocketReader) throws -> (RespObject, [Byte]) {
         
         let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         let readString = try head.stringView()
@@ -77,7 +77,7 @@ struct ErrorParser: Parser {
 /// Parses the SimpleString type
 struct SimpleStringParser: Parser {
     
-    func parse(_ alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
+    func parse(_ alreadyRead: [Byte], reader: SocketReader) throws -> (RespObject, [Byte]) {
         
         let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         let readString = try head.stringView()
@@ -90,7 +90,7 @@ struct SimpleStringParser: Parser {
 /// Parses the Integer type
 struct IntegerParser: Parser {
     
-    func parse(_ alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
+    func parse(_ alreadyRead: [Byte], reader: SocketReader) throws -> (RespObject, [Byte]) {
         
         let (head, tail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         let readString = try head.stringView()
@@ -103,7 +103,7 @@ struct IntegerParser: Parser {
 /// Parses the BulkString type
 struct BulkStringParser: Parser {
     
-    func parse(_ alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
+    func parse(_ alreadyRead: [Byte], reader: SocketReader) throws -> (RespObject, [Byte]) {
 
         //first parse the number of string bytes
         let (head, maybeTail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
@@ -132,8 +132,8 @@ struct BulkStringParser: Parser {
         //in such case, split the tail into prefixTail, which we'll use
         //and suffixTail that we'll pass along
         
-        let neededChars: [CChar]
-        let suffixTail: [CChar]
+        let neededChars: [Byte]
+        let suffixTail: [Byte]
         
         if bytesToRead > 0 {
             //we need to read further chars
@@ -155,7 +155,7 @@ struct BulkStringParser: Parser {
 // Parses the Array type
 struct ArrayParser: Parser {
     
-    func parse(_ alreadyRead: [CChar], reader: SocketReader) throws -> (RespObject, [CChar]) {
+    func parse(_ alreadyRead: [Byte], reader: SocketReader) throws -> (RespObject, [Byte]) {
         
         //first parse the number of string bytes
         let (head, maybeTail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)

@@ -18,6 +18,8 @@ public struct RedbirdConfig {
     }
 }
 
+public typealias Byte = UInt8
+
 ///Redis client object
 public class Redbird {
     
@@ -153,7 +155,7 @@ public class Pipeline: Redbird {
             //delegate reading to parsers
             let reader: SocketReader = self.socket
             
-            var leftovers = [CChar]()
+            var leftovers = [Byte]()
             var responses = [RespObject]()
             for _ in self.commands {
                 //try to parse the string into a Resp object, fail if no parser accepts it

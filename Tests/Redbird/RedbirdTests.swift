@@ -193,7 +193,7 @@ class GoodSocket: Socket {
     
     func close() {}
     
-    func read(bytes: Int) throws -> [CChar] {
+    func read(bytes: Int) throws -> [Byte] {
         return try self.testReader.read(bytes: bytes)
     }
     
@@ -210,7 +210,7 @@ class DeadSocket: Socket {
     
     func close() {}
     
-    func read(bytes: Int) throws -> [CChar] {
+    func read(bytes: Int) throws -> [Byte] {
         return []
     }
     
@@ -227,7 +227,7 @@ class ReconnectableSocket: Socket {
     
     func close() {}
     
-    func read(bytes: Int) throws -> [CChar] {
+    func read(bytes: Int) throws -> [Byte] {
         return []
     }
     

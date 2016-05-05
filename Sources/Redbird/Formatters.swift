@@ -89,7 +89,7 @@ struct BulkStringFormatter: Formatter {
         let content = (object as! RespBulkString).content
         
         //first count the number of bytes of the string
-        let byteCount = content.ccharArrayView().count
+        let byteCount = content.byteArrayView().count
         
         //format the outgoing string
         let prefix = String(byteCount)

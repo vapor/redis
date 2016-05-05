@@ -94,7 +94,7 @@ extension StringTests {
             ("testHasPrefix", testHasPrefix),
             ("testHasSuffix", testHasSuffix),
             ("testContainsCharacter", testContainsCharacter),
-            ("testCCharArrayView", testCCharArrayView),
+            ("testByteArrayView", testByteArrayView),
             ("testSplitAround_NotFound", testSplitAround_NotFound),
             ("testSplitAround_Middle", testSplitAround_Middle),
             ("testSplitAround_Start", testSplitAround_Start),

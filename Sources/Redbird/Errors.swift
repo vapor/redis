@@ -13,9 +13,9 @@ public enum RedbirdError: ErrorProtocol {
     case IntegerInvalidInput(String)
     case FormatterNotForThisType(RespObject, RespType?)
     case ReceivedStringNotTerminatedByRespTerminator(String)
-    case StringNotConvertibleToCChar(String)
+    case StringNotConvertibleToByte(String)
     case NoDataFromSocket
-    case NotEnoughCharactersToReadFromSocket(Int, [CChar])
+    case NotEnoughCharactersToReadFromSocket(Int, [Byte])
     case BulkStringProvidedUnparseableByteCount(String)
     case ArrayProvidedUnparseableCount(String)
     case NoFormatterFoundForObject(RespObject)

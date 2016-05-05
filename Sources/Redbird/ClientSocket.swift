@@ -13,13 +13,13 @@ typealias SocketError = SocksCore.Error
 
 protocol Socket: class, SocketReader {
     func write(string: String) throws
-    func read(bytes: Int) throws -> [CChar]
+    func read(bytes: Int) throws -> [Byte]
     func newWithConfig(config: RedbirdConfig) throws -> Socket
     func close()
 }
 
 extension Socket {
-    func read() throws -> [CChar] {
+    func read() throws -> [Byte] {
         return try self.read(bytes: BufferCapacity)
     }
 }
@@ -47,13 +47,13 @@ class ClientSocket: Socket {
         try self.client.write(data: string)
     }
     
-    func read(bytes: Int = BufferCapacity) throws -> [CChar] {
-        return try self.client.read(maxBytes: bytes).map { CChar($0) }
+    func read(bytes: Int = BufferCapacity) throws -> [Byte] {
+        return try self.client.read(maxBytes: bytes).map { Byte($0) }
     }
 }
 
 protocol SocketReader: class {
-    func read(bytes: Int) throws -> [CChar]
+    func read(bytes: Int) throws -> [Byte]
 }
 
 let BufferCapacity = 512
@@ -62,10 +62,10 @@ extension SocketReader {
 
     /// Reads until 1) we run out of characters or 2) we detect the delimiter
     /// whichever happens first.
-    func readUntilDelimiter(alreadyRead: [CChar], delimiter: String) throws -> ([CChar], [CChar]?) {
+    func readUntilDelimiter(alreadyRead: [Byte], delimiter: String) throws -> ([Byte], [Byte]?) {
         
         var totalBuffer = alreadyRead
-        let delimiterChars = delimiter.ccharArrayView()
+        let delimiterChars = delimiter.byteArrayView()
         var lastReadCount = BufferCapacity
         
         while true {
@@ -93,7 +93,7 @@ extension SocketReader {
 
 extension ClientSocket: SocketReader {}
 
-extension Collection where Iterator.Element == CChar {
+extension Collection where Iterator.Element == Byte {
     
     func stringView() throws -> String {
         return try self.toString()
