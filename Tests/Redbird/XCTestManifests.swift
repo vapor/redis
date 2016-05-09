@@ -7,7 +7,7 @@
 //
 
 extension ConversionTests {
-    static var allTests : [(String, ConversionTests -> () throws -> Void)] {
+    static var allTests : [(String, (ConversionTests) -> () throws -> Void)] {
         return [
             ("testArray_Ok", testArray_Ok),
             ("testArray_NullThrows", testArray_NullThrows),
@@ -26,7 +26,7 @@ extension ConversionTests {
 }
 
 extension FormattingTests {
-    static var allTests : [(String, FormattingTests -> () throws -> Void)] {
+    static var allTests : [(String, (FormattingTests) -> () throws -> Void)] {
         return [
             ("testInitialFormatter_Integer", testInitialFormatter_Integer),
             ("testError", testError),
@@ -45,7 +45,7 @@ extension FormattingTests {
 }
 
 extension ParsingTests {
-    static var allTests : [(String, ParsingTests -> () throws -> Void)] {
+    static var allTests : [(String, (ParsingTests) -> () throws -> Void)] {
         return [
             ("testParsingError_NothingReadYet", testParsingError_NothingReadYet),
             ("testParsingError_FirstReadChar", testParsingError_FirstReadChar),
@@ -66,7 +66,7 @@ extension ParsingTests {
 }
 
 extension RedbirdTests {
-    static var allTests : [(String, RedbirdTests -> () throws -> Void)] {
+    static var allTests : [(String, (RedbirdTests) -> () throws -> Void)] {
         return [
             ("testServersideKilledSocket_Reconnected", testServersideKilledSocket_Reconnected),
             ("testServersideTimeout", testServersideTimeout),
@@ -83,7 +83,7 @@ extension RedbirdTests {
 }
 
 extension StringTests {
-    static var allTests : [(String, StringTests -> () throws -> Void)] {
+    static var allTests : [(String, (StringTests) -> () throws -> Void)] {
         return [
             ("testStrippingTrailingTerminator", testStrippingTrailingTerminator),
             ("testStrippingSignature", testStrippingSignature),
