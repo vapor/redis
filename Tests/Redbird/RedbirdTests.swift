@@ -58,7 +58,7 @@ class RedbirdTests: XCTestCase {
         live { (client) in
             
             //kill our connection, simulating e.g. server disconnecting us/crashing
-            try client.command("CLIENT", params: ["KILL", "SKIPME", "NO"])
+            _ = try client.command("CLIENT", params: ["KILL", "SKIPME", "NO"])
             
             //try to ping, expected to reconnect
             let resp = try client.command("PING")
@@ -70,7 +70,7 @@ class RedbirdTests: XCTestCase {
         live { (client) in
             
             //set timeout to 1 sec
-            try client.command("CONFIG", params: ["SET", "timeout", "1"])
+            _ = try client.command("CONFIG", params: ["SET", "timeout", "1"])
             sleep(2)
             
             //try to ping, expected to reconnect
@@ -145,7 +145,7 @@ class RedbirdTests: XCTestCase {
         
         //dead socket, fails both times
         shouldThrow {
-            try client.command("PING")
+            _ = try client.command("PING")
         }
     }
     
@@ -156,7 +156,7 @@ class RedbirdTests: XCTestCase {
         
         //dead socket, fails both times
         shouldThrow {
-            try client.pipeline().enqueue("PING").execute()
+            _ = try client.pipeline().enqueue("PING").execute()
         }
     }
     
