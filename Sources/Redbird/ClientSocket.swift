@@ -29,8 +29,8 @@ class ClientSocket: Socket {
     let client: TCPClient
     
     init(address: String, port: UInt16) throws {
-        let addr = InternetAddress(hostname: address, port: .PortNumber(port))
-        self.client = try TCPClient(internetAddress: addr)
+        let addr = InternetAddress(hostname: address, port: .portNumber(port))
+        self.client = try TCPClient(address: addr)
     }
 
     func close() {
@@ -44,11 +44,11 @@ class ClientSocket: Socket {
     //MARK: Actual functionality
     
     func write(string: String) throws {
-        try self.client.write(data: string)
+        try self.client.send(bytes: string.toBytes())
     }
     
     func read(bytes: Int = BufferCapacity) throws -> [Byte] {
-        return try self.client.read(maxBytes: bytes).map { Byte($0) }
+        return try self.client.receive(maxBytes: bytes)
     }
 }
 

@@ -98,6 +98,7 @@ public class Redbird {
         }
     }
     
+    @discardableResult
     public func command(_ name: String, params: [String] = []) throws -> RespObject {
         
         let formatted = try self.formatCommand(name: name, params: params)
@@ -130,6 +131,7 @@ public class Pipeline: Redbird {
     
     private var commands = [String]()
     
+    @discardableResult
     public override func command(_ name: String, params: [String]) throws -> RespObject {
         fatalError("You must call enqueue on a Pipeline instance")
     }
@@ -140,6 +142,7 @@ public class Pipeline: Redbird {
         return self
     }
     
+    @discardableResult
     public func execute() throws -> [RespObject] {
         guard self.commands.count > 0 else {
             throw RedbirdError.PipelineNoCommandProvided
