@@ -48,7 +48,7 @@ class ClientSocket: Socket {
     }
     
     func read(bytes: Int = BufferCapacity) throws -> [Byte] {
-        return try self.client.receive(maxBytes: bytes).map { Byte($0) }
+        return try self.client.receive(maxBytes: bytes)
     }
 }
 
