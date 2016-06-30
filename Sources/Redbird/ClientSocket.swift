@@ -29,7 +29,7 @@ class ClientSocket: Socket {
     let client: TCPClient
     
     init(address: String, port: UInt16) throws {
-        let addr = InternetAddress(hostname: address, port: .portNumber(port))
+        let addr = InternetAddress(hostname: address, port: port)
         self.client = try TCPClient(address: addr)
     }
 

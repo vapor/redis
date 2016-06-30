@@ -87,6 +87,14 @@ class ConversionTests: XCTestCase {
             let orig = try RespInteger(content: "12")
             let ret = try orig.toInt()
             XCTAssertEqual(ret, 12)
+            
+            let origSimpStr = try RespSimpleString(content: "13")
+            let retSimpStr = try origSimpStr.toInt()
+            XCTAssertEqual(retSimpStr, 13)
+            
+            let origBulkStr = try RespBulkString(content: "14")
+            let retBulkStr = try origBulkStr.toInt()
+            XCTAssertEqual(retBulkStr, 14)
         }
     }
 
