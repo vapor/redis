@@ -3,7 +3,7 @@ import PackageDescription
 let package = Package(
   name: "Redbird",
   dependencies: [
-    .Package(url: "https://github.com/czechboy0/Socks.git", majorVersion: 0, minor: 5)
+    .Package(url: "https://github.com/czechboy0/Socks.git", majorVersion: 0, minor: 8)
   ],
   exclude: [],
   targets: [
