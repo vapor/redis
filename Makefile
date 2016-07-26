@@ -13,9 +13,9 @@ build-release:
 test: redis
 	@swift test
 
-example: redis build-release
+example: redis build
 	@echo "Running example client"
-	.build/release/RedbirdExample
+	.build/debug/RedbirdExample
 
 validate_spec:
 	@echo "Validating podspec"
