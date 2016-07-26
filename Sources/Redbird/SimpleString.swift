@@ -14,7 +14,7 @@ public struct RespSimpleString: RespObject {
     
     init(content: String) throws {
         if content.contains(character: "\r") || content.contains(character: "\n") {
-            throw RedbirdError.SimpleStringInvalidInput(content)
+            throw RedbirdError.simpleStringInvalidInput(content)
         }
         self.content = content
     }

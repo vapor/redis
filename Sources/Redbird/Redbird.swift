@@ -57,7 +57,7 @@ public class Redbird {
         //make sure nobody passed params in the command name
         //TODO: will become obsolete once we change name to an enum value
         guard name.subwords().count == 1 else {
-            throw RedbirdError.MoreThanOneWordSpecifiedAsCommand(name)
+            throw RedbirdError.moreThanOneWordSpecifiedAsCommand(name)
         }
         
         //format the outgoing command into a Resp string
@@ -72,7 +72,7 @@ public class Redbird {
         } catch {
             
             var retry = false
-            if case RedbirdError.NoDataFromSocket = error {
+            if case RedbirdError.noDataFromSocket = error {
                 retry = true
             }
             if let e = error as? SocketError {
@@ -147,9 +147,9 @@ public class Pipeline: Redbird {
     @discardableResult
     public func execute() throws -> [RespObject] {
         guard self.commands.count > 0 else {
-            throw RedbirdError.PipelineNoCommandProvided
+            throw RedbirdError.pipelineNoCommandProvided
         }
-        let formatted = self.commands.reduce("", combine: +)
+        let formatted = self.commands.reduce("", +)
         var ret: [RespObject]?
         
         try self.handleComms {

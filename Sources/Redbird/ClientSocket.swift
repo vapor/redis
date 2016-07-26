@@ -9,7 +9,7 @@
 import Socks
 import SocksCore
 
-typealias SocketError = SocksCore.Error
+typealias SocketError = SocksError
 
 protocol Socket: class, SocketReader {
     func write(string: String) throws

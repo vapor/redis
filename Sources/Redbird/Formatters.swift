@@ -26,7 +26,7 @@ struct InitialFormatter: Formatter {
         
         //find the appropriate formatter for this type
         guard let formatter = formatters[object.respType] else {
-            throw RedbirdError.NoFormatterFoundForObject(object)
+            throw RedbirdError.noFormatterFoundForObject(object)
         }
         
         let formatted = try formatter.format(object)
@@ -114,7 +114,7 @@ struct ArrayFormatter: Formatter {
             .wrappedInitialSignatureAndTrailingTerminator(RespArray.signature)
         let suffix = try content
             .map { try InitialFormatter().format($0) }
-            .reduce("", combine: +)
+            .reduce("", +)
         let str = prefix + suffix
         return str
     }

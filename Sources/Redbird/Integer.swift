@@ -16,7 +16,7 @@ public struct RespInteger: RespObject {
     init(content: String) throws {
         
         guard let intContent = Int64(content) else {
-            throw RedbirdError.SimpleStringInvalidInput(content)
+            throw RedbirdError.simpleStringInvalidInput(content)
         }
         self.intContent = intContent
     }

@@ -21,7 +21,7 @@ class ConversionTests: XCTestCase {
     
     func testArray_NullThrows() {
         let orig = RespNullArray()
-        assertThrow(.WrongNativeTypeUnboxing(orig, "Array")) {
+        assertThrow(.wrongNativeTypeUnboxing(orig, "Array")) {
             _ = try orig.toArray()
         }
     }
@@ -61,7 +61,7 @@ class ConversionTests: XCTestCase {
 
     func testString_NullThrows() {
         let orig = RespNullBulkString()
-        assertThrow(.WrongNativeTypeUnboxing(orig, "String")) {
+        assertThrow(.wrongNativeTypeUnboxing(orig, "String")) {
             _ = try orig.toString()
         }
     }

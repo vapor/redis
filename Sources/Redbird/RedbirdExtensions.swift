@@ -17,6 +17,6 @@ extension Redbird {
         case .SimpleString: if try ret.toString() == "OK" { return }
         default: break
         }
-        throw RedbirdError.UnexpectedReturnedObject(ret)
+        throw RedbirdError.unexpectedReturnedObject(ret)
     }
 }
