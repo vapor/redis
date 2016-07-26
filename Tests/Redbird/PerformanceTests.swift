@@ -7,37 +7,30 @@
 //
 
 import XCTest
+import Foundation
 @testable import Redbird
 
-//#if os(Linux)
-//    extension PerformanceTests: XCTestCaseProvider {
-//        var allTests : [(String, () throws -> Void)] {
-//            return [
-//                ("testPerf_ParsingArray_Normal", testPerf_ParsingArray_Normal),
-//                ("testPerf_LargeArray", testPerf_LargeArray)
-//            ]
-//        }
-//    }
-//#endif
+extension PerformanceTests {
+    static var allTests = [
+        ("testPerf_ParsingArray_Normal", testPerf_ParsingArray_Normal),
+        ("testPerf_LargeArray", testPerf_LargeArray)
+    ]
+}
 
-#if os(Linux)
-#else
 class PerformanceTests: XCTestCase {
 
-    func urlForFixture(name: String) -> NSURL {
-
+    func urlForFixture(name: String) -> URL {
         let parent = (#file).components(separatedBy: "/").dropLast().joined(separator: "/")
-        let url = NSURL(string: "file://\(parent)/\(name).txt")!
+        let url = URL(string: "file://\(parent)/\(name).txt")!
         print("Loading fixture from url \(url)")
         return url
     }
     
     func testPerf_ParsingArray_Normal() {
-        
         let strUrl = urlForFixture(name: "teststring")
-        let str = try! String(contentsOf: strUrl, encoding: NSUTF8StringEncoding)
+        let bytes = Array(try! Data(contentsOf: strUrl))
         measure {
-            let reader = TestReader(content: str)
+            let reader = TestReader(bytes: bytes)
             let (_, _) = try! InitialParser().parse([], reader: reader)
         }
     }
@@ -57,6 +50,4 @@ class PerformanceTests: XCTestCase {
             _ = try! InitialFormatter().format(input)
         }
     }
-
 }
-#endif

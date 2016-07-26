@@ -26,10 +26,10 @@ extension Parser {
         let leftToRead = min - alreadyRead.count
         let readChars = try reader.read(bytes: leftToRead)
         guard readChars.count > 0 else {
-            throw RedbirdError.NoDataFromSocket
+            throw RedbirdError.noDataFromSocket
         }
         guard readChars.count == leftToRead else {
-            throw RedbirdError.NotEnoughCharactersToReadFromSocket(leftToRead, alreadyRead)
+            throw RedbirdError.notEnoughCharactersToReadFromSocket(leftToRead, alreadyRead)
         }
         return alreadyRead + readChars
     }
@@ -54,7 +54,7 @@ struct InitialParser: Parser {
         case RespBulkString.signature: parser = BulkStringParser()
         case RespArray.signature: parser = ArrayParser()
         default:
-            throw RedbirdError.ParsingStringNotThisType(try alreadyRead.stringView(), nil)
+            throw RedbirdError.parsingStringNotThisType(try alreadyRead.stringView(), nil)
         }
         
         return try parser.parse(read, reader: reader)
@@ -109,12 +109,12 @@ struct BulkStringParser: Parser {
         let (head, maybeTail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         guard let tail = maybeTail else {
             let readSoFar = try head.stringView()
-            throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(readSoFar)
+            throw RedbirdError.receivedStringNotTerminatedByRespTerminator(readSoFar)
         }
         let rawByteCountString = try head.stringView()
         let byteCountString = rawByteCountString.strippedInitialSignatureAndTrailingTerminator()
         guard let byteCount = Int(byteCountString) else {
-            throw RedbirdError.BulkStringProvidedUnparseableByteCount(byteCountString)
+            throw RedbirdError.bulkStringProvidedUnparseableByteCount(byteCountString)
         }
         
         //if byte count is -1, then return a null string
@@ -161,12 +161,12 @@ struct ArrayParser: Parser {
         let (head, maybeTail) = try reader.readUntilDelimiter(alreadyRead: alreadyRead, delimiter: RespTerminator)
         guard let tail = maybeTail else {
             let readSoFar = try head.stringView()
-            throw RedbirdError.ReceivedStringNotTerminatedByRespTerminator(readSoFar)
+            throw RedbirdError.receivedStringNotTerminatedByRespTerminator(readSoFar)
         }
         let rawCountString = try head.stringView()
         let countString = rawCountString.strippedInitialSignatureAndTrailingTerminator()
         guard let count = Int(countString) else {
-            throw RedbirdError.ArrayProvidedUnparseableCount(countString)
+            throw RedbirdError.arrayProvidedUnparseableCount(countString)
         }
         
         //if byte count is -1, then return a null array

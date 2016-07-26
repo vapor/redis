@@ -17,6 +17,10 @@ class TestReader: SocketReader {
         self.content = content.byteArrayView()
     }
     
+    init(bytes: [Byte]) {
+        self.content = bytes
+    }
+    
     func read(bytes: Int) throws -> [Byte] {
         
         precondition(bytes > 0)
