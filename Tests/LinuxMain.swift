@@ -1,5 +1,5 @@
 import XCTest
-@testable import RedbirdTestSuite
+@testable import RedbirdTests
 
 XCTMain([
 	testCase(ConversionTests.allTests),
