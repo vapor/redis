@@ -132,19 +132,31 @@ struct BulkStringParser: Parser {
         //in such case, split the tail into prefixTail, which we'll use
         //and suffixTail that we'll pass along
         
-        let neededChars: [Byte]
-        let suffixTail: [Byte]
+        var neededChars: [Byte] = []
+        var suffixTail: [Byte] = []
         
-        if bytesToRead > 0 {
-            //we need to read further chars
-            let newlyRead = try reader.read(bytes: bytesToRead)
-            neededChars = tail + newlyRead
-            suffixTail = []
-        } else {
+        if bytesToRead <= 0 {
             //we've read enough/more than needed
             neededChars = Array(tail.prefix(requiredCount))
             suffixTail = Array(tail.suffix(tail.count - requiredCount))
+        } else {
+            
+            //we need to read further chars
+            //but the read fn might give us less than we need, so we need
+            //to call it repeatedly until we read everything
+            neededChars.append(contentsOf: tail)
+            
+            while neededChars.count < requiredCount {
+                let chunkSize = requiredCount - neededChars.count
+                let newlyRead = try reader.read(bytes: chunkSize)
+                neededChars.append(contentsOf: newlyRead)
+            }
+            
+            //sanity check
+            precondition(neededChars.count == requiredCount, "Read incorrect number of bytes")
+            suffixTail = []
         }
+        
         
         let allString = try neededChars.stringView()
         let parsedBulk = allString.strippedTrailingTerminator()

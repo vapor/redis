@@ -40,6 +40,7 @@ class RedbirdTests: XCTestCase {
             let client = try Redbird()
             try block(client)
         } catch {
+            print(error)
             XCTAssert(false, "Failed to create client \(error)")
         }
     }
@@ -54,6 +55,25 @@ class RedbirdTests: XCTestCase {
         }
     }
     
+    func testLive_LargeString() throws {
+        let count = 500_000
+        let str = Array(repeating: "large text right here, ", count: count).joined()
+        let size = str.utf8.count
+
+        live { (client) in
+            
+            let setResp = try client.command("SET", params: ["LARGE_STRING", str]).toString()
+            XCTAssertEqual(setResp, "OK")
+            let getResp = try client.command("GET", params: ["LARGE_STRING"])
+            let strOut = try getResp.toString()
+            let sizeOut = strOut.utf8.count
+            XCTAssert(str == strOut, "String mismatch")
+            XCTAssertEqual(size, sizeOut)
+            let delResp = try client.command("DEL", params: ["LARGE_STRING"]).toInt()
+            XCTAssertEqual(delResp, 1)
+        }
+    }
+
     func testServersideKilledSocket_Reconnected() {
         live { (client) in
             
@@ -76,6 +96,7 @@ class RedbirdTests: XCTestCase {
             //try to ping, expected to reconnect
             let resp = try client.command("PING")
             XCTAssertEqual(try? resp.toString(), "PONG")
+            _ = try client.command("CONFIG", params: ["SET", "timeout", "0"])
         }
     }
     
@@ -179,7 +200,6 @@ class RedbirdTests: XCTestCase {
         let resp = try! client.pipeline().enqueue("PING").execute()
         XCTAssertEqual(try? resp.first!.toString(), "PONG")
     }
-
     
 }
 
