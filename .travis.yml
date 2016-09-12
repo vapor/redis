@@ -13,7 +13,6 @@ script:
   - make redis-start
   - swift build
   - swift test
-  - make example
 notifications:
   email:
     on_success: never
