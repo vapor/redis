@@ -68,6 +68,7 @@ extension ParsingTests {
 extension RedbirdTests {
     static var allTests : [(String, (RedbirdTests) -> () throws -> Void)] {
         return [
+            ("testLive_LargeString", testLive_LargeString),
             ("testServersideKilledSocket_Reconnected", testServersideKilledSocket_Reconnected),
             ("testServersideTimeout", testServersideTimeout),
             ("testSimpleString_Ping", testSimpleString_Ping),
