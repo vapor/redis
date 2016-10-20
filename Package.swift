@@ -7,7 +7,7 @@ let package = Package(
 		// Target(name: "RedbirdExample", dependencies: ["Redbird"])
 	],
 	dependencies: [
-		.Package(url: "https://github.com/vapor/socks.git", majorVersion: 0, minor: 12)
+		.Package(url: "https://github.com/vapor/socks.git", majorVersion: 1)
 	],
 	exclude: [
         "Sources/RedbirdExample"
