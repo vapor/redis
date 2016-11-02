@@ -137,7 +137,8 @@ public class Pipeline: Redbird {
     public override func command(_ name: String, params: [String]) throws -> RespObject {
         fatalError("You must call enqueue on a Pipeline instance")
     }
-    
+
+    @discardableResult
     public func enqueue(_ name: String, params: [String] = []) throws -> Pipeline {
         let formatted = try self.formatCommand(name: name, params: params)
         self.commands.append(formatted)
