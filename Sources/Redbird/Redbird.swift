@@ -127,6 +127,18 @@ public class Redbird {
     public func pipeline() -> Pipeline {
         return Pipeline(config: self.config, socket: self.socket)
     }
+    //added by surendra tiwari to support subcribe
+    public func read() throws -> RespObject
+    {
+        var ret: RespObject?
+        try self.handleComms {
+            let reader: SocketReader = self.socket
+            let (responseObject, _) = try InitialParser().parse([], reader: reader)
+                ret = responseObject
+        }
+        return ret!
+    }
+
 }
 
 public class Pipeline: Redbird {
