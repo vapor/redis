@@ -7,7 +7,7 @@
 //
 
 public struct RespError: RespObject, Error {
-    static var signature: String = "-"
+    static let signature: String = "-"
     public let respType: RespType = .Error
     
     public let content: String

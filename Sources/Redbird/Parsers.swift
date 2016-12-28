@@ -48,13 +48,13 @@ struct InitialParser: Parser {
         
         let parser: Parser
         switch signature {
-        case RespError.signature: parser = ErrorParser()
-        case RespSimpleString.signature: parser = SimpleStringParser()
-        case RespInteger.signature: parser = IntegerParser()
-        case RespBulkString.signature: parser = BulkStringParser()
-        case RespArray.signature: parser = ArrayParser()
-        default:
-            throw RedbirdError.parsingStringNotThisType(try alreadyRead.stringView(), nil)
+            case RespError.signature: parser = ErrorParser()
+            case RespSimpleString.signature: parser = SimpleStringParser()
+            case RespInteger.signature: parser = IntegerParser()
+            case RespBulkString.signature: parser = BulkStringParser()
+            case RespArray.signature: parser = ArrayParser()
+            default:
+                throw RedbirdError.parsingStringNotThisType(try alreadyRead.stringView(), nil)
         }
         
         return try parser.parse(read, reader: reader)
@@ -177,9 +177,7 @@ struct ArrayParser: Parser {
         }
         let rawCountString = try head.stringView()
         let countString = rawCountString.strippedInitialSignatureAndTrailingTerminator()
-        guard let count = Int(countString) else {
-            throw RedbirdError.arrayProvidedUnparseableCount(countString)
-        }
+        let count = Int(countString) ?? 3 // Default to 3 if not specified
         
         //if byte count is -1, then return a null array
         if count == -1 {

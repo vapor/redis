@@ -7,7 +7,7 @@
 //
 
 public struct RespInteger: RespObject {
-    static var signature: String = ":"
+    static let signature: String = ":"
     public let respType: RespType = .Integer
     
     public let intContent: Int64
