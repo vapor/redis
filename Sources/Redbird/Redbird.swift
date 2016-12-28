@@ -184,3 +184,17 @@ struct CommandFormatter {
     }
 }
 
+// Add support for pub-sub
+extension Redbird {
+    public func read() throws -> RespObject
+    {
+        var ret: RespObject?
+        try self.handleComms {
+            let reader: SocketReader = self.socket
+            let (responseObject, _) = try InitialParser().parse([], reader: reader)
+            ret = responseObject
+        }
+        guard let retValue = ret else { throw RedbirdError.noDataFromSocket }
+        return retValue
+    }
+}

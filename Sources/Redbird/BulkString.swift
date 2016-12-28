@@ -7,7 +7,7 @@
 //
 
 public struct RespBulkString: RespObject {
-    static var signature: String = "$"
+    static let signature: String = "$"
     public let respType: RespType = .BulkString
     
     public let content: String
