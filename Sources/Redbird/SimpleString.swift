@@ -7,7 +7,7 @@
 //
 
 public struct RespSimpleString: RespObject {
-    static var signature: String = "+"
+    static let signature: String = "+"
     public let respType: RespType = .SimpleString
     
     public let content: String
