@@ -7,7 +7,7 @@
 //
 
 public struct RespNullBulkString: RespObject {
-    static var signature: String = "$-1\r\n"
+    static let signature: String = "$-1\r\n"
     public var respType: RespType = .NullBulkString
 }
 

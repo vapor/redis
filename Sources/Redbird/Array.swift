@@ -7,7 +7,7 @@
 //
 
 public struct RespArray: RespObject {
-    static var signature: String = "*"
+    static let signature: String = "*"
     public let respType: RespType = .Array
     
     public let content: [RespObject]
