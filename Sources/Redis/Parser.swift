@@ -14,10 +14,10 @@ public final class Parser {
             return .string(string)
         case Byte.hyphen:
             let string = try simple()
-            return .error(string)
+            return .error(RedisError.general(string))
         case Byte.colon:
             guard let int = Int(try simple()) else {
-                throw "int was not an int"
+                throw RedisError.invalidInteger
             }
             return .integer(int)
         case Byte.dollar:
@@ -26,7 +26,7 @@ public final class Parser {
         case Byte.asterisk:
             var items: [Data] = []
             guard let int = Int(try simple()) else {
-                throw "int was not an int"
+                throw RedisError.invalidInteger
             }
 
             for _ in 0..<int {
@@ -35,7 +35,7 @@ public final class Parser {
 
             return .array(items)
         default:
-            throw "unknown type"
+            throw RedisError.unknownResponseType
         }
     }
 
@@ -72,7 +72,7 @@ public final class Parser {
     func bulk() throws -> Bytes {
         let lengthString = try simple()
         guard let length = Int(lengthString) else {
-            throw "length was not a string"
+            throw RedisError.invalidInteger
         }
         let fullLength = length + 2 // including crlf
 
@@ -86,5 +86,3 @@ public final class Parser {
         return Array(bytes[0..<bytes.count - 2])
     }
 }
-
-extension String: Error {}
