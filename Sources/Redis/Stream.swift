@@ -14,11 +14,7 @@ public typealias DuplexStream = ReadableStream & WriteableStream
 
 extension TCPInternetSocket: DuplexStream {
     public func read(maxBytes: Int) throws -> Bytes {
-        let bytes = try recv(maxBytes: maxBytes)
-        guard bytes.count > 0 else {
-            throw SocksError(.readFailed)
-        }
-        return bytes
+        return try recv(maxBytes: maxBytes)
     }
 
     public func write(_ bytes: Bytes) throws {
