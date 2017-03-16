@@ -1,5 +1,5 @@
 import XCTest
-@testable import RedbirdTests
+@testable import RedisTests
 
 XCTMain([
 	testCase(LiveTests.allTests)
