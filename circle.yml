@@ -3,5 +3,5 @@ machine:
     - redis
 test:
   override:
-    - redis-server
+    - sudo service redis-server start
     - eval "$(curl -sL swift.vapor.sh/ci-3.1)"
