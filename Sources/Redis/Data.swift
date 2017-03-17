@@ -9,11 +9,7 @@ public enum Data {
 
 // MARK: Convenience
 
-extension Data: Polymorphic {
-    public var isNull: Bool {
-        return false
-    }
-
+extension Data {
     public var bool: Bool? {
         switch self {
         case .integer(let i):
@@ -61,7 +57,7 @@ extension Data: Polymorphic {
         }
     }
 
-    public var array: [Polymorphic]? {
+    public var array: [Data]? {
         switch self {
         case .array(let a):
             return a
@@ -70,11 +66,7 @@ extension Data: Polymorphic {
         }
     }
 
-    public var object: [String: Polymorphic]? {
-        return nil
-    }
-
-   public var bytes: [UInt8]? {
+   public var bytes: Bytes? {
         switch self {
         case .string(let s):
             return s.makeBytes()

@@ -1,13 +1,15 @@
+import Transport
+
 /// Parses Redis Data from a Stream
-public final class Parser {
-    public let stream: ReadableStream
-    public init(_ stream: ReadableStream) {
+public final class Parser<StreamType: DuplexStream> {
+    public let stream: StreamType
+    public init(_ stream: StreamType) {
         self.stream = stream
     }
 
     /// Parse a Redis Data from the stream
     public func parse() throws -> Data {
-        let type = try stream.read(maxBytes: 1).first ?? 0
+        let type = try stream.readByte() ?? 0
         switch type {
         case Byte.plus:
             let string = try simple()
@@ -47,7 +49,7 @@ public final class Parser {
         var bytes: Bytes = []
 
         loop: while true {
-            guard let byte = try stream.read(maxBytes: 1).first else {
+            guard let byte = try stream.readByte() else {
                 break loop
             }
 
@@ -80,7 +82,7 @@ public final class Parser {
         bytes.reserveCapacity(fullLength)
 
         while bytes.count < fullLength {
-            bytes += try stream.read(maxBytes: fullLength)
+            bytes += try stream.read(max: fullLength)
         }
 
         return Array(bytes[0..<bytes.count - 2])

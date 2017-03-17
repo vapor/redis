@@ -4,13 +4,13 @@ import Random
 
 class LiveTests: XCTestCase {
     func testPing() throws {
-        let client = try Client.makeTest()
+        let client = try TCPClient()
         let res = try client.command(.ping)
         XCTAssertEqual(res.string, "PONG")
     }
 
     func testString() throws {
-        let client = try Client.makeTest()
+        let client = try TCPClient()
         do {
             let res = try client.command(.set, ["FOO", "BAR"])
             XCTAssertEqual(res.string, "OK")
@@ -22,7 +22,7 @@ class LiveTests: XCTestCase {
     }
 
     func testData() throws {
-        let client = try Client.makeTest()
+        let client = try TCPClient()
         let random = try OSRandom.bytes(count: 65_536)
         do {
             let res = try client.command(.set, ["FOO".makeBytes(), random])
@@ -41,7 +41,7 @@ class LiveTests: XCTestCase {
         measure {
             for _ in 0..<128 {
                 do {
-                    let client = try Client.makeTest()
+                    let client = try TCPClient()
                     do {
                         let res = try client.command(.set, [key, random])
                         XCTAssertEqual(res.string, "OK")
@@ -64,12 +64,6 @@ class LiveTests: XCTestCase {
         ("testData", testData),
         ("testPerformance", testPerformance)
     ]
-}
-
-extension Client {
-    static func makeTest() throws -> Client {
-        return try Client(hostname: "127.0.0.1", port: 6379)
-    }
 }
 
 infix operator ^^

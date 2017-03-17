@@ -1,8 +1,10 @@
-public class Pipeline {
-    public let client: Client
+import Transport
+
+public class Pipeline<StreamType: DuplexStream> {
+    public let client: Client<StreamType>
     private var commands: [Bytes] = []
 
-    public init(_ client: Client) {
+    public init(_ client: Client<StreamType>) {
         self.client = client
     }
 

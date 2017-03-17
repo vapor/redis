@@ -1,11 +1,13 @@
+import Transport
+
 /// Redis client for executing commands
-public final class Client {
-    public let stream: DuplexStream
-    let serializer: Serializer
-    let parser: Parser
+public final class Client<StreamType: DuplexStream> {
+    public let stream: StreamType
+    let serializer: Serializer<StreamType>
+    let parser: Parser<StreamType>
 
     /// Create a new redis client
-    init(_ stream: DuplexStream, password: String? = nil) throws {
+    init(_ stream: StreamType, password: String? = nil) throws {
         self.stream = stream
 
         serializer = Serializer(stream)
@@ -25,11 +27,11 @@ public final class Client {
         }
         let query = Data.array(parts)
         try serializer.serialize(query)
-
-        return try parser.parse()
+        let res = try parser.parse()
+        return res
     }
     
-    public func pipeline() -> Pipeline {
+    public func pipeline() -> Pipeline<StreamType> {
         return Pipeline(self)
     }
 }

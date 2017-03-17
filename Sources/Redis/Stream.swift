@@ -1,40 +1,20 @@
-public protocol Stream {
-    func close() throws
-}
-
-public protocol ReadableStream: Stream {
-    func read(maxBytes: Int) throws -> Bytes
-}
-
-public protocol WriteableStream: Stream {
-    func write(_ bytes: Bytes) throws
-}
-
-public typealias DuplexStream = ReadableStream & WriteableStream
-
-extension TCPInternetSocket: DuplexStream {
-    public func read(maxBytes: Int) throws -> Bytes {
-        return try recv(maxBytes: maxBytes)
-    }
-
-    public func write(_ bytes: Bytes) throws {
-        try send(data: bytes)
-    }
-}
-
-import Socks
+import Sockets
 
 public var defaultHostname = "127.0.0.1"
 public var defaultPort: UInt16 = 6379
 
-extension Client {
+public typealias TCPClient = Client<TCPInternetSocket>
+
+extension Client where StreamType == TCPInternetSocket {
     public convenience init(
         hostname: String = defaultHostname,
         port: UInt16 = defaultPort,
         password: String? = nil
     ) throws {
-        let addr = InternetAddress(hostname: hostname, port: port)
-        let socket = try TCPInternetSocket(address: addr)
+        let socket = try TCPInternetSocket(
+            hostname: hostname,
+            port: port
+        )
         try socket.connect()
         try self.init(socket, password: password)
     }

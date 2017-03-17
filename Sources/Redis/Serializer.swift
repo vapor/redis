@@ -1,8 +1,10 @@
+import Transport
+
 /// Serializes Redis Data to a Stream
-public final class Serializer {
-    public let stream: WriteableStream
-    public init(_ stream: WriteableStream) {
-        self.stream = stream
+public final class Serializer<StreamType: DuplexStream> {
+    public let stream: StreamBuffer<StreamType>
+    public init(_ stream: StreamType) {
+        self.stream = StreamBuffer(stream)
     }
 
     /// Serialize the Redis Data into
@@ -10,6 +12,7 @@ public final class Serializer {
     public func serialize(_ r: Data) throws {
         let bytes = makeBytes(from: r)
         try stream.write(bytes)
+        try stream.flush()
     }
 
     /// Convert the Redis Data into bytes
