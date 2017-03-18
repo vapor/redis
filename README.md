@@ -8,8 +8,9 @@ Redis communication protocol specification: [http://redis.io/topics/protocol](ht
 
 A Swift wrapper for Redis.
 
-- [x] Supports most queries
 - [x] Pure Swift
+- [x] Pub/sub
+- [x] Pipelines
 - [x] Fast (Byte based)
 
 ## 📖 Examples
@@ -17,12 +18,80 @@ A Swift wrapper for Redis.
 ```swift
 import Redis
 
-let client = try Client()
+let client = try TCPClient()
 
 try client.command(.set, ["FOO", "BAR"])
 
 let res = try client.command(.get, ["FOO"])
-print(res.string) // bar
+print(res?.string) // "BAR"
+```
+
+### Custom Host / Port
+
+Setting a custom hostname and port for the TCP connection is easy.
+
+```swift
+import Redis
+
+let client = try TCPClient(
+    hostname: "127.0.0.1",
+    port: 6379
+)
+```
+
+### Password
+
+Set the password to authorize the connection upon init.
+
+```swift
+import Redis
+
+let client = try TCPClient(password: "secret")
+```
+
+### Pipeline
+
+Pipelines can be used to send multiple queries at once and receive their responses as an array.
+
+```swift
+let client = try TCPClient()
+let results = try client
+    .makePipeline()
+    .enqueue(.set, ["FOO", "BAR"])
+    .enqueue(.set, ["Hello", "World"])
+    .enqueue(.get, ["Hello"])
+    .enqueue(.get, ["FOO"])
+    .execute()
+
+print(results) // ["OK", "OK", "World", "Bar"]
+```
+
+### Pub/Sub
+
+Publish and subscribe is a mechanism by which two processes or threads can share data.
+
+Note: `subscribe` will block and loop forever. Use on a background thread if you want to continue execution on the main thread.
+
+```swift
+background {
+    let client = try TCPClient()
+    try client.subscribe(channel: "vapor") { data in
+        print(data) // "FOO"
+    }
+}
+
+let client = try TCPClient()
+try client.publish(channel: "vapor", "FOO")
+```
+
+### Ping
+
+For testing the connection.
+
+```swift
+let client = try TCPClient()
+try client.command(.ping)
+print(res?.string) // "PONG"
 ```
 
 ## 📖 Documentation

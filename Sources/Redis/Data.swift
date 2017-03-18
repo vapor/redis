@@ -4,7 +4,7 @@ public enum Data {
     case error(Error)
     case integer(Int)
     case bulk(Bytes)
-    case array([Data])
+    case array([Data?])
 }
 
 // MARK: Convenience
@@ -57,7 +57,7 @@ extension Data {
         }
     }
 
-    public var array: [Data]? {
+    public var array: [Data?]? {
         switch self {
         case .array(let a):
             return a

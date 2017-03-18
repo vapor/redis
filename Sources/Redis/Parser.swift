@@ -8,7 +8,7 @@ public final class Parser<StreamType: DuplexStream> {
     }
 
     /// Parse a Redis Data from the stream
-    public func parse() throws -> Data {
+    public func parse() throws -> Data? {
         let type = try stream.readByte() ?? 0
         switch type {
         case Byte.plus:
@@ -23,15 +23,21 @@ public final class Parser<StreamType: DuplexStream> {
             }
             return .integer(int)
         case Byte.dollar:
-            let bytes = try bulk()
+            guard let bytes = try bulk() else {
+                return nil
+            }
             return .bulk(bytes)
         case Byte.asterisk:
-            var items: [Data] = []
-            guard let int = Int(try simple()) else {
+            var items: [Data?] = []
+            guard let length = Int(try simple()) else {
                 throw RedisError.invalidInteger
             }
 
-            for _ in 0..<int {
+            guard length >= 0 else {
+                return nil
+            }
+
+            for _ in 0..<length {
                 items.append(try parse())
             }
 
@@ -71,11 +77,16 @@ public final class Parser<StreamType: DuplexStream> {
     }
 
     /// Parse bulk redis data
-    func bulk() throws -> Bytes {
+    func bulk() throws -> Bytes? {
         let lengthString = try simple()
         guard let length = Int(lengthString) else {
             throw RedisError.invalidInteger
         }
+
+        guard length >= 0 else {
+            return nil
+        }
+
         let fullLength = length + 2 // including crlf
 
         var bytes: Bytes = []

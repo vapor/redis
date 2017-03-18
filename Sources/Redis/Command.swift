@@ -8,9 +8,11 @@ public enum Command {
     case ping
     case configure
     case flushall
+    case publish
+    case subscribe
     case custom(Bytes)
 
-    public init(custom: BytesRepresentable) throws {
+    public init(_ custom: BytesRepresentable) throws {
         self = .custom(try custom.makeBytes())
     }
 }
@@ -34,6 +36,10 @@ extension Command {
             return [.C, .O, .N, .F, .I, .G]
         case .flushall:
             return [.F, .L, .U, .S, .H, .A, .L, .L]
+        case .publish:
+            return [.P, .U, .B, .L, .I, .S, .H]
+        case .subscribe:
+            return [.S, .U, .B, .S, .C, .R, .I, .B, .E]
         case .custom(let bytes):
             return bytes
         }

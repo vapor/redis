@@ -12,11 +12,18 @@ public final class Serializer<StreamType: DuplexStream> {
     public func serialize(_ r: Data) throws {
         let bytes = makeBytes(from: r)
         try stream.write(bytes)
+    }
+
+    public func flush() throws {
         try stream.flush()
     }
 
     /// Convert the Redis Data into bytes
-    public func makeBytes(from resp: Data) -> Bytes {
+    public func makeBytes(from resp: Data?) -> Bytes {
+        guard let resp = resp else {
+            return null()
+        }
+
         switch resp {
         case .string(let s):
             return simple(s)
@@ -34,7 +41,7 @@ public final class Serializer<StreamType: DuplexStream> {
     // MARK: Private
 
     /// Serialize an array of Data
-    func array(_ items: [Data]) -> Bytes {
+    func array(_ items: [Data?]) -> Bytes {
         var array: Bytes = []
         let serializedItems = items.map(makeBytes)
         let count = serializedItems.decimalCount
@@ -99,6 +106,17 @@ public final class Serializer<StreamType: DuplexStream> {
         bulk += Byte.crlf
 
         return bulk
+    }
+
+    func null() -> Bytes {
+        // $-1\r\n
+        return [
+            .dollar,
+            .hyphen,
+            .one,
+            .carriageReturn,
+            .newLine
+        ]
     }
 }
 

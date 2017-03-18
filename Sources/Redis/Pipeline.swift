@@ -2,44 +2,42 @@ import Transport
 
 public class Pipeline<StreamType: DuplexStream> {
     public let client: Client<StreamType>
-    private var commands: [Bytes] = []
+    private var queuedCommands = 0
 
     public init(_ client: Client<StreamType>) {
         self.client = client
     }
 
+    @discardableResult
     public func enqueue(_ command: Command, params: [Bytes] = []) throws -> Pipeline {
-        var parts: [Data] = [.bulk(command.raw)]
-        params.forEach { param in
-            parts.append(.bulk(param))
-        }
-        let query = Data.array(parts)
-        let bytes = client.serializer.makeBytes(from: query)
-        commands.append(bytes)
+        let query = client.format(command, params)
+        try client.serializer.serialize(query)
+        queuedCommands += 1
         return self
     }
 
     @discardableResult
-    public func execute() throws -> [Data] {
-        guard self.commands.count > 0 else {
+    public func execute() throws -> [Data?] {
+        guard queuedCommands > 0 else {
             throw RedisError.pipelineCommandsRequired
         }
 
-        let formatted = commands.joined().array
-        try client.stream.write(formatted)
+        try client.serializer.flush()
 
-        var responses: [Data] = []
-        for _ in commands {
-            responses.append(try client.parser.parse())
+        var responses: [Data?] = []
+        for _ in 0..<queuedCommands {
+            let data = try client.parser.parse()
+            responses.append(data)
         }
 
-        commands = []
+        queuedCommands = 0
 
         return responses
     }
 }
 
 extension Pipeline {
+    @discardableResult
     public func enqueue(_ command: Command, _ params: [BytesRepresentable]) throws -> Pipeline {
         let params = try params.map { try $0.makeBytes() }
         return try self.enqueue(command, params: params)
