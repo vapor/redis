@@ -5,3 +5,5 @@ xcuserdata
 TestRedis/redis.pid
 redis_protocol_spec.pdf
 *.xcodeproj
+Package.pins
+dump.rdb
