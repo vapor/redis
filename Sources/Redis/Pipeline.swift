@@ -9,7 +9,7 @@ public class Pipeline<StreamType: DuplexStream> {
     }
 
     @discardableResult
-    public func enqueue(_ command: Command, params: [Bytes] = []) throws -> Pipeline {
+    public func enqueue(_ command: Command, _ params: [Bytes] = []) throws -> Pipeline {
         let query = client.format(command, params)
         try client.serializer.serialize(query)
         queuedCommands += 1
