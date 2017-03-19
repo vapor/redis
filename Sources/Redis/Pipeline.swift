@@ -40,6 +40,6 @@ extension Pipeline {
     @discardableResult
     public func enqueue(_ command: Command, _ params: [BytesRepresentable]) throws -> Pipeline {
         let params = try params.map { try $0.makeBytes() }
-        return try self.enqueue(command, params: params)
+        return try self.enqueue(command, params)
     }
 }
