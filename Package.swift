@@ -13,6 +13,6 @@ let package = Package(
 		.Package(url: "https://github.com/vapor/socks.git", Version(2,0,0, prereleaseIdentifiers: ["beta"])),
 		
 		// Module for generating random bytes and numbers (for tests).
-        .Package(url: "https://github.com/vapor/random.git", majorVersion: 0)
+        .Package(url: "https://github.com/vapor/random.git", Version(1,0,0, prereleaseIdentifiers: ["beta"]))
 	]
 )
