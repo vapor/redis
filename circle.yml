@@ -1,6 +1,14 @@
 machine:
   services:
     - redis
+dependencies:
+  override:
+    - eval "$(curl -sL https://apt.vapor.sh)"
+    - sudo apt-get install vapor cmysql
+    - sudo chmod -R a+rx /usr/
 test:
   override:
-    - eval "$(curl -sL swift.vapor.sh/ci-3.1)"
+    - swift build
+    - swift build -c release
+    - swift test
+    
