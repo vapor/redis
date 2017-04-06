@@ -42,6 +42,10 @@ public final class Client<StreamType: DuplexStream> {
     public func makePipeline() -> Pipeline<StreamType> {
         return Pipeline(self)
     }
+    
+    deinit {
+        try? stream.close()
+    }
 }
 
 extension Client {

@@ -2,9 +2,9 @@ import Transport
 
 /// Parses Redis Data from a Stream
 public final class Parser<StreamType: DuplexStream> {
-    public let stream: StreamType
+    public let stream: StreamBuffer<StreamType>
     public init(_ stream: StreamType) {
-        self.stream = stream
+        self.stream = StreamBuffer(stream)
     }
 
     /// Parse a Redis Data from the stream
@@ -93,7 +93,7 @@ public final class Parser<StreamType: DuplexStream> {
         bytes.reserveCapacity(fullLength)
 
         while bytes.count < fullLength {
-            bytes += try stream.read(max: fullLength)
+            bytes += try stream.read(max: fullLength - bytes.count)
         }
 
         return Array(bytes[0..<bytes.count - 2])
