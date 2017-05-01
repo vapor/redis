@@ -2,7 +2,7 @@ import Transport
 
 /// Serializes Redis Data to a Stream
 public final class Serializer<StreamType: DuplexStream> {
-    public let stream: StreamBuffer<StreamType>
+    let stream: StreamBuffer<StreamType>
     public init(_ stream: StreamType) {
         self.stream = StreamBuffer(stream)
     }

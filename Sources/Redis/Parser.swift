@@ -2,7 +2,7 @@ import Transport
 
 /// Parses Redis Data from a Stream
 public final class Parser<StreamType: DuplexStream> {
-    public let stream: StreamBuffer<StreamType>
+    let stream: StreamBuffer<StreamType>
     public init(_ stream: StreamType) {
         self.stream = StreamBuffer(stream)
     }
