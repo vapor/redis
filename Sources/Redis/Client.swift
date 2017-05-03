@@ -31,7 +31,7 @@ public final class Client<StreamType: DuplexStream> {
     public func command(_ command: Command, _ params: [Bytes] = []) throws -> Data? {
         let query = format(command, params)
         try serializer.serialize(query)
-        try serializer.flush()
+
         let res = try parser.parse()
         if let data = res, case .error(let e) = data {
             throw e
