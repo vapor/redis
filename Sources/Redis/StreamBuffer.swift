@@ -13,7 +13,6 @@ final class StreamBuffer<Stream: DuplexStream>: DuplexStream {
     private let size: Int
     
     private var readIterator: IndexingIterator<[Byte]>
-    private var writeBuffer: Bytes
     
     var isClosed: Bool {
         return stream.isClosed
@@ -33,7 +32,6 @@ final class StreamBuffer<Stream: DuplexStream>: DuplexStream {
         self.stream = stream
         
         readIterator = Bytes().makeIterator()
-        writeBuffer = []
     }
     
     /// Reads the next byte from the buffer
@@ -89,14 +87,12 @@ final class StreamBuffer<Stream: DuplexStream>: DuplexStream {
     }
     
     /// write bytes to the buffer stream
-    func write(_ bytes: Bytes) throws {
-        writeBuffer += bytes
+    func write(_ bytes: Bytes) throws -> Int {
+        return try write(max: bytes.count, from: bytes)
     }
-    
-    func flush() throws {
-        guard !writeBuffer.isEmpty else { return }
-        try stream.write(writeBuffer)
-        try stream.flush()
-        writeBuffer = []
+
+    func write(max: Int, from buffer: Bytes) throws -> Int {
+        return try stream.write(max: max, from: buffer)
     }
+
 }

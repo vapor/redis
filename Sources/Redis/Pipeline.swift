@@ -22,8 +22,6 @@ public class Pipeline<StreamType: DuplexStream> {
             throw RedisError.pipelineCommandsRequired
         }
 
-        try client.serializer.flush()
-
         var responses: [Data?] = []
         for _ in 0..<queuedCommands {
             let data = try client.parser.parse()
