@@ -89,14 +89,15 @@ final class StreamBuffer<Stream: DuplexStream>: DuplexStream {
     }
     
     /// write bytes to the buffer stream
-    func write(_ bytes: Bytes) throws {
-        writeBuffer += bytes
+    func write(max: Int, from buffer: Bytes) throws -> Int {
+        writeBuffer += buffer
+
+        return writeBuffer.count
     }
     
     func flush() throws {
         guard !writeBuffer.isEmpty else { return }
-        try stream.write(writeBuffer)
-        try stream.flush()
+        _ = try stream.write(max: writeBuffer.count, from: writeBuffer)
         writeBuffer = []
     }
 }

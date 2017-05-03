@@ -11,7 +11,7 @@ public final class Serializer<StreamType: DuplexStream> {
     /// the Serializer's stream
     public func serialize(_ r: Data) throws {
         let bytes = makeBytes(from: r)
-        try stream.write(bytes)
+        _ = try stream.write(bytes)
     }
 
     public func flush() throws {
