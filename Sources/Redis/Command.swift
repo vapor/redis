@@ -2,6 +2,11 @@
 public enum Command {
     case get
     case set
+    case hget
+    case hset
+    case hdel
+    case hkeys
+    case keys
     case authorize
     case delete
     case client
@@ -24,6 +29,16 @@ extension Command {
             return [.G, .E, .T]
         case .set:
             return [.S, .E, .T]
+        case .hget:
+            return [.H, .G, .E, .T]
+        case .hset:
+            return [.H, .S, .E, .T]
+        case .hkeys:
+            return [.H, .K, .E, .Y, .S]
+        case .hdel:
+            return [.H, .D, .E, .L]
+        case .keys:
+            return [.K, .E, .Y, .S]
         case .authorize:
             return [.A, .U, .T, .H]
         case .delete:

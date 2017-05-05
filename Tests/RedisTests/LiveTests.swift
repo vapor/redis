@@ -10,6 +10,17 @@ class LiveTests: XCTestCase {
         XCTAssertEqual(res?.string, "PONG")
     }
 
+    func testKeys() throws {
+        let client = try TCPClient()
+        try client.command(.flushall)
+        try client.command(.set, ["FOO", "BAR"])
+        try client.command(.set, ["BAR", "BAZ"])
+
+        let res = try client.command(.keys, ["*"])
+
+        XCTAssertEqual(res!.array!.flatMap { $0?.string }, ["FOO", "BAR"])
+    }
+
     func testString() throws {
         let client = try TCPClient()
         do {
@@ -32,6 +43,36 @@ class LiveTests: XCTestCase {
         do {
             let res = try client.command(.get, ["FOO"])
             XCTAssert(res!.bytes! == random)
+        }
+    }
+
+    func testHash() throws {
+        let client = try TCPClient()
+        try client.command(.flushall)
+        do {
+            let res = try client.command(.hset, ["BAZ", "BAR", "FOO"])
+            XCTAssertEqual(res?.int, 1)
+        }
+        do {
+            let res = try client.command(.hget, ["BAZ", "BAR"])
+            XCTAssertEqual(res?.string, "FOO")
+        }
+        do {
+            let res = try client.command(.hset, ["BAZ", "BAR", "BAR"])
+            XCTAssertEqual(res?.int, 0)
+        }
+        do {
+            let res = try client.command(.hget, ["BAZ", "BAR"])
+            XCTAssertEqual(res?.string, "BAR")
+        }
+        do {
+            let res = try client.command(.hkeys, ["BAZ"])
+            XCTAssertEqual(res!.array!.flatMap { $0?.string }, ["BAR"])
+        }
+        do {
+            try client.command(.hdel, ["BAZ", "BAR"])
+            let res = try client.command(.hkeys, ["BAZ"])
+            XCTAssertEqual(res!.array!.flatMap { $0?.string }, [])
         }
     }
 
