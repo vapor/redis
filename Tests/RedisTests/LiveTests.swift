@@ -160,7 +160,7 @@ class LiveTests: XCTestCase {
         ("testPing", testPing),
         ("testString", testString),
         ("testData", testData),
-        ("testPerformance", testPerformance),
+        // ("testPerformance", testPerformance), // no linux
         ("testPipeline", testPipeline),
         ("testError", testError),
         ("testPubSub", testPubSub)
