@@ -18,7 +18,13 @@ class LiveTests: XCTestCase {
 
         let res = try client.command(.keys, ["*"])
 
-        XCTAssertEqual(res!.array!.flatMap { $0?.string }, ["FOO", "BAR"])
+        if let strings = res?.array?.flatMap({ $0?.string }) {
+            XCTAssertEqual(strings.count, 2)
+            XCTAssert(strings.contains("FOO"))
+            XCTAssert(strings.contains("BAR"))
+        } else {
+            XCTFail("Invalid response")
+        }
     }
 
     func testString() throws {
