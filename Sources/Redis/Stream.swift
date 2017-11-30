@@ -24,20 +24,20 @@ extension Client where StreamType == TCPInternetSocket {
 public typealias TLSClient = Client<TLS.InternetSocket>
 
 extension Client where StreamType == TLS.InternetSocket {
-	public convenience init (
-		hostname: String = defaultHostname,
-		port: UInt16 = defaultPort,
-		password: String? = nil
-	) throws {
-		let socket = try TCPInternetSocket(
-			scheme: "rediss",
-			hostname: hostname,
-			port: port
-		)
+    public convenience init (
+        hostname: String = defaultHostname,
+        port: UInt16 = defaultPort,
+        password: String? = nil
+    ) throws {
+        let socket = try TCPInternetSocket(
+            scheme: "rediss",
+            hostname: hostname,
+            port: port
+        )
 
-		let stream = try TLS.InternetSocket(socket, Context(.client))
+        let stream = try TLS.InternetSocket(socket, Context(.client))
 
-		try stream.connect()
-		try self.init(stream, password: password)
-	}
+        try stream.connect()
+        try self.init(stream, password: password)
+    }
 }
