@@ -13,6 +13,9 @@ let package = Package(
         .Package(url: "https://github.com/vapor/sockets.git", majorVersion: 2),
 
         // Module for generating random bytes and numbers (for tests).
-        .Package(url: "https://github.com/vapor/random.git", majorVersion: 1)
+        .Package(url: "https://github.com/vapor/random.git", majorVersion: 1),
+
+        // Secure sockets
+        .Package(url: "https://github.com/vapor/tls.git", majorVersion: 2)
     ]
 )

@@ -18,10 +18,13 @@ let package = Package(
         .package(url: "https://github.com/vapor/sockets.git", from: "2.1.0"),
 
         // Module for generating random bytes and numbers (for tests).
-        .package(url: "https://github.com/vapor/random.git", from: "1.2.0")
+        .package(url: "https://github.com/vapor/random.git", from: "1.2.0"),
+
+        // Secure sockets
+        .package(url: "https://github.com/vapor/tls.git", from: "2.1.0")
     ],
     targets: [
-        .target(name: "Redis", dependencies: ["Core", "Node", "Sockets", "Random"]),
+        .target(name: "Redis", dependencies: ["Core", "Node", "Sockets", "Random", "TLS"]),
         .testTarget(name: "RedisTests", dependencies: ["Redis"])
     ]
 )
