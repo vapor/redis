@@ -9,6 +9,7 @@ jobs:
       - run: brew services start redis
       - checkout
       - run: swift build
+      # - run: swift build -c release
       - run: swift test
 
   linux:
@@ -19,6 +20,7 @@ jobs:
       - run: apt-get install -yq libssl-dev
       - checkout
       - run: swift build
+      # - run: swift build -c release
       - run: swift test
 
 workflows:
