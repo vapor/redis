@@ -1,80 +1,127 @@
-/// RESP data format
-public enum Data {
-    case string(String)
-    case error(Error)
-    case integer(Int)
-    case bulk(Bytes)
-    case array([Data?])
-}
+import Foundation
 
-// MARK: Convenience
-
-extension Data {
-    public var bool: Bool? {
-        switch self {
-        case .integer(let i):
-            return i == 1
-        case .string(let s):
-            return s.bool
-        case .bulk(let b):
-            return b.makeString().bool
-        default:
-            return nil
-        }
+/// A Redis primitive value
+public struct RedisData {
+    /// Internal storage abstraction
+    indirect enum Storage {
+        case null
+        case basicString(String)
+        case bulkString(Data)
+        case error(RedisError)
+        case integer(Int)
+        case array([RedisData])
     }
-
-    public var double: Double? {
-        if let i = int {
-            return Double(i)
-        } else {
-            return nil
-        }
+    
+    /// Stores the actual value so we don't have to break the API
+    var storage: Storage
+    
+    /// Creates a new RedisData
+    private init(storage: Storage) {
+        self.storage = storage
     }
-
-    public var int: Int? {
-        switch self {
-        case .integer(let int):
-            return int
-        case .string(let s):
-            return s.int
-        case .bulk(let b):
-            return b.makeString().int
-        default:
-            return nil
-        }
+    
+    /// Initializes a bulk string from a String
+    public init(bulk: String) {
+        self = .bulkString(Data(bulk.utf8))
     }
-
+    
+    /// Creates a BasicString. Used for command names and basic responses
+    public static func basicString(_ string: String) -> RedisData {
+        return RedisData(storage: .basicString(string))
+    }
+    
+    /// Creates a textual bulk string, or a "normal" String
+    public static func bulkString(_ string: String) -> RedisData {
+        return RedisData(storage: .bulkString(Data(string.utf8)))
+    }
+    
+    /// Creates a binary bulk string, or a "normal" Data
+    public static func bulkString(_ data: Data) -> RedisData {
+        return RedisData(storage: .bulkString(data))
+    }
+    
+    /// Creates an array of redis data
+    public static func array(_ data: [RedisData]) -> RedisData {
+        return RedisData(storage: .array(data))
+    }
+    
+    /// Creates a new Redis Integer Data
+    public static func integer(_ int: Int) -> RedisData {
+        return RedisData(storage: .integer(int))
+    }
+    
+    /// Creates a redis Error
+    public static func error(_ error: RedisError) -> RedisData {
+        return RedisData(storage: .error(error))
+    }
+    
+    /// Redis' Null
+    public static let null = RedisData(storage: .null)
+    
+    /// Extracts the basic/bulk string as a `String`.
     public var string: String? {
-        switch self {
-        case .integer(let i):
-            return i.description
-        case .string(let s):
-            return s
-        case .bulk(let b):
-            return b.makeString()
+        switch self.storage {
+        case .basicString(let string):
+            return string
+        case .bulkString(let data):
+            return String(bytes: data, encoding: .utf8)
         default:
             return nil
         }
     }
-
-    public var array: [Data?]? {
-        switch self {
-        case .array(let a):
-            return a
-        default:
-            return nil
+    
+    /// Extracts the binary data from a Redis BulkString
+    public var data: Data? {
+        if case .bulkString(let data) = self.storage {
+            return data
         }
+        
+        return nil
     }
-
-   public var bytes: Bytes? {
-        switch self {
-        case .string(let s):
-            return s.makeBytes()
-        case .bulk(let b):
-            return b
-        default:
+    
+    /// Extracts an array type from this data
+    public var array: [RedisData]? {
+        guard case .array(let array) = self.storage else {
             return nil
         }
+        
+        return array
+    }
+    
+    /// Extracts an array type from this data
+    public var int: Int? {
+        guard case .integer(let int) = self.storage else {
+            return nil
+        }
+        
+        return int
     }
 }
 
+extension RedisData: ExpressibleByStringLiteral {
+    /// Initializes a bulk string from a String literal
+    public init(stringLiteral value: String) {
+        self = .bulkString(Data(value.utf8))
+    }
+}
+
+extension RedisData: ExpressibleByArrayLiteral {
+    /// Initializes an array from an Array literal
+    public init(arrayLiteral elements: RedisData...) {
+        self = .array(elements)
+    }
+}
+
+extension RedisData: ExpressibleByNilLiteral {
+    /// Initializes null from a nil literal
+    public init(nilLiteral: ()) {
+        self = .null
+    }
+}
+
+extension RedisData: ExpressibleByIntegerLiteral {
+    /// Initializes an integer from an integer literal
+    public init(integerLiteral value: Int) {
+        self = .integer(value)
+    }
+}
