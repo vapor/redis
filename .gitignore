@@ -7,3 +7,4 @@ redis_protocol_spec.pdf
 *.xcodeproj
 Package.pins
 dump.rdb
+Package.resolved
