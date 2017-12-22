@@ -138,28 +138,37 @@ class LiveTests: XCTestCase {
     }
 
     func testPubSub() throws {
-        let exp = expectation(description: "publish")
+        let pub = expectation(description: "publish")
+        let sub = expectation(description: "subscribe")
 
-        let group = DispatchGroup()
-        group.enter()
-        background {
-            group.leave()
-            let client = try? TCPClient()
-            _ = try? client?.subscribe(channel: "vapor") { data in
-                let array = data?.array ?? []
-                XCTAssertEqual(array.count, 3)
-                XCTAssertEqual(array.last??.string, "foo")
-                exp.fulfill()
+        let queue1 = DispatchQueue.global(qos: .background)
+        let queue2 = DispatchQueue.global(qos: .userInteractive)
+
+        queue1.async {
+            do {
+                let client = try TCPClient()
+                try client.subscribe(channel: "vapor") { data in
+                    let array = data?.array ?? []
+                    XCTAssertEqual(array.count, 3)
+                    XCTAssertEqual(array.last??.string, "foo")
+                    sub.fulfill()
+                }
+            } catch {
+                XCTFail("Failed to subscribe to channel")
             }
         }
 
-        group.wait()
-        usleep(500)
+        queue2.asyncAfter(deadline: .now() + 0.3) {
+            do {
+                let client = try TCPClient()
+                try client.publish(channel: "vapor", "foo")
+                pub.fulfill()
+            } catch {
+                XCTFail("Failed to publish message")
+            }
+        }
 
-        let client = try TCPClient()
-        try client.publish(channel: "vapor", "foo")
-
-        waitForExpectations(timeout: 2)
+        waitForExpectations(timeout: 5)
     }
 
     static var allTests = [
