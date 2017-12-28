@@ -1,6 +1,20 @@
 import Async
 
 extension RedisClient {
+    /// Authorizes the client
+    ///
+    /// - returns: A future that will be completed (or failed) when the client is authorized
+    @discardableResult
+    public func authorize(with password: String) -> Future<RedisClient> {
+        return self.run(command: "AUTH", arguments: [RedisData(bulk: password)]).map(to: RedisClient.self) { result in
+            if case .error(let error) = result.storage {
+                throw error
+            } else {
+                return self
+            }
+        }
+    }
+    
     /// Stores the `value` at the key `key`
     ///
     /// [Learn More →](https://docs.vapor.codes/3.0/redis/basics/#creating-a-record)
