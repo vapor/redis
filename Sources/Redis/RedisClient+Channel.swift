@@ -2,7 +2,7 @@ import Async
 import Bits
 
 extension RedisClient {
-    /// Creates a `RedisSubscriptionStream`.
+    /// Creates a `RedisChannelStream`.
     public static func subscribe<SourceStream, SinkStream>(
         to channels: Set<String>,
         source: SourceStream,

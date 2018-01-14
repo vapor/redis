@@ -7,7 +7,7 @@ import XCTest
 class RedisTests: XCTestCase {
     func testCRUD() throws {
         let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.crud")
-        let redis = try RedisClient.connect(hostname: "localhost", port: 6379, on: eventLoop)
+        let redis = try RedisClient.connect(on: eventLoop)
         let set = try redis.set("world", forKey: "hello").await(on: eventLoop)
         XCTAssertEqual(set.string, "OK")
         let get = try redis.get(forKey: "hello").await(on: eventLoop)
@@ -17,24 +17,24 @@ class RedisTests: XCTestCase {
     }
 
     func testPubSub() throws {
+        // Setup
         let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.pubsub")
-        let redis = try RedisClient.subscribe(to: ["foo"], hostname: "localhost", port: 6379, on: eventLoop).await(on: eventLoop)
-
         let promise = Promise(RedisData.self)
-        let drain = redis.drain { data, upstream in
+
+        // Subscribe
+        try RedisClient.subscribe(to: ["foo"], on: eventLoop).await(on: eventLoop).drain { data, upstream in
             XCTAssertEqual(data.channel, "foo")
             promise.complete(data.data)
         }.catch { error in
             XCTFail("\(error)")
-        }.finally {
-            // closed
-        }
-        drain.upstream?.request(count: .max)
+        }.upstream?.request(count: .max)
 
-        let publisher = try RedisClient.connect(hostname: "localhost", port: 6379, on: eventLoop)
-        let res = try publisher.publish(.bulkString("it worked"), to: "foo").await(on: eventLoop)
-        XCTAssertEqual(res.int, 1)
+        // Publish
+        let publisher = try RedisClient.connect(on: eventLoop)
+        let publish = try publisher.publish(.bulkString("it worked"), to: "foo").await(on: eventLoop)
+        XCTAssertEqual(publish.int, 1)
 
+        // Verify
         let data = try promise.future.await(on: eventLoop)
         XCTAssertEqual(data.string, "it worked")
     }
