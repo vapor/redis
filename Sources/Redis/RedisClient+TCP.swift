@@ -11,10 +11,7 @@ extension RedisClient {
         let socket = try TCPSocket(isNonBlocking: true)
         let client = try TCPClient(socket: socket)
         try client.connect(hostname: hostname, port: port)
-        return RedisClient(
-            source: socket.source(on: worker.eventLoop),
-            sink: socket.sink(on: worker.eventLoop)
-        )
+        return RedisClient(stream: socket.stream(on: worker))
     }
 
     /// Subscribes to a Redis channel using a TCP socket.
@@ -27,10 +24,6 @@ extension RedisClient {
         let socket = try TCPSocket(isNonBlocking: true)
         let client = try TCPClient(socket: socket)
         try client.connect(hostname: hostname, port: port)
-        return RedisClient.subscribe(
-            to: channels,
-            source: socket.source(on: worker.eventLoop),
-            sink: socket.sink(on: worker.eventLoop)
-        )
+        return RedisClient.subscribe(to: channels, stream: socket.stream(on: worker))
     }
 }

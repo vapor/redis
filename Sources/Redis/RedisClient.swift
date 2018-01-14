@@ -8,24 +8,16 @@ public final class RedisClient {
     private let queueStream: QueueStream<RedisData, RedisData>
 
     /// Creates a new Redis client on the provided data source and sink.
-    public init<SourceStream, SinkStream>(
-        source: SourceStream,
-        sink: SinkStream
-    ) where
-        SourceStream: OutputStream,
-        SinkStream: InputStream,
-        SinkStream.Input == ByteBuffer,
-        SourceStream.Output == ByteBuffer
-    {
+    public init<Stream>(stream: Stream) where Stream: ByteStream {
         let queueStream = QueueStream<RedisData, RedisData>()
 
         let serializerStream = RedisDataSerializer()
         let parserStream = RedisDataParser()
 
-        source.stream(to: parserStream)
+        stream.stream(to: parserStream)
             .stream(to: queueStream)
             .stream(to: serializerStream)
-            .output(to: sink)
+            .output(to: stream)
 
         self.queueStream = queueStream
     }

@@ -3,22 +3,15 @@ import Bits
 
 extension RedisClient {
     /// Creates a `RedisChannelStream`.
-    public static func subscribe<SourceStream, SinkStream>(
-        to channels: Set<String>,
-        source: SourceStream,
-        sink: SinkStream
-    ) -> Future<RedisChannelStream>
-        where SourceStream: OutputStream,
-            SinkStream: InputStream,
-            SinkStream.Input == ByteBuffer,
-            SourceStream.Output == ByteBuffer
+    public static func subscribe<Stream>(to channels: Set<String>, stream: Stream) -> Future<RedisChannelStream>
+        where Stream: ByteStream
     {
-        let client = RedisClient(source: source, sink: sink)
+        let client = RedisClient(stream: stream)
         let channels = channels.map { name in
             return RedisData(bulk: name)
         }
         return client.command("SUBSCRIBE", channels).map(to: RedisChannelStream.self) { data in
-            return .init(source: source)
+            return .init(source: stream)
         }
     }
 }
