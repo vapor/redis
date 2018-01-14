@@ -2,17 +2,12 @@ import Async
 import Bits
 import TCP
 
-/// A Redis client
-///
-/// Wraps around the provided Connection/Closable Binary Stream
+/// A Redis client.
 public final class RedisClient {
-    /// Keeps track of whether this client is currently subscribed to a channel
-    internal var isSubscribed = false
+    /// Handles enqueued redis commands and responses.
+    private let queueStream: QueueStream<RedisData, RedisData>
 
-    /// Underlying redis data stream.
-    let stream: RedisDataStream
-
-    /// Creates a new Redis client on the provided connection
+    /// Creates a new Redis client on the provided data source and sink.
     public init<SourceStream, SinkStream>(
         source: SourceStream,
         sink: SinkStream
@@ -22,40 +17,34 @@ public final class RedisClient {
         SinkStream.Input == ByteBuffer,
         SourceStream.Output == ByteBuffer
     {
-        stream = .init(source: source, sink: sink)
+        let queueStream = QueueStream<RedisData, RedisData>()
+
+        let serializerStream = RedisDataSerializer()
+        let parserStream = RedisDataParser()
+
+        source.stream(to: parserStream)
+            .stream(to: queueStream)
+            .stream(to: serializerStream)
+            .output(to: sink)
+
+        self.queueStream = queueStream
+    }
+
+    /// Sends `RedisData` to the server.
+    public func send(_ data: RedisData) -> Future<RedisData> {
+        return queueStream.queue(data)
     }
 
     /// Runs a Value as a command
     ///
     /// [Learn More →](https://docs.vapor.codes/3.0/redis/custom-commands/#usage)
-    ///
-    /// - returns: A future containing the server's response or the error
-    public func run(command: String, arguments: [RedisData]? = nil) -> Future<RedisData> {
-        if isSubscribed {
-            return Future(error: RedisError(.cannotReuseSubscribedClients))
+    public func command(_ command: String, _ arguments: [RedisData] = []) -> Future<RedisData> {
+        return send(.array([.bulkString(command)] + arguments)).map(to: RedisData.self) { res in
+            // convert redis errors to a Future error
+            switch res.storage {
+            case .error(let error): throw error
+            default: return res
+            }
         }
-
-        let arguments = arguments ?? []
-        let command = RedisData.array([.bulkString(command)] + arguments)
-        return stream.enqueue(request: command)
-    }
-}
-
-extension RedisClient {
-    /// Connects to `Redis` using on a TCP socket to the provided hostname and port
-    ///
-    /// Listens to the socket using the provided `DispatchQueue`
-    public static func connect(
-        hostname: String = "localhost",
-        port: UInt16 = 6379,
-        on worker: Worker
-    ) throws -> RedisClient {
-        let socket = try TCPSocket(isNonBlocking: true)
-        let client = try TCPClient(socket: socket)
-        try client.connect(hostname: hostname, port: port)
-        return RedisClient(
-            source: socket.source(on: worker.eventLoop),
-            sink: socket.sink(on: worker.eventLoop)
-        )
     }
 }

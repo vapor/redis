@@ -3,7 +3,7 @@ import Bits
 import Foundation
 
 /// A streaming Redis value serializer
-final class RedisDataSerializer: Async.Stream {
+internal final class RedisDataSerializer: Async.Stream {
     /// See InputStream.Input
     typealias Input = RedisData
     

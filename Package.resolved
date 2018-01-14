@@ -1,0 +1,52 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Async",
+        "repositoryURL": "https://github.com/vapor/async.git",
+        "state": {
+          "branch": "beta",
+          "revision": "0cb3065d963c6a5764ef3c7c099ea61ddd1bd375",
+          "version": null
+        }
+      },
+      {
+        "package": "Core",
+        "repositoryURL": "https://github.com/vapor/core.git",
+        "state": {
+          "branch": "beta",
+          "revision": "a848fb34323fa194ba9255df6899dcf9291b00ff",
+          "version": null
+        }
+      },
+      {
+        "package": "Crypto",
+        "repositoryURL": "https://github.com/vapor/crypto.git",
+        "state": {
+          "branch": "beta",
+          "revision": "b31cdb4ecc32b8f529a6027c1945f404c4a41c1e",
+          "version": null
+        }
+      },
+      {
+        "package": "Engine",
+        "repositoryURL": "https://github.com/vapor/engine.git",
+        "state": {
+          "branch": "beta",
+          "revision": "91c90806d4114458dd89906b943ff799265eed39",
+          "version": null
+        }
+      },
+      {
+        "package": "Service",
+        "repositoryURL": "https://github.com/vapor/service.git",
+        "state": {
+          "branch": "beta",
+          "revision": "807ac871f46b1fac3621b947cace00a249f32ddc",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
