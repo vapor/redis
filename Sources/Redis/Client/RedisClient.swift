@@ -40,3 +40,25 @@ public final class RedisClient {
         }
     }
 }
+
+/// MARK: Config
+
+/// Config options for a `RedisClient.
+struct RedisClientConfig: Codable {
+    /// Default `RedisClientConfig`
+    public static func `default`() -> RedisClientConfig {
+        return .init(hostname: "localhost", port: 6379)
+    }
+
+    /// The Redis server's hostname.
+    public var hostname: String
+
+    /// The Redis server's port.
+    public var port: UInt16
+
+    /// Create a new `RedisClientConfig`
+    public init(hostname: String, port: UInt16) {
+        self.hostname = hostname
+        self.port = port
+    }
+}
