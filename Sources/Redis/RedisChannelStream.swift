@@ -17,7 +17,7 @@ public final class RedisChannelStream: OutputStream {
     {
         stream = source.stream(to: RedisDataParser()).map(to: RedisChannelData.self) { data in
             guard let arr = data.array, arr.count == 3 else {
-                throw RedisError(.unexpectedResult(data))
+                throw RedisError(identifier: "unexpectedResult", reason: "Unexpected result while subscribing: \(data)")
             }
 
             return .init(
