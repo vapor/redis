@@ -18,7 +18,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/engine.git", .branch("beta")),
 
         // Core services for creating database integrations.
-        .package(url: "https://github.com/vapor/database-kit.git", .branch("keyed-cache")),
+        .package(url: "https://github.com/vapor/database-kit.git", .branch("beta")),
     ],
     targets: [
         .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "TCP"]),
