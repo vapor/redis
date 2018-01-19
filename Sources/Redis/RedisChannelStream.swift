@@ -32,4 +32,3 @@ public final class RedisChannelStream: OutputStream {
         stream.output(to: inputStream)
     }
 }
-
