@@ -8,7 +8,7 @@ public final class RedisChannelStream: OutputStream {
     public typealias Output = RedisChannelData
 
     /// The internal stream.
-    private let stream: MapStream<RedisData, RedisChannelData>
+    private let stream: TranscribingStreamWrapper<MapStream<RedisData, RedisChannelData>>
 
     /// Create a new `RedisSubscriptionStream`.
     /// Use static method on `RedisClient` to create.

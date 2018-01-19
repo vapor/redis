@@ -24,7 +24,7 @@ public final class RedisClient {
 
     /// Sends `RedisData` to the server.
     public func send(_ data: RedisData) -> Future<RedisData> {
-        return queueStream.queue(data)
+        return queueStream.enqueue(data)
     }
 
     /// Runs a Value as a command
