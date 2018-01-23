@@ -16,9 +16,12 @@ let package = Package(
 
         // Non-blocking networking for Swift (HTTP and WebSockets).
         .package(url: "https://github.com/vapor/engine.git", .branch("beta")),
+
+        // Core services for creating database integrations.
+        .package(url: "https://github.com/vapor/database-kit.git", .branch("beta")),
     ],
     targets: [
-        .target(name: "Redis", dependencies: ["Async", "Bits", "Debugging", "TCP"]),
+        .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "TCP"]),
         .testTarget(name: "RedisTests", dependencies: ["Redis"]),
     ]
 )

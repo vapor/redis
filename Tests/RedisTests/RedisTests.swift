@@ -5,57 +5,61 @@ import TCP
 import XCTest
 
 class RedisTests: XCTestCase {
-    var clientCount = 0
-
-    let queue = DispatchEventLoop(label: "codes.vapor.redis.test")
-
-    func makeClient() throws -> RedisClient {
-        return try RedisClient.connect(
-            hostname: "localhost",
-            on: queue
-        )
-    }
-    
     func testCRUD() throws {
-        let connection = try makeClient()
-        _ = try connection.delete(
-            keys: ["*"]
-        ).blockingAwait(timeout: .seconds(10))
-
-        _  = try connection.set("world", forKey: "hello").blockingAwait(timeout: .seconds(10))
-        let result = try connection.getData(forKey: "hello").blockingAwait()
-
-        let removedCount = try connection.delete(keys: ["hello"]).blockingAwait(timeout: .seconds(10))
-
-        XCTAssertEqual(removedCount, 1)
-        XCTAssertEqual(result.string, "world")
+        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.crud")
+        let redis = try RedisClient.connect(on: eventLoop)
+        try redis.set("world", forKey: "hello").await(on: eventLoop)
+        let get = try redis.get(String.self, forKey: "hello").await(on: eventLoop)
+        XCTAssertEqual(get, "world")
+        try redis.remove("hello").await(on: eventLoop)
     }
 
     func testPubSub() throws {
-        let promise = Promise<RedisData>()
-        let listener = try makeClient()
+        // Setup
+        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.pubsub")
+        let promise = Promise(RedisData.self)
 
-        _ = listener.subscribe(to: ["test", "test2"]).drain { req in
-            req.request()
-        }.output { input in
-            promise.complete(input.message)
-        }.catch(onError: promise.fail)
+        // Subscribe
+        try RedisClient.subscribe(to: ["foo"], on: eventLoop).await(on: eventLoop).drain { data, upstream in
+            XCTAssertEqual(data.channel, "foo")
+            promise.complete(data.data)
+        }.catch { error in
+            XCTFail("\(error)")
+        }.upstream?.request(count: .max)
 
-        let publisher = try makeClient()
-        let listeners = try publisher.publish("hello", to: "test").blockingAwait(timeout: .seconds(1))
+        // Publish
+        let publisher = try RedisClient.connect(on: eventLoop)
+        let publish = try publisher.publish(.bulkString("it worked"), to: "foo").await(on: eventLoop)
+        XCTAssertEqual(publish.int, 1)
 
-        XCTAssertEqual(listeners, 1)
-
-        let result = try promise.future.blockingAwait(timeout: .seconds(3))
-
-        XCTAssertEqual(result.string, "hello")
-
-        // Prevent deallocation
-        _ = listener
+        // Verify
+        let data = try promise.future.await(on: eventLoop)
+        XCTAssertEqual(data.string, "it worked")
     }
-    
+
+    func testStruct() throws {
+        struct Hello: Codable {
+            var message: String
+            var array: [Int]
+            var dict: [String: Bool]
+        }
+        let hello = Hello(message: "world", array: [1, 2, 3], dict: ["yes": true, "false": false])
+        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.struct")
+        let redis = try RedisClient.connect(on: eventLoop)
+        try redis.set(hello, forKey: "hello").await(on: eventLoop)
+        let get = try redis.get(Hello.self, forKey: "hello").await(on: eventLoop)
+        XCTAssertEqual(get?.message, "world")
+        XCTAssertEqual(get?.array.first, 1)
+        XCTAssertEqual(get?.array.last, 3)
+        XCTAssertEqual(get?.dict["yes"], true)
+        XCTAssertEqual(get?.dict["false"], false)
+        try redis.remove("hello").await(on: eventLoop)
+
+    }
+
     static let allTests = [
         ("testCRUD", testCRUD),
         ("testPubSub", testPubSub),
+        ("testStruct", testStruct),
     ]
 }
