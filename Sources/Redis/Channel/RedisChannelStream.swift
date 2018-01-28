@@ -12,10 +12,10 @@ public final class RedisChannelStream: OutputStream {
 
     /// Create a new `RedisSubscriptionStream`.
     /// Use static method on `RedisClient` to create.
-    internal init<SourceStream>(source: SourceStream)
+    internal init<SourceStream>(source: SourceStream, worker: Worker)
         where SourceStream: OutputStream, SourceStream.Output == ByteBuffer
     {
-        stream = source.stream(to: RedisDataParser()).map(to: RedisChannelData.self) { data in
+        stream = source.stream(to: RedisDataParser().stream(on: worker)).map(to: RedisChannelData.self) { data in
             guard let arr = data.array, arr.count == 3 else {
                 throw RedisError(identifier: "unexpectedResult", reason: "Unexpected result while subscribing: \(data)")
             }

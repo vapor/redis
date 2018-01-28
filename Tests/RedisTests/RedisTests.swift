@@ -20,12 +20,12 @@ class RedisTests: XCTestCase {
         let promise = Promise(RedisData.self)
 
         // Subscribe
-        try RedisClient.subscribe(to: ["foo"], on: eventLoop).await(on: eventLoop).drain { data, upstream in
+        try RedisClient.subscribe(to: ["foo"], on: eventLoop).await(on: eventLoop).drain { data in
             XCTAssertEqual(data.channel, "foo")
             promise.complete(data.data)
         }.catch { error in
             XCTFail("\(error)")
-        }.upstream?.request(count: .max)
+        }
 
         // Publish
         let publisher = try RedisClient.connect(on: eventLoop)

@@ -2,17 +2,10 @@ import Async
 import Bits
 import Foundation
 
-/// Various states the parser stream can be in
-enum ProtocolParserState {
-    /// normal state
-    case ready
+/// A streaming Redis data parser
+internal final class RedisDataParser: ByteParser {
+    var state: ByteParserState<RedisDataParser>
     
-    /// waiting for data from upstream
-    case awaitingUpstream
-}
-
-/// A streaming Redis value parser
-internal final class RedisDataParser: Async.Stream, ConnectionContext {
     /// See InputStream.Input
     typealias Input = ByteBuffer
     
@@ -20,75 +13,25 @@ internal final class RedisDataParser: Async.Stream, ConnectionContext {
     typealias Output = RedisData
     
     /// The in-progress parsing value
-    var processing: PartialRedisData?
+    typealias Partial = PartialRedisData
     
-    /// The upstream providing byte buffers
-    var upstream: ConnectionContext?
-    
-    /// Use a basic output stream to implement server output stream.
-    var downstream: AnyInputStream<Output>?
-
-    /// Remaining downstream demand
-    var downstreamDemand: UInt
-
-    /// Current state
-    var state: ProtocolParserState
-    
-    var parsing: ByteBuffer? {
-        didSet {
-            parsedBytes = 0
-        }
-    }
-    
-    var parsedBytes: Int = 0
-    
-    /// Creates a new ValueParser
+    /// Creates a new RedisDataParser
     init() {
-        downstreamDemand = 0
-        state = .ready
+        state = .init()
     }
     
-    func input(_ event: InputEvent<ByteBuffer>) {
-        switch event {
-        case .close:
-            downstream?.close()
-        case .connect(let upstream):
-            self.upstream = upstream
-        case .error(let error):
-            downstream?.error(error)
-        case .next(let next):
-            do {
-                self.parsing = next
-                
-                try transform()
-            } catch {
-                self.downstream?.error(error)
+    func parseBytes(from buffer: ByteBuffer, partial: RedisDataParser.Partial?) throws -> Future<ByteParserResult<RedisDataParser>> {
+        var value = partial ?? .notYetParsed
+        var offset = 0
+        
+        if try continueParsing(partial: &value, from: buffer, at: &offset) {
+            guard case .parsed(let value) = value else {
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
             }
-        }
-    }
-    
-    func output<S>(to inputStream: S) where S : Async.InputStream, Output == S.Input {
-        self.downstream = AnyInputStream(inputStream)
-        inputStream.connect(to: self)
-    }
-    
-    func connection(_ event: ConnectionEvent) {
-        switch event {
-        case .cancel:
-            self.downstreamDemand = 0
-        case .request(let demand):
-            self.downstreamDemand += demand
-        }
-        
-        guard downstreamDemand > 0, parsing != nil else {
-            upstream?.request()
-            return
-        }
-        
-        do {
-            try transform()
-        } catch {
-            self.downstream?.error(error)
+            
+            return Future(.completed(consuming: offset, result: value))
+        } else {
+            return Future(.uncompleted(value))
         }
     }
     
@@ -275,47 +218,6 @@ internal final class RedisDataParser: Async.Stream, ConnectionContext {
         }
         
         return false
-    }
-    
-    /// Continues parsing the `Data` buffer
-    func transform() throws {
-        guard downstreamDemand > 0 else {
-            return
-        }
-        
-        guard let parsing = parsing else {
-            upstream?.request()
-            return
-        }
-        
-        var value: PartialRedisData
-        
-        // Continues parsing while there are still pending requests
-        repeat {
-            if let processing = self.processing {
-                value = processing
-            } else {
-                value = .notYetParsed
-            }
-            
-            if try continueParsing(partial: &value, from: parsing, at: &parsedBytes) {
-                guard case .parsed(let value) = value else {
-                    throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
-                }
-                
-                self.processing = nil
-                flush(value)
-            } else {
-                self.processing = value
-            }
-        } while parsedBytes < parsing.count && downstreamDemand > 0
-        
-        upstream?.request()
-    }
-    
-    private func flush(_ data: RedisData) {
-        self.downstreamDemand -= 1
-        self.downstream?.next(data)
     }
 }
 
