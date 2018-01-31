@@ -31,7 +31,7 @@ internal final class RedisDataSerializer: ByteSerializer {
     deinit {
         if let lastMessage = self.lastMessage {
             lastMessage.baseAddress?.deinitialize(count: lastMessage.count)
-            lastMessage.baseAddress?.deallocate(capacity: lastMessage.count)
+            lastMessage.baseAddress?.deallocate()
         }
     }
 }
