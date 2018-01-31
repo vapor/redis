@@ -25,6 +25,8 @@ class RedisTests: XCTestCase {
             promise.complete(data.data)
         }.catch { error in
             XCTFail("\(error)")
+        }.finally {
+            // closed
         }
 
         // Publish
