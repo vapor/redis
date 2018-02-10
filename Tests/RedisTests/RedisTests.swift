@@ -7,7 +7,9 @@ import XCTest
 class RedisTests: XCTestCase {
     func testCRUD() throws {
         let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.crud")
-        let redis = try RedisClient.connect(on: eventLoop)
+        let redis = try RedisClient.connect(on: eventLoop) { _, error in
+            XCTFail("\(error)")
+        }
         try redis.set("world", forKey: "hello").await(on: eventLoop)
         let get = try redis.get(String.self, forKey: "hello").await(on: eventLoop)
         XCTAssertEqual(get, "world")
@@ -20,7 +22,9 @@ class RedisTests: XCTestCase {
         let promise = Promise(RedisData.self)
 
         // Subscribe
-        try RedisClient.subscribe(to: ["foo"], on: eventLoop).await(on: eventLoop).drain { data in
+        try RedisClient.subscribe(to: ["foo"], on: eventLoop) { _, error in
+            XCTFail("\(error)")
+        }.await(on: eventLoop).drain { data in
             XCTAssertEqual(data.channel, "foo")
             promise.complete(data.data)
         }.catch { error in
@@ -30,7 +34,9 @@ class RedisTests: XCTestCase {
         }
 
         // Publish
-        let publisher = try RedisClient.connect(on: eventLoop)
+        let publisher = try RedisClient.connect(on: eventLoop) { _, error in
+            XCTFail("\(error)")
+        }
         let publish = try publisher.publish(.bulkString("it worked"), to: "foo").await(on: eventLoop)
         XCTAssertEqual(publish.int, 1)
 
@@ -47,7 +53,9 @@ class RedisTests: XCTestCase {
         }
         let hello = Hello(message: "world", array: [1, 2, 3], dict: ["yes": true, "false": false])
         let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.struct")
-        let redis = try RedisClient.connect(on: eventLoop)
+        let redis = try RedisClient.connect(on: eventLoop) { _, error in
+            XCTFail("\(error)")
+        }
         try redis.set(hello, forKey: "hello").await(on: eventLoop)
         let get = try redis.get(Hello.self, forKey: "hello").await(on: eventLoop)
         XCTAssertEqual(get?.message, "world")
