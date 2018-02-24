@@ -26,7 +26,7 @@ internal final class RedisDataParser: ByteParser {
         
         if try continueParsing(partial: &value, from: buffer, at: &offset) {
             guard case .parsed(let value) = value else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
             
             return Future(.completed(consuming: offset, result: value))
@@ -76,7 +76,7 @@ internal final class RedisDataParser: ByteParser {
         
         // Instantiate the integer
         guard let number = Int(string) else {
-            throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+            throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
         }
         
         return number
@@ -91,29 +91,29 @@ internal final class RedisDataParser: ByteParser {
         case .plus:
             // Simple string
             guard let string = simpleString(from: input, at: &position) else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
             
             return .parsed(.basicString(string))
         case .hyphen:
             // Error
             guard let string = simpleString(from: input, at: &position) else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
 
-            let error = RedisError(identifier: "serverSide", reason: string)
+            let error = RedisError(identifier: "serverSide", reason: string, source: .capture())
             return .parsed(.error(error))
         case .colon:
             // Integer
             guard let number = try integer(from: input, at: &position) else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
             
             return .parsed(.integer(number))
         case .dollar:
             // Bulk strings start with their length
             guard let size = try integer(from: input, at: &position) else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
             
             // Negative bulk strings are `null`
@@ -126,7 +126,7 @@ internal final class RedisDataParser: ByteParser {
                 size > -1,
                 size < input.distance(from: position, to: input.endIndex)
             else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
             
             let endPosition = input.index(position, offsetBy: size)
@@ -139,11 +139,11 @@ internal final class RedisDataParser: ByteParser {
         case .asterisk:
             // Arrays start with their element count
             guard let size = try integer(from: input, at: &position) else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
             
             guard size >= 0 else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
             }
             
             var array = [PartialRedisData](repeating: .notYetParsed, count: size)
@@ -165,7 +165,7 @@ internal final class RedisDataParser: ByteParser {
             
             let values = try array.map { value -> RedisData in
                 guard case .parsed(let value) = value else {
-                    throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                    throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
                 }
                 
                 return value
@@ -174,7 +174,7 @@ internal final class RedisDataParser: ByteParser {
             // All elements have been parsed, return the complete array
             return .parsed(.array(values))
         default:
-            throw RedisError(identifier: "invalidTypeToken", reason: "Unexpected error while parsing RedisData.")
+            throw RedisError(identifier: "invalidTypeToken", reason: "Unexpected error while parsing RedisData.", source: .capture())
         }
     }
     
@@ -207,7 +207,7 @@ internal final class RedisDataParser: ByteParser {
             
             let values = try values.map { value -> RedisData in
                 guard case .parsed(let value) = value else {
-                    throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.")
+                    throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
                 }
                 
                 return value

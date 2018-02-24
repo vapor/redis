@@ -14,7 +14,7 @@ extension RedisClient: KeyedCache {
             } else {
                 switch data.storage {
                 case .bulkString(let d): entity = try JSONDecoder().decode(D.self, from: d)
-                default: throw RedisError(identifier: "jsonData", reason: "Data type required to decode JSON.")
+                default: throw RedisError(identifier: "jsonData", reason: "Data type required to decode JSON.", source: .capture())
                 }
             }
             return entity
@@ -34,7 +34,7 @@ extension RedisClient: KeyedCache {
             }
             switch data.storage {
             case .bulkString: break
-            default: throw RedisError(identifier: "setData", reason: "Set data must be of type bulkString")
+            default: throw RedisError(identifier: "setData", reason: "Set data must be of type bulkString", source: .capture())
             }
             return self.command("SET", [RedisData(bulk: key), data]).transform(to: ())
         }
