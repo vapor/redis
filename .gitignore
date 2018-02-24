@@ -1,10 +1,7 @@
 .build
-run-tests
 Packages
 xcuserdata
-TestRedis/redis.pid
-redis_protocol_spec.pdf
 *.xcodeproj
-Package.pins
 dump.rdb
 Package.resolved
+.DS_Store

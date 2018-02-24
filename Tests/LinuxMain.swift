@@ -2,5 +2,5 @@ import XCTest
 @testable import RedisTests
 
 XCTMain([
-	testCase(LiveTests.allTests)
+	testCase(RedisTests.allTests)
 ])
