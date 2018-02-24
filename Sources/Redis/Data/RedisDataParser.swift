@@ -143,7 +143,7 @@ internal final class RedisDataParser: ByteParser {
             }
             
             guard size >= 0 else {
-                throw RedisError(identifier: "parse", reason: "Unexpected error while parsing RedisData.", source: .capture())
+                return .parsed(.null)
             }
             
             var array = [PartialRedisData](repeating: .notYetParsed, count: size)
