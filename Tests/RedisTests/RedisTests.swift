@@ -66,10 +66,27 @@ class RedisTests: XCTestCase {
         try redis.remove("hello").await(on: eventLoop)
 
     }
+    
+    func testStringCommands() throws {
+        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.struct")
+        let redis = try RedisClient.connect(on: eventLoop) { _, error in
+            XCTFail("\(error)")
+        }
+        
+        let values = ["hello": RedisData(bulk: "world"), "hello2": RedisData(bulk: "world2")]
+        try redis.mset(with: values).await(on: eventLoop)
+        let resp = try redis.mget(["hello", "hello2"]).await(on: eventLoop)
+        XCTAssertEqual(resp[0].string, "world")
+        XCTAssertEqual(resp[1].string, "world2")
+        try redis.remove("hello").await(on: eventLoop)
+        try redis.remove("hello2").await(on: eventLoop)
+        
+    }
 
     static let allTests = [
         ("testCRUD", testCRUD),
         ("testPubSub", testPubSub),
         ("testStruct", testStruct),
+        ("testStringCommands", testStringCommands),
     ]
 }
