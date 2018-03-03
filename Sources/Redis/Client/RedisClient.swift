@@ -44,7 +44,7 @@ public final class RedisClient {
 /// MARK: Config
 
 /// Config options for a `RedisClient.
-struct RedisClientConfig: Codable {
+public struct RedisClientConfig: Codable {
     /// Default `RedisClientConfig`
     public static func `default`() -> RedisClientConfig {
         return .init(hostname: "localhost", port: 6379)
