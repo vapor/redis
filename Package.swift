@@ -1,21 +1,26 @@
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
     name: "Redis",
+    products: [
+        .library(name: "Redis", targets: ["Redis"]),
+    ],
     dependencies: [
+        // Swift Promises, Futures, and Streams.
+        .package(url: "https://github.com/vapor/async.git", from: "1.0.0-rc"),
+
         // Core extensions, type-aliases, and functions that facilitate common tasks.
-        .Package(url: "https://github.com/vapor/core.git", majorVersion: 2),
+        .package(url: "https://github.com/vapor/core.git", from: "3.0.0-rc"),
 
-        // A formatted data encapsulation meant to facilitate the transformation from one object to another.
-        .Package(url: "https://github.com/vapor/node.git", majorVersion: 2),
+        // Non-blocking networking for Swift.
+        .package(url: "https://github.com/vapor/sockets.git", from: "3.0.0-rc"),
 
-        // Pure-Swift Sockets: TCP, UDP; Client, Server; Linux, OS X.
-        .Package(url: "https://github.com/vapor/sockets.git", majorVersion: 2),
-
-        // Module for generating random bytes and numbers (for tests).
-        .Package(url: "https://github.com/vapor/random.git", majorVersion: 1),
-
-        // Secure sockets
-        .Package(url: "https://github.com/vapor/tls.git", majorVersion: 2)
+        // Core services for creating database integrations.
+        .package(url: "https://github.com/vapor/database-kit.git", from: "1.0.0-rc"),
+    ],
+    targets: [
+        .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "TCP"]),
+        .testTarget(name: "RedisTests", dependencies: ["Redis"]),
     ]
 )
