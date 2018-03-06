@@ -1,6 +1,7 @@
 import Async
 import Bits
 import TCP
+import Foundation
 
 /// A Redis client.
 public final class RedisClient {
@@ -44,7 +45,7 @@ public final class RedisClient {
 /// MARK: Config
 
 /// Config options for a `RedisClient.
-struct RedisClientConfig: Codable {
+public struct RedisClientConfig: Codable {
     /// Default `RedisClientConfig`
     public static func `default`() -> RedisClientConfig {
         return .init(hostname: "localhost", port: 6379)
@@ -60,5 +61,24 @@ struct RedisClientConfig: Codable {
     public init(hostname: String, port: UInt16) {
         self.hostname = hostname
         self.port = port
+    }
+
+    public init(connectionString: String) throws {
+        guard let url = URL(string: connectionString),
+            let port = url.port,
+            let host = url.host else {
+                throw RedisError(identifier: "Bad Connection String",
+                           reason: "Host could not be parsed",
+                           possibleCauses: ["Foundation URL is unable to parse the provided connection string"],
+                           suggestedFixes: ["Check the connection string being passed"],
+                           source: .capture())
+
+        }
+        self.port = UInt16(port)
+        if  url.user != nil || url.password != nil {
+            self.hostname = "\(url.user ?? ""):\(url.password ?? "")@\(host)"
+        } else {
+            self.hostname = host
+        }
     }
 }

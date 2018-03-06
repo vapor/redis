@@ -38,7 +38,7 @@ extension RedisClient: ServiceType {
 
 extension RedisClientConfig: ServiceType {
     /// See `ServiceType.makeService(for:)`
-    static func makeService(for worker: Container) throws -> RedisClientConfig {
+    public static func makeService(for worker: Container) throws -> RedisClientConfig {
         return .default()
     }
 }
