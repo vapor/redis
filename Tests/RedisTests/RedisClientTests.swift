@@ -39,12 +39,4 @@ class RedisClientTests: XCTestCase {
 
         XCTAssertEqual(config.port, UInt16(55595))
         XCTAssertEqual(config.hostname, "myUser:myPassword@pub-redis-redis.aws-compas-1-4.3.ec2.someEc2Thing.com")
-    }
-
-    static let allTests = [
-        ("testClientConfigParsesWithNoAuth", testClientConfigParsesWithNoAuth),
-        ("testClientConfigParsesWithUsername", testClientConfigParsesWithUsername),
-        ("testClientConfigParsesWithPassword", testClientConfigParsesWithPassword),
-        ("testClientConfigParsesWithAuth", testClientConfigParsesWithAuth)
-        ]
-}
+    }g
