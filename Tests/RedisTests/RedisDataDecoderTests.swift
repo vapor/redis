@@ -275,6 +275,8 @@ class RedisDataDecoderTests: XCTestCase {
         buff.write(string: nilString)
         buff.write(string: fooBar3Array)
         try embeddedChannel.writeInbound(buff)
+
+
         let decodedString: RedisData? = embeddedChannel.readInbound()
         let decodedError: RedisData? = embeddedChannel.readInbound()
         let decodedInteger: RedisData? = embeddedChannel.readInbound()
