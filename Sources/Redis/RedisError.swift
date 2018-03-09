@@ -28,3 +28,8 @@ public struct RedisError: Debuggable {
     }
 }
 
+func VERBOSE(_ string: @autoclosure () -> (String)) {
+    #if VERBOSE
+    print("[VERBOSE] [PostgreSQL] \(string())")
+    #endif
+}

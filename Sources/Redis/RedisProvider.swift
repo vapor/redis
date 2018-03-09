@@ -25,20 +25,25 @@ extension RedisClient: ServiceType {
 
     /// See `ServiceType.makeService(for:)`
     public static func makeService(for worker: Container) throws -> RedisClient {
+        return RedisClient()
+        // TODO : Change to the following
+/*
         let config = try worker.make(RedisClientConfig.self, for: RedisClient.self)
         return try RedisClient.connect(
             hostname: config.hostname,
             port: config.port,
             on: worker
-        ) { _, error in
+        ) { error in
             print("[Redis] \(error)")
         }
+    }
+ */
     }
 }
 
 extension RedisClientConfig: ServiceType {
     /// See `ServiceType.makeService(for:)`
-    static func makeService(for worker: Container) throws -> RedisClientConfig {
+    public static func makeService(for worker: Container) throws -> RedisClientConfig {
         return .default()
     }
 }

@@ -1,36 +1,21 @@
 import Async
 import Bits
-import TCP
+import NIO
 
 /// A Redis client.
 public final class RedisClient {
     /// Handles enqueued redis commands and responses.
-    private let queueStream: QueueStream<RedisData, RedisData>
+    //private let queueHandler: QueueHandler<RedisData, RedisData>
 
     /// Creates a new Redis client on the provided data source and sink.
-    public init<Stream>(stream: Stream, on worker: Worker) where Stream: ByteStream {
-        let queueStream = QueueStream<RedisData, RedisData>()
-
-        let serializerStream = RedisDataSerializer().stream(on: worker)
-        let parserStream = RedisDataParser().stream(on: worker)
-
-        stream.stream(to: parserStream)
-            .stream(to: queueStream)
-            .stream(to: serializerStream)
-            .output(to: stream)
-
-        self.queueStream = queueStream
-    }
 
     /// Sends `RedisData` to the server.
-    public func send(_ data: RedisData) -> Future<RedisData> {
-        return queueStream.enqueue(data)
-    }
+    // public func send(_ data: RedisData) -> Future<RedisData>
 
     /// Runs a Value as a command
     ///
     /// [Learn More →](https://docs.vapor.codes/3.0/redis/custom-commands/#usage)
-    public func command(_ command: String, _ arguments: [RedisData] = []) -> Future<RedisData> {
+    /*public func command(_ command: String, _ arguments: [RedisData] = []) -> Future<RedisData> {
         return send(.array([.bulkString(command)] + arguments)).map(to: RedisData.self) { res in
             // convert redis errors to a Future error
             switch res.storage {
@@ -38,13 +23,13 @@ public final class RedisClient {
             default: return res
             }
         }
-    }
+    }*/
 }
 
 /// MARK: Config
 
 /// Config options for a `RedisClient.
-struct RedisClientConfig: Codable {
+public struct RedisClientConfig: Codable {
     /// Default `RedisClientConfig`
     public static func `default`() -> RedisClientConfig {
         return .init(hostname: "localhost", port: 6379)
