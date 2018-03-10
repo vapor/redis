@@ -9,13 +9,10 @@ public final class RedisClient {
     }
 
     /// Handles enqueued redis commands and responses.
-    private let queue: QueueHandler<RedisData, RedisData>
+    internal let queue: QueueHandler<RedisData, RedisData>
 
     /// The channel
     private let channel: Channel
-
-    /// If non-nil, will log queries.
-    // Future Feature public var logger: RedisLogger?
 
     /// Creates a new Redis client on the provided data source and sink.
     init(queue: QueueHandler<RedisData, RedisData>, channel: Channel) {
