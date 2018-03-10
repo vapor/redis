@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio.git", from: "1.0.0"),
     ],
     targets: [
-        .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "NIO"]),
+      .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "NIO", "COperatingSystem"]),
         .testTarget(name: "RedisTests", dependencies: ["Redis"]),
     ]
 )
