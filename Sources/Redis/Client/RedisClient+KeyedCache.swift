@@ -1,10 +1,3 @@
-//
-//  RedisClient+KeyedCache.swift
-//  Async
-//
-//  Created by Shaun Hubbard on 3/9/18.
-//
-
 import Async
 import DatabaseKit
 import Foundation

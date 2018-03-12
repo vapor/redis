@@ -60,7 +60,7 @@ public final class RedisClient {
 public struct RedisClientConfig: Codable {
     /// Default `RedisClientConfig`
     public static func `default`() -> RedisClientConfig {
-        return .init(hostname: "127.0.0.1", port: 6379)
+        return .init(hostname: "localhost", port: 6379)
     }
 
     /// The Redis server's hostname.

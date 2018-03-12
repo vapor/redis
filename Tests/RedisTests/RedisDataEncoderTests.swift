@@ -1,10 +1,3 @@
-//
-//  RedisDataEncoderTests.swift
-//  RedisTests
-//
-//  Created by Shaun Hubbard on 3/8/18.
-//
-
 import XCTest
 import NIO
 @testable import Redis

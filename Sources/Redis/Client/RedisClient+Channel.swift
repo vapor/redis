@@ -13,8 +13,10 @@ extension RedisClient {
     /// Subscribes to the channels and call the subscription handler on message from server
     /// Should be closed when subscription not needed.
     /// Makes the redis client subscription only.
-    public func subscribe(_ channels: Set<String>,
-                          subscriptionHandler: @escaping (RedisChannelData) -> Void) throws -> Future<Void> {
+    public func subscribe(
+        _ channels: Set<String>,
+        subscriptionHandler: @escaping (RedisChannelData) -> Void
+    ) throws -> Future<Void> {
        let messages: [RedisData] = [.array([.bulkString("SUBSCRIBE")] + channels.map {.bulkString($0)})]
         return queue.enqueue(messages) { [weak self] channelMessage in
             if let redisChannelData = try self?.convert(channelMessage: channelMessage) {
@@ -26,7 +28,7 @@ extension RedisClient {
 
     /// Maps RedisData.array to RedisChannelData, throws if map fails
     private func convert(channelMessage: RedisData) throws -> RedisChannelData? {
-        guard  let array = channelMessage.array,
+        guard let array = channelMessage.array,
             array.first?.string == "message" // must contain ["message", <channel>, <redisData>]
              else {
             return nil

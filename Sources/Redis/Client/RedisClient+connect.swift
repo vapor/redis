@@ -8,7 +8,7 @@ extension RedisClient {
         port: Int = 6379,
         on worker: Worker,
         onError: @escaping (Error) -> Void
-        ) throws -> Future<RedisClient> {
+    ) throws -> Future<RedisClient> {
         let handler = QueueHandler<RedisData, RedisData>(on: worker, onError: onError)
         let bootstrap = ClientBootstrap(group: worker.eventLoop)
             // Enable SO_REUSEADDR.
