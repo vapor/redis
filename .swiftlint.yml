@@ -7,3 +7,7 @@ nesting:
 opt_in_rules:
   - closure_end_indentation
   - literal_expression_end_indentation
+
+identifier_name:
+  excluded:
+    - id
