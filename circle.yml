@@ -14,6 +14,7 @@ jobs:
       - image: redis:3.2
     steps:
       - checkout
+      - run: swiftlint
       - run: swift build
       - run: swift test
       - run: swift build -c release
