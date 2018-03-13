@@ -37,38 +37,36 @@ final class RedisDataDecoder: ByteToMessageDecoder {
 
 fileprivate extension RedisDataDecoder {
     func parse(at position: inout Int, from buffer: ByteBuffer) throws -> PartialRedisData {
-        guard let token = buffer.peekBytes(at: position, length: 1)?.first
-            else { return .notYetParsed }
+        guard let token = buffer.peekBytes(at: position, length: 1)?.first else {
+            return .notYetParsed
+        }
         position += 1
         switch token {
         case .plus:
-            guard let string = try parseSimpleString(at: &position, from: buffer)
-                else { return .notYetParsed }
+            guard let string = try parseSimpleString(at: &position, from: buffer) else { return .notYetParsed }
             return .parsed(.basicString(string))
         case .hyphen:
-            guard let string = try parseSimpleString(at: &position, from: buffer)
-                else { return .notYetParsed }
+            guard let string = try parseSimpleString(at: &position, from: buffer) else { return .notYetParsed }
             let error = RedisError(identifier: "serverSide", reason: string, source: .capture())
             return .parsed(.error(error))
         case .colon:
-            guard let number = try integer(at: &position, from: buffer)
-                else { return .notYetParsed }
+            guard let number = try integer(at: &position, from: buffer) else { return .notYetParsed }
             return .parsed(.integer(number))
         case .dollar:
             return try parseBulkString(at: &position, from: buffer)
         case .asterisk:
             return try parseArray(at: &position, from: buffer)
         default:
-            throw RedisError(identifier: "invalidTypeToken",
-                             reason: "Unexpected error while parsing RedisData.",
-                             source: .capture())
+            throw RedisError(
+                identifier: "invalidTypeToken",
+                reason: "Unexpected error while parsing RedisData.",
+                source: .capture()
+            )
         }
     }
 
-    private func parseArray(at position: inout Int,
-                            from buffer: ByteBuffer) throws -> PartialRedisData {
-        guard let arraySize = try integer(at: &position, from: buffer)
-            else { return .notYetParsed }
+    private func parseArray(at position: inout Int, from buffer: ByteBuffer) throws -> PartialRedisData {
+        guard let arraySize = try integer(at: &position, from: buffer) else { return .notYetParsed }
 
         var array = [PartialRedisData](repeating: .notYetParsed, count: arraySize)
         for index in 0..<arraySize {
@@ -83,9 +81,11 @@ fileprivate extension RedisDataDecoder {
 
         let values = try array.map { partialRedisData -> RedisData in
             guard case .parsed(let value) = partialRedisData else {
-                throw RedisError(identifier: "parse",
-                                 reason: "Unexpected error while parsing RedisData.",
-                                 source: .capture())
+                throw RedisError(
+                    identifier: "parse",
+                    reason: "Unexpected error while parsing RedisData.",
+                    source: .capture()
+                )
             }
             return value
         }
@@ -97,8 +97,7 @@ fileprivate extension RedisDataDecoder {
         //buffer.peekString
         let byteCount = buffer.readableBytes - position
         guard byteCount > 2 else { return nil } // terminatorToken guard to avoid bad access
-        guard let bytes = buffer.peekBytes(at: position, length: byteCount)
-            else { return nil }
+        guard let bytes = buffer.peekBytes(at: position, length: byteCount) else { return nil }
         var offset = 0
 
         var carriageReturnFound = false
@@ -132,17 +131,18 @@ fileprivate extension RedisDataDecoder {
     }
 
     /// Parses an integer associated with the token at the provided position
-    fileprivate func integer(at offset: inout Int,
-                             from input: ByteBuffer) throws -> Int? {
+    fileprivate func integer(at offset: inout Int, from input: ByteBuffer) throws -> Int? {
         // Parses a string
-        guard let string = try parseSimpleString(at: &offset,
-                                                 from: input) else {
+        guard let string = try parseSimpleString(at: &offset, from: input) else {
             return nil
         }
 
         guard let number = Int(string) else {
-            throw RedisError(identifier: "parse",
-                             reason: "Unexpected error while parsing RedisData.", source: .capture())
+            throw RedisError(
+                identifier: "parse",
+                reason: "Unexpected error while parsing RedisData.",
+                source: .capture()
+            )
         }
         return number
     }
@@ -155,8 +155,7 @@ fileprivate extension RedisDataDecoder {
 
         guard size > -1 else { return .parsed(.null) }
 
-        guard buffer.readableBytes > ("$\(size)\r\n".count + size + 2)
-            else { return .notYetParsed }
+        guard buffer.readableBytes > ("$\(size)\r\n".count + size + 2) else { return .notYetParsed }
 
         guard size > 0 else { // special case
             position += size + 2
@@ -164,8 +163,7 @@ fileprivate extension RedisDataDecoder {
         }
 
         let byteCount = buffer.readableBytes - position
-        guard let bytes = buffer.peekBytes(at: position, length: byteCount)
-            else { return .notYetParsed }
+        guard let bytes = buffer.peekBytes(at: position, length: byteCount) else { return .notYetParsed }
 
         defer { position += size + 2 }
         return .parsed(.bulkString(Data(bytes[..<size])))

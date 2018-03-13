@@ -37,9 +37,12 @@ extension RedisClient: KeyedCache {
             }
             switch data.storage {
             case .bulkString: break
-            default: throw RedisError(identifier: "setData",
-                                      reason: "Set data must be of type bulkString",
-                                      source: .capture())
+            default:
+                throw RedisError(
+                    identifier: "setData",
+                    reason: "Set data must be of type bulkString",
+                    source: .capture()
+                )
             }
             return self.command("SET", [RedisData(bulk: key), data]).transform(to: ())
         }

@@ -15,7 +15,6 @@ extension RedisClient {
 }
 
 class RedisTests: XCTestCase {
-
     func testCRUD() throws {
         let redis = try RedisClient.makeTest()
         _ = try redis.set("world", forKey: "hello")
@@ -44,7 +43,7 @@ class RedisTests: XCTestCase {
             channelReceivedData = true
             XCTAssert(channelData.data.string == expectedChannel1Msg)
             }.catch { _ in
-                XCTFail()
+                XCTFail("this should not throw an error")
         }
         _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
         _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
@@ -72,14 +71,13 @@ class RedisTests: XCTestCase {
             XCTAssert(channelData.data.string == expectedChannel1Msg ||
                 channelData.data.string == expectedChannel2Msg)
             }.catch { _ in
-                XCTFail()
+                XCTFail("this should not throw an error")
         }
         _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
         _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
         sleep(1)
         XCTAssert(channelReceivedData)
     }
-
 
     func testStruct() throws {
         struct Hello: Codable {
@@ -104,6 +102,6 @@ class RedisTests: XCTestCase {
         ("testCRUD", testCRUD),
         ("testPubSubSingleChannel", testPubSubSingleChannel),
         ("testPubSubMultiChannel", testPubSubMultiChannel),
-        ("testStruct", testStruct),
+        ("testStruct", testStruct)
         ]
 }

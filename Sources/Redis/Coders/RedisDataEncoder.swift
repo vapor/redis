@@ -11,9 +11,11 @@ final class RedisDataEncoder: MessageToByteEncoder {
     ///     - ctx: The `ChannelHandlerContext` which this `ByteToMessageDecoder` belongs to.
     ///     - data: The data to encode into a `ByteBuffer`.
     ///     - out: The `ByteBuffer` into which we want to encode.
-    func encode(ctx: ChannelHandlerContext,
-                data: RedisDataEncoder.OutboundIn,
-                out: inout ByteBuffer) throws {
+    func encode(
+        ctx: ChannelHandlerContext,
+        data: RedisDataEncoder.OutboundIn,
+        out: inout ByteBuffer
+    ) throws {
         out.write(string: encode(data: data))
     }
 

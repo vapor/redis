@@ -8,9 +8,9 @@ class RedisDataEncoderTests: XCTestCase {
         super.setUp()
         channel = EmbeddedChannel()
         do {
-        _ = try channel.pipeline.add(handler: RedisDataEncoder()).wait()
+            _ = try channel.pipeline.add(handler: RedisDataEncoder()).wait()
         } catch {
-            XCTFail()
+            XCTFail("the channel should always startup")
         }
     }
 
@@ -21,7 +21,7 @@ class RedisDataEncoderTests: XCTestCase {
 
     private func validatEncodedMessage(expectedMessage: String) {
         let writtenData: IOData = channel.readOutbound()!
-        switch writtenData{
+        switch writtenData {
         case .byteBuffer(let b):
             let writtenResponse = b.getString(at: b.readerIndex, length: b.readableBytes)!
             XCTAssertEqual(writtenResponse, expectedMessage)
@@ -77,7 +77,8 @@ class RedisDataEncoderTests: XCTestCase {
         ]
 
         XCTAssertNoThrow(try channel.writeOutbound(RedisData.array(redisArray)))
-        validatEncodedMessage(expectedMessage: "*\(redisArray.count)\r\n+\(foo)\r\n-\(bar)\r\n:\(number)\r\n$3\r\n\(baz)\r\n$-1\r\n")
+        let expected = "*\(redisArray.count)\r\n+\(foo)\r\n-\(bar)\r\n:\(number)\r\n$3\r\n\(baz)\r\n$-1\r\n"
+        validatEncodedMessage(expectedMessage: expected)
 
         XCTAssertNoThrow(try channel.writeOutbound(RedisData.array([])))
         validatEncodedMessage(expectedMessage: "*0\r\n")
@@ -89,6 +90,6 @@ class RedisDataEncoderTests: XCTestCase {
         ("testEncodingInteger", testEncodingInteger),
         ("testEncodingBulkString", testEncodingBulkString),
         ("testEncodingNil", testEncodingNil),
-        ("testEncodingArray", testEncodingArray),
+        ("testEncodingArray", testEncodingArray)
         ]
 }
