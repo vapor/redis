@@ -1,13 +1,5 @@
 excluded:
   - .build
 
-type_body_length:
-  - 300 # warning
-  - 400 # error
-
-function_body_length:
-  - 50 # warning
-  - 60 # error
-
 nesting:
   type_level: 2

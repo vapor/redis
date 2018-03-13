@@ -210,28 +210,35 @@ class RedisDataDecoderTests: XCTestCase {
         let expectedElements: [RedisData] = [.basicString("foo"), .bulkString("bar"), .integer(3)]
         try assertArrayParsing(string: fooBar3Array, expectedElements: expectedElements)
     }
+}
+
+extension RedisDataDecoderTests {
+    // This is an exceptionally long test
+    private struct Data {
+        static let expectedString = "string"
+        static let basicString = "+\(expectedString)\r\n"
+        static let expectedError = "error"
+        static let error = "-\(expectedError)\r\n"
+        static let expectedInteger = 1
+        static let integer = ":\(expectedInteger)\r\n"
+        static let expectedBulkString = "aa"
+        static let bulkString = "$2\r\naa\r\n"
+        static let nilString = "$-123\r\n"
+        static let fooBar3Array = "*3\r\n+foo\r\n$3\r\nbar\r\n:3\r\n"
+    }
 
     func testAllTogether() throws {
-        let expectedString = "string"
-        let basicString = "+\(expectedString)\r\n"
-        let expectedError = "error"
-        let error = "-\(expectedError)\r\n"
-        let expectedInteger = 1
-        let integer = ":\(expectedInteger)\r\n"
-        let expectedBulkString = "aa"
-        let bulkString = "$2\r\naa\r\n"
-        let nilString = "$-123\r\n"
-        let fooBar3Array = "*3\r\n+foo\r\n$3\r\nbar\r\n:3\r\n"
+
         let embeddedChannel = EmbeddedChannel()
         defer { _ = try? embeddedChannel.finish() }
         try embeddedChannel.pipeline.add(handler: decoder).wait()
         var buff = allocator.buffer(capacity: 256)
-        buff.write(string: basicString)
-        buff.write(string: error)
-        buff.write(string: integer)
-        buff.write(string: bulkString)
-        buff.write(string: nilString)
-        buff.write(string: fooBar3Array)
+        buff.write(string: Data.basicString)
+        buff.write(string: Data.error)
+        buff.write(string: Data.integer)
+        buff.write(string: Data.bulkString)
+        buff.write(string: Data.nilString)
+        buff.write(string: Data.fooBar3Array)
         try embeddedChannel.writeInbound(buff)
         let decodedString: RedisData? = embeddedChannel.readInbound()
         let decodedError: RedisData? = embeddedChannel.readInbound()
@@ -239,16 +246,16 @@ class RedisDataDecoderTests: XCTestCase {
         let decodedBulkString: RedisData? = embeddedChannel.readInbound()
         let decodedNil: RedisData? = embeddedChannel.readInbound()
         let decodedArray: RedisData? = embeddedChannel.readInbound()
-        XCTAssertEqual(decodedString?.string, expectedString)
+        XCTAssertEqual(decodedString?.string, Data.expectedString)
         guard let errorStorage = decodedError?.storage else { return XCTFail("no decoded data stored") }
         switch errorStorage {
         case let .error(redisError):
-            XCTAssertEqual(redisError.reason, expectedError)
+            XCTAssertEqual(redisError.reason, Data.expectedError)
         default:
             XCTFail("No Error Found")
         }
-        XCTAssertEqual(decodedInteger?.int, expectedInteger)
-        XCTAssertEqual(decodedBulkString?.string, expectedBulkString)
+        XCTAssertEqual(decodedInteger?.int, Data.expectedInteger)
+        XCTAssertEqual(decodedBulkString?.string, Data.expectedBulkString)
         guard let nilStorage = decodedNil?.storage else { return XCTFail("no decoded data stored") }
         switch nilStorage {
         case .null:
