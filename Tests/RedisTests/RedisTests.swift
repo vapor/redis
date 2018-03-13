@@ -9,7 +9,7 @@ extension RedisClient {
         let group = MultiThreadedEventLoopGroup(numThreads: 1)
         let client = try RedisClient.connect(on: group) { error in
             XCTFail("\(error)")
-            }.wait()
+        }.wait()
         return client
     }
 }
@@ -42,8 +42,8 @@ class RedisTests: XCTestCase {
         _ = try redisSubscriber.subscribe(Set([channel1])) { channelData in
             channelReceivedData = true
             XCTAssert(channelData.data.string == expectedChannel1Msg)
-            }.catch { _ in
-                XCTFail("this should not throw an error")
+        }.catch { _ in
+            XCTFail("this should not throw an error")
         }
         _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
         _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
@@ -70,8 +70,8 @@ class RedisTests: XCTestCase {
             channelReceivedData = true
             XCTAssert(channelData.data.string == expectedChannel1Msg ||
                 channelData.data.string == expectedChannel2Msg)
-            }.catch { _ in
-                XCTFail("this should not throw an error")
+        }.catch { _ in
+            XCTFail("this should not throw an error")
         }
         _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
         _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
@@ -103,5 +103,5 @@ class RedisTests: XCTestCase {
         ("testPubSubSingleChannel", testPubSubSingleChannel),
         ("testPubSubMultiChannel", testPubSubMultiChannel),
         ("testStruct", testStruct)
-        ]
+    ]
 }

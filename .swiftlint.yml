@@ -3,3 +3,7 @@ excluded:
 
 nesting:
   type_level: 2
+
+opt_in_rules:
+  - closure_end_indentation
+  - literal_expression_end_indentation

@@ -91,5 +91,5 @@ class RedisDataEncoderTests: XCTestCase {
         ("testEncodingBulkString", testEncodingBulkString),
         ("testEncodingNil", testEncodingNil),
         ("testEncodingArray", testEncodingArray)
-        ]
+    ]
 }

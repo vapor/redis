@@ -17,11 +17,11 @@ extension RedisClient {
                 return channel.pipeline.addRedisHandlers().then {
                     channel.pipeline.add(handler: handler)
                 }
-        }
+            }
 
         return bootstrap.connect(host: hostname, port: port).map(to: RedisClient.self) { channel in
             return .init(queue: handler, channel: channel)
-            }
+        }
     }
 }
 
