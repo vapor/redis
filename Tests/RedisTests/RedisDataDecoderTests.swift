@@ -228,7 +228,6 @@ extension RedisDataDecoderTests {
     }
 
     func testAllTogether() throws {
-
         let embeddedChannel = EmbeddedChannel()
         defer { _ = try? embeddedChannel.finish() }
         try embeddedChannel.pipeline.add(handler: decoder).wait()

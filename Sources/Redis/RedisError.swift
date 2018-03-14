@@ -11,7 +11,7 @@ public struct RedisError: Debuggable {
     public var possibleCauses: [String]
     public var suggestedFixes: [String]
 
-    /// Create a new TCP error.
+    /// Create a new Redis error.
     public init(
         identifier: String,
         reason: String,

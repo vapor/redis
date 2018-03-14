@@ -10,15 +10,17 @@ extension RedisClient: KeyedCache {
             let entity: D?
             if let convertible = type as? RedisDataConvertible.Type {
                 guard let maybeEntity = try? convertible.convertFromRedisData(data),
-                let entity = maybeEntity as? D
-                else { return nil }
+                    let entity = maybeEntity as? D else { return nil }
                 return entity
             } else {
                 switch data.storage {
                 case .bulkString(let d): entity = try JSONDecoder().decode(D.self, from: d)
-                default: throw RedisError(identifier: "jsonData",
-                                          reason: "Data type required to decode JSON.",
-                                          source: .capture())
+                default:
+                    throw RedisError(
+                        identifier: "jsonData",
+                        reason: "Data type required to decode JSON.",
+                        source: .capture()
+                    )
                 }
             }
             return entity

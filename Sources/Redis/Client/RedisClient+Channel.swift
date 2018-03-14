@@ -28,15 +28,16 @@ extension RedisClient {
 
     /// Maps RedisData.array to RedisChannelData, throws if map fails
     private func convert(channelMessage: RedisData) throws -> RedisChannelData? {
-        guard let array = channelMessage.array,
-            array.first?.string == "message" // must contain ["message", <channel>, <redisData>]
-             else {
+        // must contain ["message", <channel>, <redisData>]
+        guard let array = channelMessage.array, array.first?.string == "message" else {
             return nil
         }
         guard let channel = array[1].string else {
-            throw RedisError(identifier: "channel data",
-                             reason: "channel data did not contain identifier",
-                             source: .capture())
+            throw RedisError(
+                identifier: "channel data",
+                reason: "channel data did not contain identifier",
+                source: .capture()
+            )
         }
         return RedisChannelData(channel: channel, data: array[2])
     }

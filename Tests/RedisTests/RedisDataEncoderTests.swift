@@ -7,11 +7,7 @@ class RedisDataEncoderTests: XCTestCase {
     override func setUp() {
         super.setUp()
         channel = EmbeddedChannel()
-        do {
-            _ = try channel.pipeline.add(handler: RedisDataEncoder()).wait()
-        } catch {
-            XCTFail("the channel should always startup")
-        }
+        _ = try? channel.pipeline.add(handler: RedisDataEncoder()).wait()
     }
 
     override func tearDown() {

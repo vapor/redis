@@ -61,7 +61,6 @@ class RedisTests: XCTestCase {
 
         let channel1 = "channel/1"
         let channel2 = "channel/2"
-
         let expectedChannel1Msg = "Stuff and things"
         let expectedChannel2Msg = "Stuff and things 3"
 

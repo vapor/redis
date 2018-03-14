@@ -168,7 +168,6 @@ fileprivate extension RedisDataDecoder {
         defer { position += size + 2 }
         return .parsed(.bulkString(Data(bytes[..<size])))
     }
-
 }
 
 indirect enum PartialRedisData {
