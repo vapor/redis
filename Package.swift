@@ -8,10 +8,10 @@ let package = Package(
     ],
     dependencies: [
         // Core extensions, type-aliases, and functions that facilitate common tasks.
-      .package(url: "https://github.com/vapor/core.git", .branch("master")),
+      .package(url: "https://github.com/vapor/core.git", from: "3.0.0-rc.2"),
 
         // Core services for creating database integrations.
-        .package(url: "https://github.com/vapor/database-kit.git", .branch("master")),
+        .package(url: "https://github.com/vapor/database-kit.git", from: "1.0.0-rc.2"),
 
         // Event-driven network application framework for high performance protocol servers & clients, non-blocking.
         .package(url: "https://github.com/apple/swift-nio.git", from: "1.0.0")
