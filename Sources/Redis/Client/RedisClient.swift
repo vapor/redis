@@ -1,30 +1,38 @@
 import Async
 import Bits
-import TCP
+import NIO
 
 /// A Redis client.
 public final class RedisClient {
+    public var eventLoop: EventLoop {
+        return channel.eventLoop
+    }
+
     /// Handles enqueued redis commands and responses.
-    private let queueStream: QueueStream<RedisData, RedisData>
+    internal let queue: QueueHandler<RedisData, RedisData>
+
+    /// The channel
+    private let channel: Channel
 
     /// Creates a new Redis client on the provided data source and sink.
-    public init<Stream>(stream: Stream, on worker: Worker) where Stream: ByteStream {
-        let queueStream = QueueStream<RedisData, RedisData>()
+    init(queue: QueueHandler<RedisData, RedisData>, channel: Channel) {
+        self.queue = queue
+        self.channel = channel
+    }
 
-        let serializerStream = RedisDataSerializer().stream(on: worker)
-        let parserStream = RedisDataParser().stream(on: worker)
-
-        stream.stream(to: parserStream)
-            .stream(to: queueStream)
-            .stream(to: serializerStream)
-            .output(to: stream)
-
-        self.queueStream = queueStream
+    private func send(_ messages: [RedisData],
+                      onResponse: @escaping (RedisData) throws -> Void) -> Future<Void> {
+        return queue.enqueue(messages) { message in
+            try onResponse(message)
+            return true // redis is kind of one piece of redis data at time
+        }
     }
 
     /// Sends `RedisData` to the server.
     public func send(_ data: RedisData) -> Future<RedisData> {
-        return queueStream.enqueue(data)
+        var dataArr = [RedisData]()
+        return send([data]) { dataArr.append($0) }
+            .map(to: RedisData.self) { dataArr.first!}
     }
 
     /// Runs a Value as a command
@@ -39,12 +47,17 @@ public final class RedisClient {
             }
         }
     }
+
+    /// Closes this client.
+    public func close() {
+        channel.close(promise: nil)
+    }
 }
 
 /// MARK: Config
 
 /// Config options for a `RedisClient.
-struct RedisClientConfig: Codable {
+public struct RedisClientConfig: Codable {
     /// Default `RedisClientConfig`
     public static func `default`() -> RedisClientConfig {
         return .init(hostname: "localhost", port: 6379)
@@ -54,10 +67,10 @@ struct RedisClientConfig: Codable {
     public var hostname: String
 
     /// The Redis server's port.
-    public var port: UInt16
+    public var port: Int
 
     /// Create a new `RedisClientConfig`
-    public init(hostname: String, port: UInt16) {
+    public init(hostname: String, port: Int) {
         self.hostname = hostname
         self.port = port
     }
