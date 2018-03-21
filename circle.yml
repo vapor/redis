@@ -10,7 +10,7 @@ jobs:
       - run: swift test
   linux:
     docker:
-      - image: norionomura/swift:swift-4.1-branch
+      - image: codevapor/swift:4.1
       - image: redis:3.2
     steps:
       - checkout

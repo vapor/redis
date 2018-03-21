@@ -33,8 +33,8 @@ class RedisTests: XCTestCase {
             redisSubscriber.close()
         }
 
-        let channel1 = "channel/1"
-        let channel2 = "channel/2"
+        let channel1 = "channel1"
+        let channel2 = "channel2"
 
         let expectedChannel1Msg = "Stuff and things"
 
@@ -45,6 +45,7 @@ class RedisTests: XCTestCase {
         }.catch { _ in
             XCTFail("this should not throw an error")
         }
+        sleep(1)
         _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
         _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
         sleep(1)

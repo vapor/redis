@@ -1,3 +1,4 @@
+import Async
 import DatabaseKit
 import Service
 
@@ -17,7 +18,9 @@ public final class RedisProvider: Provider {
     }
 
     /// See `Provider.boot`
-    public func boot(_ worker: Container) throws { }
+    public func didBoot(_ worker: Container) throws -> Future<Void> {
+        return .done(on: worker)
+    }
 }
 
 /// MARK: Services
@@ -30,7 +33,7 @@ extension RedisClientConfig: ServiceType {
 extension RedisClient: ServiceType {
     /// See `ServiceType.makeService(for:)`
     public static func makeService(for worker: Container) throws -> RedisClient {
-        let config = try worker.make(RedisClientConfig.self, for: RedisClient.self)
+        let config = try worker.make(RedisClientConfig.self)
         return try RedisClient.connect(
             hostname: config.hostname,
             port: config.port,
