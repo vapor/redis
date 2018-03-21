@@ -1,48 +1,81 @@
-import Async
+import NIO
 import Dispatch
 @testable import Redis
-import TCP
 import XCTest
+
+extension RedisClient {
+    /// Creates a test event loop and Redis client.
+    static func makeTest() throws -> RedisClient {
+        let group = MultiThreadedEventLoopGroup(numThreads: 1)
+        let client = try RedisClient.connect(on: group) { error in
+            XCTFail("\(error)")
+        }.wait()
+        return client
+    }
+}
 
 class RedisTests: XCTestCase {
     func testCRUD() throws {
-        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.crud")
-        let redis = try RedisClient.connect(on: eventLoop) { _, error in
-            XCTFail("\(error)")
-        }
-        try redis.set("world", forKey: "hello").await(on: eventLoop)
-        let get = try redis.get(String.self, forKey: "hello").await(on: eventLoop)
+        let redis = try RedisClient.makeTest()
+        _ = try redis.set("world", forKey: "hello")
+        let get = try redis.get(String.self, forKey: "hello").wait()
         XCTAssertEqual(get, "world")
-        try redis.remove("hello").await(on: eventLoop)
+        _ = try redis.remove("hello")
+        XCTAssertNil(try redis.get(String.self, forKey: "hello").wait())
+        redis.close()
     }
 
-    func testPubSub() throws {
-        // Setup
-        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.pubsub")
-        let promise = Promise(RedisData.self)
-
-        // Subscribe
-        try RedisClient.subscribe(to: ["foo"], on: eventLoop) { _, error in
-            XCTFail("\(error)")
-        }.await(on: eventLoop).drain { data in
-            XCTAssertEqual(data.channel, "foo")
-            promise.complete(data.data)
-        }.catch { error in
-            XCTFail("\(error)")
-        }.finally {
-            // closed
+    func testPubSubSingleChannel() throws {
+        let redisSubscriber = try RedisClient.makeTest()
+        let redisPublisher = try RedisClient.makeTest()
+        defer {
+            redisPublisher.close()
+            redisSubscriber.close()
         }
 
-        // Publish
-        let publisher = try RedisClient.connect(on: eventLoop) { _, error in
-            XCTFail("\(error)")
-        }
-        let publish = try publisher.publish(.bulkString("it worked"), to: "foo").await(on: eventLoop)
-        XCTAssertEqual(publish.int, 1)
+        let channel1 = "channel/1"
+        let channel2 = "channel/2"
 
-        // Verify
-        let data = try promise.future.await(on: eventLoop)
-        XCTAssertEqual(data.string, "it worked")
+        let expectedChannel1Msg = "Stuff and things"
+
+        var channelReceivedData = false
+        _ = try redisSubscriber.subscribe(Set([channel1])) { channelData in
+            channelReceivedData = true
+            XCTAssert(channelData.data.string == expectedChannel1Msg)
+        }.catch { _ in
+            XCTFail("this should not throw an error")
+        }
+        _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
+        _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
+        sleep(1)
+        XCTAssert(channelReceivedData)
+    }
+
+    func testPubSubMultiChannel() throws {
+        let redisSubscriber = try RedisClient.makeTest()
+        let redisPublisher = try RedisClient.makeTest()
+        defer {
+            redisPublisher.close()
+            redisSubscriber.close()
+        }
+
+        let channel1 = "channel/1"
+        let channel2 = "channel/2"
+        let expectedChannel1Msg = "Stuff and things"
+        let expectedChannel2Msg = "Stuff and things 3"
+
+        var channelReceivedData = false
+        _ = try redisSubscriber.subscribe(Set([channel1, channel2])) { channelData in
+            channelReceivedData = true
+            XCTAssert(channelData.data.string == expectedChannel1Msg ||
+                channelData.data.string == expectedChannel2Msg)
+        }.catch { _ in
+            XCTFail("this should not throw an error")
+        }
+        _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
+        _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
+        sleep(1)
+        XCTAssert(channelReceivedData)
     }
 
     func testStruct() throws {
@@ -52,24 +85,22 @@ class RedisTests: XCTestCase {
             var dict: [String: Bool]
         }
         let hello = Hello(message: "world", array: [1, 2, 3], dict: ["yes": true, "false": false])
-        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.struct")
-        let redis = try RedisClient.connect(on: eventLoop) { _, error in
-            XCTFail("\(error)")
-        }
-        try redis.set(hello, forKey: "hello").await(on: eventLoop)
-        let get = try redis.get(Hello.self, forKey: "hello").await(on: eventLoop)
+        let redis = try RedisClient.makeTest()
+        defer { redis.close() }
+        try redis.set(hello, forKey: "hello").wait()
+        let get = try redis.get(Hello.self, forKey: "hello").wait()
         XCTAssertEqual(get?.message, "world")
         XCTAssertEqual(get?.array.first, 1)
         XCTAssertEqual(get?.array.last, 3)
         XCTAssertEqual(get?.dict["yes"], true)
         XCTAssertEqual(get?.dict["false"], false)
-        try redis.remove("hello").await(on: eventLoop)
-
+        try redis.remove("hello").wait()
     }
 
     static let allTests = [
         ("testCRUD", testCRUD),
-        ("testPubSub", testPubSub),
-        ("testStruct", testStruct),
+        ("testPubSubSingleChannel", testPubSubSingleChannel),
+        ("testPubSubMultiChannel", testPubSubMultiChannel),
+        ("testStruct", testStruct)
     ]
 }

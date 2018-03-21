@@ -17,9 +17,16 @@ jobs:
       - run: swift build
       - run: swift test
       - run: swift build -c release
+  swiftlint:
+     docker:
+       - image: norionomura/swiftlint
+     steps:
+       - checkout
+       - run: swiftlint --strict
 workflows:
   version: 2
   tests:
     jobs:
       - linux
+      - swiftlint
       # - macos
