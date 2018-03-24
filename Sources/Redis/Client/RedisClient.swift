@@ -69,9 +69,18 @@ public struct RedisClientConfig: Codable {
     /// The Redis server's port.
     public var port: Int
 
+    /// The Redis server's optional password.
+    public var password: String?
+
     /// Create a new `RedisClientConfig`
     public init(hostname: String, port: Int) {
         self.hostname = hostname
         self.port = port
+    }
+
+    public init(hostname: String, port: Int, password: String) {
+        self.hostname = hostname
+        self.port = port
+        self.password = password
     }
 }
