@@ -39,7 +39,7 @@ extension RedisClient {
         }
     }
     
-    /// Increments the number stored at key by one.
+    /// Increments the number stored at key by one or a specified amount.
     public func increment(_ key: String, by amount: Int? = nil) -> Future<Int> {
         let name = amount == nil ? "INCR" : "INCRBY"
         let args = amount == nil ? [RedisData(bulk: key)] : [RedisData(bulk: key), RedisData(bulk: amount!.description)]
@@ -49,7 +49,7 @@ extension RedisClient {
         return resp.unwrap(or: RedisError(identifier: "increment", reason: "Could not convert resp to int", source: .capture()))
     }
     
-    /// Decrements the number stored at key by one.
+    /// Decrements the number stored at key by one or a specified amount.
     public func decrement(_ key: String, by amount: Int? = nil) -> Future<Int> {
         let name = amount == nil ? "DECR" : "DECRBY"
         let args = amount == nil ? [RedisData(bulk: key)] : [RedisData(bulk: key), RedisData(bulk: amount!.description)]
@@ -59,4 +59,14 @@ extension RedisClient {
         return resp.unwrap(or: RedisError(identifier: "decrement", reason: "Could not convert resp to int", source: .capture()))
     }
     
+}
+
+/// List commands
+extension RedisClient {
+
+    public func lrange(list: String, range: ClosedRange<Int>) -> Future<RedisData> {
+        let lower = RedisData(bulk: range.lowerBound.description)
+        let upper = RedisData(bulk: range.upperBound.description)
+        return command("LRANGE", [RedisData(bulk: list), lower, upper])
+    }
 }

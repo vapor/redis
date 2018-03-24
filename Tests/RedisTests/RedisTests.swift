@@ -68,7 +68,7 @@ class RedisTests: XCTestCase {
     }
     
     func testStringCommands() throws {
-        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.struct")
+        let eventLoop = try DefaultEventLoop(label: "codes.vapor.redis.test.StringCommands")
         let redis = try RedisClient.connect(on: eventLoop) { _, error in
             XCTFail("\(error)")
         }
