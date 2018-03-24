@@ -15,14 +15,9 @@ public final class RedisDatabase: Database {
         self.config = config
     }
 
-
     public func makeConnection(on worker: Worker) -> EventLoopFuture<RedisClient> {
-        do {
-            return try RedisClient.connect(hostname: config.hostname, port: config.port, on: worker) { error in
-                print("[Redis] \(error)")
-            }
-        } catch {
-            fatalError(error.localizedDescription)
+        return RedisClient.connect(hostname: config.hostname, port: config.port, on: worker) { error in
+            print("[Redis] \(error)")
         }
     }
 }

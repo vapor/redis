@@ -89,10 +89,10 @@ extension Float {
 extension Data {
     /// See `RedisDataConvertible.convertFromRedisData(_:)`
     public static func convertFromRedisData(_ data: RedisData) throws -> Data {
-        guard let d = data.data else {
+        guard let theData = data.data else {
             throw RedisError(identifier: "data", reason: "Could not convert to data: \(data)", source: .capture())
         }
-        return d
+        return theData
     }
 
     /// See `RedisDataConvertible.convertToRedisData()`
