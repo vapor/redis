@@ -97,6 +97,27 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(get?.dict["false"], false)
         try redis.remove("hello").wait()
     }
+    
+    func testStringCommands() throws {
+        let redis = try RedisClient.makeTest()
+        
+        let values = ["hello": RedisData(bulk: "world"), "hello2": RedisData(bulk: "world2")]
+        try redis.mset(with: values).wait()
+        let resp = try redis.mget(["hello", "hello2"]).wait()
+        XCTAssertEqual(resp[0].string, "world")
+        XCTAssertEqual(resp[1].string, "world2")
+        _ = try redis.delete(["hello", "hello2"]).wait()
+        
+        let number = try redis.increment("number").wait()
+        XCTAssertEqual(number, 1)
+        let number2 = try redis.increment("number", by: 10).wait()
+        XCTAssertEqual(number2, 11)
+        let number3 = try redis.decrement("number", by: 10).wait()
+        XCTAssertEqual(number3, 1)
+        let number4 = try redis.decrement("number").wait()
+        XCTAssertEqual(number4, 0)
+        _ = try redis.delete(["number"]).wait()
+    }
 
     static let allTests = [
         ("testCRUD", testCRUD),

@@ -14,10 +14,13 @@ extension RedisClient {
 extension RedisClient {
     /// Removes the specified keys. A key is ignored if it does not exist.
     public func delete(_ keys: [String]) throws -> Future<Int> {
-        let resp = command("DEL", keys.map(RedisData.init(bulk:))).map(to: Int?.self) { data in
-            return data.int
+        let resp = command("DEL", keys.map(RedisData.init(bulk:))).map(to: Int.self) { data in
+            guard let value = data.int else {
+                throw RedisError(identifier: "delete", reason: "Could not convert resp to int", source: .capture())
+            }
+            return value
         }
-        return resp.unwrap(or: RedisError(identifier: "delete", reason: "Could not convert resp to int", source: .capture()))
+        return resp
     }
 }
 
@@ -43,27 +46,33 @@ extension RedisClient {
     public func increment(_ key: String, by amount: Int? = nil) -> Future<Int> {
         let name = amount == nil ? "INCR" : "INCRBY"
         let args = amount == nil ? [RedisData(bulk: key)] : [RedisData(bulk: key), RedisData(bulk: amount!.description)]
-        let resp = command(name, args).map(to: Int?.self) { data in
-            return data.int
+        let resp = command(name, args).map(to: Int.self) { data in
+            guard let value = data.int else {
+                throw RedisError(identifier: "increment", reason: "Could not convert resp to int", source: .capture())
+            }
+            return value
         }
-        return resp.unwrap(or: RedisError(identifier: "increment", reason: "Could not convert resp to int", source: .capture()))
+        return resp
     }
     
     /// Decrements the number stored at key by one or a specified amount.
     public func decrement(_ key: String, by amount: Int? = nil) -> Future<Int> {
         let name = amount == nil ? "DECR" : "DECRBY"
         let args = amount == nil ? [RedisData(bulk: key)] : [RedisData(bulk: key), RedisData(bulk: amount!.description)]
-        let resp = command(name, args).map(to: Int?.self) { data in
-            return data.int
+        let resp = command(name, args).map(to: Int.self) { data in
+            guard let value = data.int else {
+                throw RedisError(identifier: "decrement", reason: "Could not convert resp to int", source: .capture())
+            }
+            return value
         }
-        return resp.unwrap(or: RedisError(identifier: "decrement", reason: "Could not convert resp to int", source: .capture()))
+        return resp
     }
     
 }
 
 /// List commands
 extension RedisClient {
-
+    
     public func lrange(list: String, range: ClosedRange<Int>) -> Future<RedisData> {
         let lower = RedisData(bulk: range.lowerBound.description)
         let upper = RedisData(bulk: range.upperBound.description)
