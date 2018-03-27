@@ -30,7 +30,7 @@ public final class RedisProvider: Provider {
 extension RedisClientConfig: ServiceType {
     /// See `ServiceType.makeService(for:)`
     public static func makeService(for worker: Container) throws -> RedisClientConfig {
-        return .default()
+        return .init()
     }
 }
 extension RedisDatabase: ServiceType {
