@@ -119,7 +119,6 @@ class RedisTests: XCTestCase {
         _ = try redis.delete(["number"]).wait()
     }
 
-
     func testListCommands() throws {
         let redis = try RedisClient.makeTest()
 
@@ -148,7 +147,7 @@ class RedisTests: XCTestCase {
         let rpoplpush = try redis.rpoplpush(source: "mylist", destination: "list2").wait()
         XCTAssertEqual(rpoplpush.string, "hello2")
 
-        _ = try redis.delete(["mylist","list2"]).wait()
+        _ = try redis.delete(["mylist", "list2"]).wait()
     }
 
     static let allTests = [
