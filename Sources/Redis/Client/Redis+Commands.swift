@@ -7,7 +7,7 @@ extension RedisClient {
     public func authorize(with password: String) -> Future<Void> {
         return command("AUTH", [RedisData(bulk: password)]).transform(to: ())
     }
-    
+
 }
 
 /// Key commands
@@ -34,14 +34,14 @@ extension RedisClient {
         }
         return command("MSET", args).transform(to: ())
     }
-    
+
     /// Returns the values of all specified keys.
     public func mget(_ keys: [String]) -> Future<[RedisData]> {
         return command("MGET", keys.map(RedisData.init(bulk:))).map(to: [RedisData].self) { data  in
             return data.array ?? []
         }
     }
-    
+
     /// Increments the number stored at key by one or a specified amount.
     public func increment(_ key: String, by amount: Int? = nil) -> Future<Int> {
         let name = amount == nil ? "INCR" : "INCRBY"
@@ -54,7 +54,7 @@ extension RedisClient {
         }
         return resp
     }
-    
+
     /// Decrements the number stored at key by one or a specified amount.
     public func decrement(_ key: String, by amount: Int? = nil) -> Future<Int> {
         let name = amount == nil ? "DECR" : "DECRBY"
@@ -67,19 +67,19 @@ extension RedisClient {
         }
         return resp
     }
-    
+
 }
 
 /// List commands
 extension RedisClient {
-    
+
     /// Returns the specified elements of the list stored at key.
     public func lrange(list: String, range: ClosedRange<Int>) -> Future<RedisData> {
         let lower = RedisData(bulk: range.lowerBound.description)
         let upper = RedisData(bulk: range.upperBound.description)
         return command("LRANGE", [RedisData(bulk: list), lower, upper])
     }
-    
+
     /// Insert all the specified values at the tail of the list stored at key.
     public func rpush(_ values: [RedisData], into list: String) -> Future<Int> {
         var args = values
@@ -92,7 +92,7 @@ extension RedisClient {
         }
         return resp
     }
-    
+
     /// Insert all the specified values at the head of the list stored at key.
     public func lpush(_ values: [RedisData], into list: String) -> Future<Int> {
         var args = values
@@ -105,12 +105,12 @@ extension RedisClient {
         }
         return resp
     }
-    
+
     /// Returns the element at index in the list stored at key.
     public func lIndex(list: String, index: Int) -> Future<RedisData> {
         return command("LINDEX", [RedisData(bulk: list), RedisData(bulk: index.description)])
     }
-    
+
     /// Returns the length of the list stored at key.
     public func length(of list: String) -> Future<Int> {
         let resp = command("LLEN", [RedisData(bulk: list)]).map(to: Int.self) { data in
@@ -121,25 +121,22 @@ extension RedisClient {
         }
         return resp
     }
-    
+
     /// Sets the list element at index to value.
     public func lSet(_ item: RedisData, at index: Int, in list: String) -> Future<Void> {
-        let resp = command("LSET", [RedisData(bulk: list),
-                                    RedisData(bulk: index.description),
-                                    item
-            ])
+        let resp = command("LSET", [RedisData(bulk: list), RedisData(bulk: index.description), item])
         return resp.transform(to: ())
     }
-    
+
     /// Removes and returns the last element of the list stored at key.
     public func rPop(_ list: String) -> Future<RedisData> {
         return command("RPOP", [RedisData(bulk: list)])
     }
-    
+
     /// Atomically returns and removes the last element (tail) of the list stored at source,
     /// and pushes the element at the first element (head) of the list stored at destination.
     public func rpoplpush(source: String, destination: String) -> Future<RedisData> {
         return command("RPOPLPUSH", [RedisData(bulk: source), RedisData(bulk: destination)])
     }
-    
+
 }
