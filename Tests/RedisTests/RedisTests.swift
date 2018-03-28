@@ -98,10 +98,64 @@ class RedisTests: XCTestCase {
         try redis.remove("hello").wait()
     }
 
+    func testStringCommands() throws {
+        let redis = try RedisClient.makeTest()
+
+        let values = ["hello": RedisData(bulk: "world"), "hello2": RedisData(bulk: "world2")]
+        try redis.mset(with: values).wait()
+        let resp = try redis.mget(["hello", "hello2"]).wait()
+        XCTAssertEqual(resp[0].string, "world")
+        XCTAssertEqual(resp[1].string, "world2")
+        _ = try redis.delete(["hello", "hello2"]).wait()
+
+        let number = try redis.increment("number").wait()
+        XCTAssertEqual(number, 1)
+        let number2 = try redis.increment("number", by: 10).wait()
+        XCTAssertEqual(number2, 11)
+        let number3 = try redis.decrement("number", by: 10).wait()
+        XCTAssertEqual(number3, 1)
+        let number4 = try redis.decrement("number").wait()
+        XCTAssertEqual(number4, 0)
+        _ = try redis.delete(["number"]).wait()
+    }
+
+    func testListCommands() throws {
+        let redis = try RedisClient.makeTest()
+
+        let lpushResp = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
+        XCTAssertEqual(lpushResp, 1)
+
+        let rpushResp = try redis.rpush([RedisData(bulk: "hello1")], into: "mylist").wait()
+        XCTAssertEqual(rpushResp, 2)
+
+        let length = try redis.length(of: "mylist").wait()
+        XCTAssertEqual(length, 2)
+
+        let item = try redis.lIndex(list: "mylist", index: 0).wait()
+        XCTAssertEqual(item.string, "hello")
+
+        let items = try redis.lrange(list: "mylist", range: 0...1).wait()
+        XCTAssertEqual(items.array?.count, 2)
+
+        try redis.lSet(RedisData(bulk: "hello2"), at: 0, in: "mylist").wait()
+        let item2 = try redis.lIndex(list: "mylist", index: 0).wait()
+        XCTAssertEqual(item2.string, "hello2")
+
+        let rpopResp = try redis.rPop("mylist").wait()
+        XCTAssertEqual(rpopResp.string, "hello1")
+
+        let rpoplpush = try redis.rpoplpush(source: "mylist", destination: "list2").wait()
+        XCTAssertEqual(rpoplpush.string, "hello2")
+
+        _ = try redis.delete(["mylist", "list2"]).wait()
+    }
+
     static let allTests = [
         ("testCRUD", testCRUD),
         ("testPubSubSingleChannel", testPubSubSingleChannel),
         ("testPubSubMultiChannel", testPubSubMultiChannel),
-        ("testStruct", testStruct)
+        ("testStruct", testStruct),
+        ("testStringCommands", testStringCommands),
+        ("testListCommands", testListCommands)
     ]
 }
