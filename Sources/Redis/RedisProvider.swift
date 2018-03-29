@@ -14,7 +14,10 @@ public final class RedisProvider: Provider {
     public func register(_ services: inout Services) throws {
         try services.register(DatabaseKitProvider())
         services.register(RedisClientConfig.self)
-        services.register(RedisClient.self)
+        services.register(RedisDatabase.self)
+        var databases = DatabaseConfig()
+        databases.add(database: RedisDatabase.self, as: .redis)
+        services.register(databases)
     }
 
     /// See `Provider.boot`
@@ -27,19 +30,12 @@ public final class RedisProvider: Provider {
 extension RedisClientConfig: ServiceType {
     /// See `ServiceType.makeService(for:)`
     public static func makeService(for worker: Container) throws -> RedisClientConfig {
-        return .default()
+        return .init()
     }
 }
-extension RedisClient: ServiceType {
+extension RedisDatabase: ServiceType {
     /// See `ServiceType.makeService(for:)`
-    public static func makeService(for worker: Container) throws -> RedisClient {
-        let config = try worker.make(RedisClientConfig.self)
-        return try RedisClient.connect(
-            hostname: config.hostname,
-            port: config.port,
-            on: worker
-        ) { error in
-            print("[Redis] \(error)")
-        }.wait()
+    public static func makeService(for worker: Container) throws -> RedisDatabase {
+        return try .init(config: worker.make())
     }
 }

@@ -18,8 +18,8 @@ class RedisDataEncoderTests: XCTestCase {
     private func validatEncodedMessage(expectedMessage: String) {
         let writtenData: IOData = channel.readOutbound()!
         switch writtenData {
-        case .byteBuffer(let b):
-            let writtenResponse = b.getString(at: b.readerIndex, length: b.readableBytes)!
+        case .byteBuffer(let buff):
+            let writtenResponse = buff.getString(at: buff.readerIndex, length: buff.readableBytes)!
             XCTAssertEqual(writtenResponse, expectedMessage)
         case .fileRegion:
             XCTFail("Unexpected file region")

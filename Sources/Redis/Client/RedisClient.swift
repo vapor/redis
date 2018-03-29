@@ -58,20 +58,19 @@ public final class RedisClient {
 
 /// Config options for a `RedisClient.
 public struct RedisClientConfig: Codable {
-    /// Default `RedisClientConfig`
-    public static func `default`() -> RedisClientConfig {
-        return .init(hostname: "localhost", port: 6379)
-    }
-
     /// The Redis server's hostname.
     public var hostname: String
 
     /// The Redis server's port.
     public var port: Int
 
+    /// The Redis server's optional password.
+    public var password: String?
+
     /// Create a new `RedisClientConfig`
-    public init(hostname: String, port: Int) {
+    public init(hostname: String = "localhost", port: Int = 6379, password: String? = nil) {
         self.hostname = hostname
         self.port = port
+        self.password = password
     }
 }

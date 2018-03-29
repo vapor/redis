@@ -14,7 +14,7 @@ extension RedisClient: KeyedCache {
                 return entity
             } else {
                 switch data.storage {
-                case .bulkString(let d): entity = try JSONDecoder().decode(D.self, from: d)
+                case .bulkString(let data): entity = try JSONDecoder().decode(D.self, from: data)
                 default:
                     throw RedisError(
                         identifier: "jsonData",
