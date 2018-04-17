@@ -212,6 +212,7 @@ class RedisDataDecoderTests: XCTestCase {
         let fooBar3Array = "*3\r\n+foo\r\n$3\r\nbar\r\n:3\r\n"
         let expectedElements: [RedisData] = [.basicString("foo"), .bulkString("bar"), .integer(3)]
         try assertArrayParsing(string: fooBar3Array, expectedElements: expectedElements)
+        try assertWillParseNil(string: "*2\r\n$5\r\ntest0\r\n")
     }
 }
 
