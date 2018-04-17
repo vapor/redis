@@ -136,6 +136,7 @@ class RedisDataDecoderTests: XCTestCase {
         let incompleteString = "*8\r\n$16\r\ntest8:1523640910\r\n$10\r\n1523640910\r\n$16\r\ntest9:15" +
         "23640913\r\n$10\r\n1523640913\r\n$17\r\ntest10:1523640916\r\n$10\r\n15"
         try bulkStringTestCase(protocolString: incompleteString, expectedString: nil)
+        try bulkStringTestCase(protocolString: "*2\r\n$5\r\ntest0\r\n", expectedString: nil)
     }
 
     // Test Null String

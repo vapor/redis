@@ -70,11 +70,15 @@ fileprivate extension RedisDataDecoder {
 
         var array = [PartialRedisData](repeating: .notYetParsed, count: arraySize)
         for index in 0..<arraySize {
-            let parseResult = try parse(at: &position, from: buffer)
-            switch parseResult {
-            case .parsed:
-                array[index] = parseResult
-            default:
+            do {
+                let parseResult = try parse(at: &position, from: buffer)
+                switch parseResult {
+                case .parsed:
+                    array[index] = parseResult
+                default:
+                    return .notYetParsed
+                }
+            } catch {
                 return .notYetParsed
             }
         }
