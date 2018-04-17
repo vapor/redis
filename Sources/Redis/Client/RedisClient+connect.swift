@@ -4,7 +4,7 @@ import NIO
 extension RedisClient {
     /// Connects to a Redis server using a TCP socket.
     public static func connect(
-        hostname: String = "127.0.0.1",
+        hostname: String = "localhost",
         port: Int = 6379,
         on worker: Worker,
         onError: @escaping (Error) -> Void
