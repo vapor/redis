@@ -1,6 +1,7 @@
 import Async
 import Bits
 import NIO
+import Foundation
 
 /// A Redis client.
 public final class RedisClient {
@@ -68,9 +69,32 @@ public struct RedisClientConfig: Codable {
     public var password: String?
 
     /// Create a new `RedisClientConfig`
-    public init(hostname: String = "localhost", port: Int = 6379, password: String? = nil) {
-        self.hostname = hostname
-        self.port = port
-        self.password = password
+    public init(url: URL) {
+        self.hostname = url.host ?? "localhost"
+        self.port = url.port ?? 6379
+        self.password = url.password
+    }
+
+    public init() {
+        self.hostname = "localhost"
+        self.port = 6379
+    }
+
+    internal func toURL() throws -> URL {
+        let urlString: String
+        if let password = password {
+            urlString = "redis://:\(password)@\(hostname):\(port)"
+        } else {
+            urlString = "redis://\(hostname):\(port)"
+        }
+
+        guard let url = URL(string: urlString) else {
+            throw RedisError(
+                identifier: "URL creation",
+                reason: "Redis client config could not be transformed to url",
+                source: .capture())
+        }
+
+        return url
     }
 }
