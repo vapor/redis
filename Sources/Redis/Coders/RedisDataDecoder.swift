@@ -154,6 +154,7 @@ fileprivate extension RedisDataDecoder {
         }
 
         guard size > -1 else { return .parsed(.null) }
+        guard buffer.readableBytes - position > (size + 1) else { return .notYetParsed }
 
         guard buffer.readableBytes > ("$\(size)\r\n".count + size + 2) else { return .notYetParsed }
 
