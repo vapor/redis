@@ -71,7 +71,7 @@ fileprivate extension RedisDataDecoder {
         var array = [PartialRedisData](repeating: .notYetParsed, count: arraySize)
         for index in 0..<arraySize {
             guard buffer.readableBytes - position > 0 else { return .notYetParsed }
-            
+
             let parseResult = try parse(at: &position, from: buffer)
             switch parseResult {
             case .parsed:
