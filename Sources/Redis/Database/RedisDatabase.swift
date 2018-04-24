@@ -1,5 +1,4 @@
 import Foundation
-import DatabaseKit
 import Async
 
 public final class RedisDatabase: Database {
@@ -19,7 +18,7 @@ public final class RedisDatabase: Database {
         self.config = RedisClientConfig(url: url)
     }
 
-    public func makeConnection(on worker: Worker) -> EventLoopFuture<RedisClient> {
+    public func newConnection(on worker: Worker) -> EventLoopFuture<RedisClient> {
         return RedisClient.connect(hostname: config.hostname, port: config.port, on: worker) { error in
             print("[Redis] \(error)")
         }.map(to: RedisClient.self, { client in
@@ -30,8 +29,6 @@ public final class RedisDatabase: Database {
         })
     }
 }
-
-extension RedisClient: DatabaseConnection, BasicWorker { }
 
 extension DatabaseIdentifier {
     /// Default identifier for `RedisClient`.

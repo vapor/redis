@@ -7,7 +7,7 @@ extension RedisClient {
     /// Creates a test event loop and Redis client.
     static func makeTest() throws -> RedisClient {
         let group = MultiThreadedEventLoopGroup(numThreads: 1)
-        let client = try RedisClient.connect(on: group) { error in
+        let client = try RedisClient.connect(hostname: "localhost", port: 6379, on: group) { error in
             XCTFail("\(error)")
         }.wait()
         return client
@@ -17,12 +17,12 @@ extension RedisClient {
 class RedisTests: XCTestCase {
     func testCRUD() throws {
         let redis = try RedisClient.makeTest()
-        _ = try redis.set("world", forKey: "hello")
-        let get = try redis.get(String.self, forKey: "hello").wait()
+        defer { redis.close() }
+        try redis.set("hello", to: "world").wait()
+        let get = try redis.get("hello", as: String.self).wait()
         XCTAssertEqual(get, "world")
-        _ = try redis.remove("hello")
-        XCTAssertNil(try redis.get(String.self, forKey: "hello").wait())
-        redis.close()
+        try redis.delete("hello").wait()
+        XCTAssertNil(try redis.get("hello", as: String.self).wait())
     }
 
     func testPubSubSingleChannel() throws {
@@ -88,14 +88,14 @@ class RedisTests: XCTestCase {
         let hello = Hello(message: "world", array: [1, 2, 3], dict: ["yes": true, "false": false])
         let redis = try RedisClient.makeTest()
         defer { redis.close() }
-        try redis.set(hello, forKey: "hello").wait()
-        let get = try redis.get(Hello.self, forKey: "hello").wait()
+        try redis.set("hello", to: hello).wait()
+        let get = try redis.get("hello", as: Hello.self).wait()
         XCTAssertEqual(get?.message, "world")
         XCTAssertEqual(get?.array.first, 1)
         XCTAssertEqual(get?.array.last, 3)
         XCTAssertEqual(get?.dict["yes"], true)
         XCTAssertEqual(get?.dict["false"], false)
-        try redis.remove("hello").wait()
+        try redis.delete("hello").wait()
     }
 
     func testStringCommands() throws {
@@ -123,7 +123,7 @@ class RedisTests: XCTestCase {
     func testListCommands() throws {
         let redis = try RedisClient.makeTest()
         defer { redis.close() }
-        try redis.command("FLUSHALL").wait()
+        _ = try redis.command("FLUSHALL").wait()
 
         let lpushResp = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
         XCTAssertEqual(lpushResp, 1)

@@ -12,8 +12,67 @@ extension RedisClient {
 
 /// Key commands
 extension RedisClient {
+    /// Gets key as a decodable type.
+    public func get<D>(_ key: String, as type: D.Type) -> Future<D?>
+        where D: Decodable
+    {
+        return command("GET", [RedisData(bulk: key)]).map(to: D?.self) { data in
+            let entity: D?
+            if let convertible = type as? RedisDataConvertible.Type {
+                guard let maybeEntity = try? convertible.convertFromRedisData(data),
+                    let entity = maybeEntity as? D else { return nil }
+                return entity
+            } else {
+                switch data.storage {
+                case .bulkString(let data): entity = try JSONDecoder().decode(D.self, from: data)
+                default:
+                    throw RedisError(
+                        identifier: "jsonData",
+                        reason: "Data type required to decode JSON.",
+                        source: .capture()
+                    )
+                }
+            }
+            return entity
+        }
+    }
+
+    /// Sets key to an encodable item.
+    public func set<E>(_ key: String, to entity: E) -> Future<Void>
+        where E: Encodable
+    {
+        return Future.flatMap(on: self.eventLoop) {
+            let data: RedisData
+            if let convertible = entity as? RedisDataConvertible {
+                data = try convertible.convertToRedisData()
+            } else {
+                data = try .bulkString(JSONEncoder().encode(entity))
+            }
+            switch data.storage {
+            case .bulkString: break
+            default:
+                throw RedisError(
+                    identifier: "setData",
+                    reason: "Set data must be of type bulkString",
+                    source: .capture()
+                )
+            }
+            return self.command("SET", [RedisData(bulk: key), data]).transform(to: ())
+        }
+    }
+
     /// Removes the specified keys. A key is ignored if it does not exist.
-    public func delete(_ keys: [String]) throws -> Future<Int> {
+    public func delete(_ key: String) -> Future<Void> {
+        return command("DEL", [RedisData(bulk: key)]).transform(to: ())
+    }
+
+    /// Removes the specified keys. A key is ignored if it does not exist.
+    public func delete(_ keys: String...) -> Future<Int> {
+        return delete(keys)
+    }
+
+    /// Removes the specified keys. A key is ignored if it does not exist.
+    public func delete(_ keys: [String]) -> Future<Int> {
         let resp = command("DEL", keys.map(RedisData.init(bulk:))).map(to: Int.self) { data in
             guard let value = data.int else {
                 throw RedisError(identifier: "delete", reason: "Could not convert resp to int", source: .capture())
