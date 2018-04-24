@@ -88,8 +88,8 @@ class RedisTests: XCTestCase {
         let hello = Hello(message: "world", array: [1, 2, 3], dict: ["yes": true, "false": false])
         let redis = try RedisClient.makeTest()
         defer { redis.close() }
-        try redis.set("hello", to: hello).wait()
-        let get = try redis.get("hello", as: Hello.self).wait()
+        try redis.jsonSet("hello", to: hello).wait()
+        let get = try redis.jsonGet("hello", as: Hello.self).wait()
         XCTAssertEqual(get?.message, "world")
         XCTAssertEqual(get?.array.first, 1)
         XCTAssertEqual(get?.array.last, 3)

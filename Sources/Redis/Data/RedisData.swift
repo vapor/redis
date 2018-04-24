@@ -93,6 +93,14 @@ public struct RedisData {
         }
         return int
     }
+
+    /// `true` if this data is null.
+    public var isNull: Bool {
+        switch storage {
+        case .null: return true
+        default: return false
+        }
+    }
 }
 
 extension RedisData: ExpressibleByStringLiteral {

@@ -46,7 +46,7 @@ extension UInt16: RedisDataConvertible {}
 extension UInt32: RedisDataConvertible {}
 extension UInt64: RedisDataConvertible {}
 
-extension Double {
+extension Double: RedisDataConvertible {
     /// See `RedisDataConvertible.convertFromRedisData(_:)`
     public static func convertFromRedisData(_ data: RedisData) throws -> Double {
         guard let string = data.string else {
@@ -66,7 +66,7 @@ extension Double {
     }
 }
 
-extension Float {
+extension Float: RedisDataConvertible {
     /// See `RedisDataConvertible.convertFromRedisData(_:)`
     public static func convertFromRedisData(_ data: RedisData) throws -> Float {
         guard let string = data.string else {
@@ -86,7 +86,7 @@ extension Float {
     }
 }
 
-extension Data {
+extension Data: RedisDataConvertible {
     /// See `RedisDataConvertible.convertFromRedisData(_:)`
     public static func convertFromRedisData(_ data: RedisData) throws -> Data {
         guard let theData = data.data else {

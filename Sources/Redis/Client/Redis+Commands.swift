@@ -1,65 +1,13 @@
-import Foundation
-import Async
-
 /// Connection commands
 extension RedisClient {
+    // MARK: Auth
+
     /// Request for authentication in a password-protected Redis server
     public func authorize(with password: String) -> Future<Void> {
         return command("AUTH", [RedisData(bulk: password)]).transform(to: ())
     }
 
-}
-
-/// Key commands
-extension RedisClient {
-    /// Gets key as a decodable type.
-    public func get<D>(_ key: String, as type: D.Type) -> Future<D?>
-        where D: Decodable
-    {
-        return command("GET", [RedisData(bulk: key)]).map(to: D?.self) { data in
-            let entity: D?
-            if let convertible = type as? RedisDataConvertible.Type {
-                guard let maybeEntity = try? convertible.convertFromRedisData(data),
-                    let entity = maybeEntity as? D else { return nil }
-                return entity
-            } else {
-                switch data.storage {
-                case .bulkString(let data): entity = try JSONDecoder().decode(D.self, from: data)
-                default:
-                    throw RedisError(
-                        identifier: "jsonData",
-                        reason: "Data type required to decode JSON.",
-                        source: .capture()
-                    )
-                }
-            }
-            return entity
-        }
-    }
-
-    /// Sets key to an encodable item.
-    public func set<E>(_ key: String, to entity: E) -> Future<Void>
-        where E: Encodable
-    {
-        return Future.flatMap(on: self.eventLoop) {
-            let data: RedisData
-            if let convertible = entity as? RedisDataConvertible {
-                data = try convertible.convertToRedisData()
-            } else {
-                data = try .bulkString(JSONEncoder().encode(entity))
-            }
-            switch data.storage {
-            case .bulkString: break
-            default:
-                throw RedisError(
-                    identifier: "setData",
-                    reason: "Set data must be of type bulkString",
-                    source: .capture()
-                )
-            }
-            return self.command("SET", [RedisData(bulk: key), data]).transform(to: ())
-        }
-    }
+    // MARK: Delete
 
     /// Removes the specified keys. A key is ignored if it does not exist.
     public func delete(_ key: String) -> Future<Void> {
@@ -80,6 +28,68 @@ extension RedisClient {
             return value
         }
         return resp
+    }
+
+    // MARK: Convertible
+
+    /// Gets key as a `RedisDataConvertible` type.
+    public func get<D>(_ key: String, as type: D.Type) -> Future<D?> where D: RedisDataConvertible {
+        return rawGet(key).map(to: D?.self) { data in
+            if data.isNull {
+                return nil
+            } else {
+                return try D.convertFromRedisData(data)
+            }
+        }
+    }
+
+    /// Sets key to a `RedisDataConvertible` type.
+    public func set<E>(_ key: String, to data: E) -> Future<Void> where E: RedisDataConvertible {
+        return Future.flatMap(on: self.eventLoop) {
+            let data = try data.convertToRedisData()
+            switch data.storage {
+            case .bulkString: break
+            default:
+                throw RedisError(
+                    identifier: "setData",
+                    reason: "Set data must be of type bulkString",
+                    source: .capture()
+                )
+            }
+            return self.rawSet(key, to: data)
+        }
+    }
+
+    // MARK: JSON
+
+    /// Gets key as a decodable type.
+    public func jsonGet<D>(_ key: String, as type: D.Type) -> Future<D?> where D: Decodable {
+        return get(key, as: Data.self).thenThrowing { data in
+            return try data.flatMap { data in
+                return try JSONDecoder().decode(D.self, from: data)
+            }
+        }
+    }
+
+    /// Sets key to an encodable item.
+    public func jsonSet<E>(_ key: String, to entity: E) -> Future<Void> where E: Encodable {
+        do {
+            return try set(key, to: JSONEncoder().encode(entity))
+        } catch {
+            return eventLoop.newFailedFuture(error: error)
+        }
+    }
+
+    // MARK: JSON
+
+    /// Gets key as `RedisData`.
+    public func rawGet(_ key: String) -> Future<RedisData> {
+        return command("GET", [RedisData(bulk: key)])
+    }
+
+    /// Sets key to `RedisData`.
+    public func rawSet(_ key: String, to data: RedisData) -> Future<Void> {
+        return command("SET", [RedisData(bulk: key), data]).transform(to: ())
     }
 }
 
@@ -131,7 +141,6 @@ extension RedisClient {
 
 /// List commands
 extension RedisClient {
-
     /// Returns the specified elements of the list stored at key.
     public func lrange(list: String, range: ClosedRange<Int>) -> Future<RedisData> {
         let lower = RedisData(bulk: range.lowerBound.description)
