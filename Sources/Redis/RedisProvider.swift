@@ -15,7 +15,7 @@ public final class RedisProvider: Provider {
         try services.register(DatabaseKitProvider())
         services.register(RedisClientConfig.self)
         services.register(RedisDatabase.self)
-        var databases = DatabaseConfig()
+        var databases = DatabasesConfig()
         databases.add(database: RedisDatabase.self, as: .redis)
         services.register(databases)
     }

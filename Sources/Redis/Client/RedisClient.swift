@@ -1,13 +1,17 @@
-import Async
-import Bits
 import NIO
-import Foundation
 
 /// A Redis client.
-public final class RedisClient {
+public final class RedisClient: DatabaseConnection, BasicWorker {
+    /// See `BasicWorker`.
     public var eventLoop: EventLoop {
         return channel.eventLoop
     }
+
+    /// See `DatabaseConnection`.
+    public var isClosed: Bool
+
+    /// See `Extendable`.
+    public var extend: Extend
 
     /// Handles enqueued redis commands and responses.
     internal let queue: QueueHandler<RedisData, RedisData>
@@ -15,25 +19,19 @@ public final class RedisClient {
     /// The channel
     private let channel: Channel
 
+    /// Currently executing `send(...)` promise.
+    private var currentSend: Promise<Void>?
+
     /// Creates a new Redis client on the provided data source and sink.
     init(queue: QueueHandler<RedisData, RedisData>, channel: Channel) {
         self.queue = queue
         self.channel = channel
-    }
-
-    private func send(_ messages: [RedisData],
-                      onResponse: @escaping (RedisData) throws -> Void) -> Future<Void> {
-        return queue.enqueue(messages) { message in
-            try onResponse(message)
-            return true // redis is kind of one piece of redis data at time
+        self.extend = [:]
+        self.isClosed = false
+        channel.closeFuture.always {
+            self.isClosed = true
+            self.currentSend?.fail(error: closeError)
         }
-    }
-
-    /// Sends `RedisData` to the server.
-    public func send(_ data: RedisData) -> Future<RedisData> {
-        var dataArr = [RedisData]()
-        return send([data]) { dataArr.append($0) }
-            .map(to: RedisData.self) { dataArr.first!}
     }
 
     /// Runs a Value as a command
@@ -49,11 +47,47 @@ public final class RedisClient {
         }
     }
 
+    /// Sends `RedisData` to the server.
+    public func send(_ data: RedisData) -> Future<RedisData> {
+        var dataArr = [RedisData]()
+        return send([data]) { dataArr.append($0) }
+            .map(to: RedisData.self) { dataArr.first!}
+    }
+
+    private func send(_ messages: [RedisData], onResponse: @escaping (RedisData) throws -> Void) -> Future<Void> {
+        // if currentSend is not nil, previous send has not completed
+        assert(currentSend == nil, "Attempting to call `send(...)` again before previous invocation has completed.")
+
+        // ensure the connection is not closed
+        guard !isClosed else {
+            return eventLoop.newFailedFuture(error: closeError)
+        }
+        
+        // create a new promise and store it
+        let promise = eventLoop.newPromise(Void.self)
+        currentSend = promise
+
+        // cascade this enqueue to the newly created promise
+        queue.enqueue(messages) { message in
+            try onResponse(message)
+            return true // redis is kind of one piece of redis data at time
+        }.cascade(promise: promise)
+
+        // when the promise completes, remove the reference to it
+        promise.futureResult.always { self.currentSend = nil }
+
+        // return the promise's future result (same as `queue.enqueue`)
+        return promise.futureResult
+    }
+
     /// Closes this client.
     public func close() {
+        self.isClosed = true
         channel.close(promise: nil)
     }
 }
+
+private let closeError = RedisError(identifier: "closed", reason: "Connection is closed.", source: .capture())
 
 /// MARK: Config
 
