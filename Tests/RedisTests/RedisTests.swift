@@ -100,6 +100,7 @@ class RedisTests: XCTestCase {
 
     func testStringCommands() throws {
         let redis = try RedisClient.makeTest()
+        defer { redis.close() }
 
         let values = ["hello": RedisData(bulk: "world"), "hello2": RedisData(bulk: "world2")]
         try redis.mset(with: values).wait()
@@ -121,6 +122,8 @@ class RedisTests: XCTestCase {
 
     func testListCommands() throws {
         let redis = try RedisClient.makeTest()
+        defer { redis.close() }
+        try redis.command("FLUSHALL").wait()
 
         let lpushResp = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
         XCTAssertEqual(lpushResp, 1)

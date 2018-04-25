@@ -11,8 +11,12 @@ public final class RedisDatabase: Database {
     public let config: RedisClientConfig
 
     /// Creates a new `RedisDatabase`.
-    public init(config: RedisClientConfig) {
+    public init(config: RedisClientConfig) throws {
         self.config = config
+    }
+
+    public init(url: URL) throws {
+        self.config = RedisClientConfig(url: url)
     }
 
     public func makeConnection(on worker: Worker) -> EventLoopFuture<RedisClient> {
