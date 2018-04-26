@@ -11,7 +11,7 @@ let package = Package(
       .package(url: "https://github.com/vapor/core.git", from: "3.0.0-rc.2"),
 
         // Core services for creating database integrations.
-        .package(url: "https://github.com/vapor/database-kit.git", .branch("gm")),
+        .package(url: "https://github.com/vapor/database-kit.git", from: "1.0.0"),
 
         // Event-driven network application framework for high performance protocol servers & clients, non-blocking.
         .package(url: "https://github.com/apple/swift-nio.git", from: "1.0.0")

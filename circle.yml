@@ -8,6 +8,8 @@ jobs:
       - checkout
       - run: swift build
       - run: swift test
+
+
   linux:
     docker:
       - image: codevapor/swift:4.1
@@ -16,7 +18,18 @@ jobs:
       - checkout
       - run: swift build
       - run: swift test
+
+
+  linux-release:
+    docker:
+      - image: codevapor/swift:4.1
+      - image: redis:3.2
+    steps:
+      - checkout
       - run: swift build -c release
+
+
+
   swiftlint:
      docker:
        - image: norionomura/swiftlint
@@ -28,5 +41,6 @@ workflows:
   tests:
     jobs:
       - linux
-      - swiftlint
+      - linux-release
+      # - swiftlint
       # - macos
