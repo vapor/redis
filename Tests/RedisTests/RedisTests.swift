@@ -16,6 +16,7 @@ extension RedisClient {
 }
 
 class RedisTests: XCTestCase {
+    let defaultTimeout = 2.0
     func testCRUD() throws {
         let redis = try RedisClient.makeTest()
         defer { redis.close() }
@@ -27,6 +28,8 @@ class RedisTests: XCTestCase {
     }
 
     func testPubSubSingleChannel() throws {
+        let futureExpectation = expectation(description: "Subscriber should recevie message")
+
         let redisSubscriber = try RedisClient.makeTest()
         let redisPublisher = try RedisClient.makeTest()
         defer {
@@ -38,22 +41,24 @@ class RedisTests: XCTestCase {
         let channel2 = "channel2"
 
         let expectedChannel1Msg = "Stuff and things"
-
-        var channelReceivedData = false
         _ = try redisSubscriber.subscribe(Set([channel1])) { channelData in
-            channelReceivedData = true
-            XCTAssert(channelData.data.string == expectedChannel1Msg)
+            if channelData.data.string == expectedChannel1Msg {
+                futureExpectation.fulfill()
+            }
         }.catch { _ in
             XCTFail("this should not throw an error")
         }
-        sleep(1)
+
         _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
         _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
-        sleep(1)
-        XCTAssert(channelReceivedData)
+        waitForExpectations(timeout: defaultTimeout)
     }
 
     func testPubSubMultiChannel() throws {
+        let expectedChannel1Msg = "Stuff and things"
+        let expectedChannel2Msg = "Stuff and things 3"
+        let futureExpectation1 = expectation(description: "Subscriber should recevie message \(expectedChannel1Msg)")
+        let futureExpectation2 = expectation(description: "Subscriber should recevie message \(expectedChannel2Msg)")
         let redisSubscriber = try RedisClient.makeTest()
         let redisPublisher = try RedisClient.makeTest()
         defer {
@@ -63,21 +68,19 @@ class RedisTests: XCTestCase {
 
         let channel1 = "channel/1"
         let channel2 = "channel/2"
-        let expectedChannel1Msg = "Stuff and things"
-        let expectedChannel2Msg = "Stuff and things 3"
 
-        var channelReceivedData = false
         _ = try redisSubscriber.subscribe(Set([channel1, channel2])) { channelData in
-            channelReceivedData = true
-            XCTAssert(channelData.data.string == expectedChannel1Msg ||
-                channelData.data.string == expectedChannel2Msg)
+            if channelData.data.string == expectedChannel1Msg {
+                futureExpectation1.fulfill()
+            } else if channelData.data.string == expectedChannel2Msg {
+                futureExpectation2.fulfill()
+            }
         }.catch { _ in
             XCTFail("this should not throw an error")
         }
         _ = try redisPublisher.publish("Stuff and things", to: channel1).wait()
         _ = try redisPublisher.publish("Stuff and things 3", to: channel2).wait()
-        sleep(1)
-        XCTAssert(channelReceivedData)
+        waitForExpectations(timeout: defaultTimeout)
     }
 
     func testStruct() throws {
