@@ -6,6 +6,7 @@ extension RedisClient {
     public static func connect(
         hostname: String = "localhost",
         port: Int = 6379,
+        password: String? = nil,
         on worker: Worker,
         onError: @escaping (Error) -> Void
     ) -> Future<RedisClient> {
@@ -16,6 +17,8 @@ extension RedisClient {
             .channelInitializer { channel in
                 return channel.pipeline.addRedisHandlers().then {
                     channel.pipeline.add(handler: handler)
+                    }.then {
+                        
                 }
             }
 
