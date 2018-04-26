@@ -17,13 +17,15 @@ extension RedisClient {
             .channelInitializer { channel in
                 return channel.pipeline.addRedisHandlers().then {
                     channel.pipeline.add(handler: handler)
-                    }.then {
-                        
                 }
             }
-
         return bootstrap.connect(host: hostname, port: port).map(to: RedisClient.self) { channel in
             return .init(queue: handler, channel: channel)
+        }.flatMap(to: RedisClient.self) { client in
+            if let password = password {
+                return client.authorize(with: password).map({ _ in client })
+            }
+            return Future.map(on: worker, { client})
         }
     }
 }
