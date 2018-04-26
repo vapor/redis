@@ -25,7 +25,7 @@ extension RedisClient {
             if let password = password {
                 return client.authorize(with: password).map({ _ in client })
             }
-            return Future.map(on: worker, { client})
+            return Future.map(on: worker, { client })
         }
     }
 }
