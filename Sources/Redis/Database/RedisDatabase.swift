@@ -13,14 +13,13 @@ public final class RedisDatabase: Database {
 
     /// See `Database`.
     public func newConnection(on worker: Worker) -> EventLoopFuture<RedisClient> {
-        return RedisClient.connect(hostname: config.hostname, port: config.port, on: worker) { error in
+        return RedisClient.connect(
+            hostname: config.hostname,
+            port: config.port,
+            password: config.password,
+            on: worker
+        ) { error in
             print("[Redis] \(error)")
-        }.then { client in
-            if let password = self.config.password {
-                return client.command("AUTH", [.basicString(password)]).transform(to: client)
-            } else {
-                return worker.eventLoop.newSucceededFuture(result: client)
-            }
         }
     }
 }
