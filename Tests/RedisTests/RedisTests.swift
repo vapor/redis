@@ -33,7 +33,7 @@ class RedisTests: XCTestCase {
     }
 
     func testPubSubSingleChannel() throws {
-        let futureExpectation = expectation(description: "Subscriber should recevie message")
+        let futureExpectation = expectation(description: "Subscriber should receive message")
 
         let redisSubscriber = try RedisClient.makeTest()
         let redisPublisher = try RedisClient.makeTest()
@@ -62,8 +62,8 @@ class RedisTests: XCTestCase {
     func testPubSubMultiChannel() throws {
         let expectedChannel1Msg = "Stuff and things"
         let expectedChannel2Msg = "Stuff and things 3"
-        let futureExpectation1 = expectation(description: "Subscriber should recevie message \(expectedChannel1Msg)")
-        let futureExpectation2 = expectation(description: "Subscriber should recevie message \(expectedChannel2Msg)")
+        let futureExpectation1 = expectation(description: "Subscriber should receive message \(expectedChannel1Msg)")
+        let futureExpectation2 = expectation(description: "Subscriber should receive message \(expectedChannel2Msg)")
         let redisSubscriber = try RedisClient.makeTest()
         let redisPublisher = try RedisClient.makeTest()
         defer {
