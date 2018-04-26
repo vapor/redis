@@ -8,7 +8,12 @@ extension RedisClient {
     static func makeTest() throws -> RedisClient {
         let group = MultiThreadedEventLoopGroup(numThreads: 1)
         let password = Environment.get("REDIS_PASSWORD")
-        let client = try RedisClient.connect(hostname: "localhost", port: 6379, password: password, on: group) { error in
+        let client = try RedisClient.connect(
+            hostname: "localhost",
+            port: 6379,
+            password: password,
+            on: group
+        ) { error in
             XCTFail("\(error)")
         }.wait()
         return client
