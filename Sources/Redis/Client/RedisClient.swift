@@ -62,7 +62,7 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
         guard !isClosed else {
             return eventLoop.newFailedFuture(error: closeError)
         }
-        
+
         // create a new promise and store it
         let promise = eventLoop.newPromise(Void.self)
         currentSend = promise
