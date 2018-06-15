@@ -2,6 +2,8 @@ import NIO
 
 /// A Redis client.
 public final class RedisClient: DatabaseConnection, BasicWorker {
+    public typealias Database = RedisDatabase
+    
     /// See `BasicWorker`.
     public var eventLoop: EventLoop {
         return channel.eventLoop

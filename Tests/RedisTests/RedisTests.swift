@@ -6,7 +6,7 @@ import XCTest
 extension RedisClient {
     /// Creates a test event loop and Redis client.
     static func makeTest() throws -> RedisClient {
-        let group = MultiThreadedEventLoopGroup(numThreads: 1)
+        let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
         let password = Environment.get("REDIS_PASSWORD")
         let client = try RedisClient.connect(
             hostname: "localhost",
