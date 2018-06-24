@@ -107,6 +107,23 @@ class RedisDataDecoderTests: XCTestCase {
     }
 
     private func bulkStringTestCase(
+        protocolData: Foundation.Data,
+        expectedData: Foundation.Data?,
+        otherData: Foundation.Data? = nil
+    ) throws {
+        let embeddedChannel = EmbeddedChannel()
+        try embeddedChannel.pipeline.add(handler: decoder).wait()
+        var buff = allocator.buffer(capacity: 256)
+        buff.write(bytes: protocolData)
+        try embeddedChannel.writeInbound(buff)
+        let decoded: RedisData? = embeddedChannel.readInbound()
+        let otherInbound: RedisData? = embeddedChannel.readInbound()
+        XCTAssertEqual(decoded?.data, expectedData)
+        XCTAssertEqual(otherInbound?.data, otherData)
+        _ = try embeddedChannel.finish()
+    }
+    
+    private func bulkStringTestCase(
         protocolString: String,
         expectedString: String?,
         otherString: String? = nil
@@ -123,6 +140,12 @@ class RedisDataDecoderTests: XCTestCase {
         _ = try embeddedChannel.finish()
     }
 
+    private func bulkStringTestCase(bytes: [UInt8]) throws {
+        let data = Foundation.Data(bytes: bytes)
+        let protocolData = "$\(data.count)\r\n".convertToData() + data + "\r\n".convertToData()
+        XCTAssertNoThrow(try bulkStringTestCase(protocolData: protocolData, expectedData: data))
+    }
+
     func testBulkString() throws {
         try assertWillParseNil(string: "$0\r\n\r")
         try bulkStringTestCase(protocolString: "$0\r\n\r\n", expectedString: "")
@@ -136,6 +159,17 @@ class RedisDataDecoderTests: XCTestCase {
         let incompleteString = "*8\r\n$16\r\ntest8:1523640910\r\n$10\r\n1523640910\r\n$16\r\ntest9:15" +
         "23640913\r\n$10\r\n1523640913\r\n$17\r\ntest10:1523640916\r\n$10\r\n15"
         try bulkStringTestCase(protocolString: incompleteString, expectedString: nil)
+        do {
+            let str = "κόσμε"
+            let bytes = str.convertToData()
+            try bulkStringTestCase(protocolString: "$\(bytes.count)\r\n\(str)\r\n", expectedString: str)
+        }
+
+        // test raw bytes
+        try bulkStringTestCase(bytes: [0x00, 0x01, 0x02, 0x03, 0x0A, 0xff]) // 0xff is problematic for UTF-8 encoding
+
+        // test UTF-8 string
+        try bulkStringTestCase(bytes: [UInt8]("κόσμε".convertToData()))
     }
 
     // Test Null String
