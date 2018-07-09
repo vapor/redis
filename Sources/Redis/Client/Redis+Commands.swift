@@ -207,4 +207,7 @@ extension RedisClient {
         return command("RPOPLPUSH", [RedisData(bulk: source), RedisData(bulk: destination)])
     }
 
+    public func select(_ database: Int) -> Future<RedisData> {
+        return command("SELECT", [RedisData(bulk: database.description)])
+    }
 }

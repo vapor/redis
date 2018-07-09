@@ -13,13 +13,22 @@ public final class RedisDatabase: Database {
 
     /// See `Database`.
     public func newConnection(on worker: Worker) -> EventLoopFuture<RedisClient> {
-        return RedisClient.connect(
+        let connect = RedisClient.connect(
             hostname: config.hostname,
             port: config.port,
             password: config.password,
             on: worker
         ) { error in
             print("[Redis] \(error)")
+        }
+
+        guard let database = config.database else {
+            return connect
+        }
+
+        return connect.flatMap { client in
+            client.select(database)
+                .transform(to: client)
         }
     }
 }
