@@ -7,7 +7,7 @@ public final class RedisProvider: Provider {
     /// See `Provider.repositoryName`
     public static let repositoryName = "redis"
 
-    /// Creates a new `PostgreSQLProvider`.
+    /// Creates a new `RedisProvider`.
     public init() {}
 
     /// See `Provider.register`
