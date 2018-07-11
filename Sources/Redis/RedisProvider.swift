@@ -18,6 +18,11 @@ public final class RedisProvider: Provider {
         var databases = DatabasesConfig()
         databases.add(database: RedisDatabase.self, as: .redis)
         services.register(databases)
+        
+        services.register(KeyedCache.self) { container -> RedisCache in
+            let pool = try container.connectionPool(to: .redis)
+            return .init(pool: pool)
+        }
     }
 
     /// See `Provider.boot`
@@ -39,3 +44,5 @@ extension RedisDatabase: ServiceType {
         return try .init(config: worker.make())
     }
 }
+
+public typealias RedisCache = DatabaseKeyedCache<ConfiguredDatabase<RedisDatabase>>
