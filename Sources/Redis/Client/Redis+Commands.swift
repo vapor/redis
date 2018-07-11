@@ -30,6 +30,19 @@ extension RedisClient {
         return resp
     }
 
+    // MARK: Expire
+    public func expire(_ key: String, after deadline: Int) -> Future<Int> {
+        let resp = command("EXPIRE", [RedisData(stringLiteral:key), RedisData(integerLiteral: deadline)]).map(to: Int.self) { data in
+            guard let value = data.int else {
+                throw RedisError(identifier: "expire", reason: "Could not convert resp to int", source: .capture())
+            }
+
+            return value
+        }
+
+        return resp
+    }
+
     // MARK: Convertible
 
     /// Gets key as a `RedisDataConvertible` type.
