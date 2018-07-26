@@ -26,6 +26,17 @@ class RedisDataEncoderTests: XCTestCase {
         }
     }
 
+    private func validatEncodedMessage(expectedData: Data) {
+        let writtenData: IOData = channel.readOutbound()!
+        switch writtenData {
+        case .byteBuffer(let buff):
+            let writtenResponse = buff.getData(at: buff.readerIndex, length: buff.readableBytes)!
+            XCTAssertEqual(writtenResponse, expectedData)
+        case .fileRegion:
+            XCTFail("Unexpected file region")
+        }
+    }
+
     func testEncodingSimpleString() throws {
         let sample = "foo"
         XCTAssertNoThrow(try channel.writeOutbound(RedisData.basicString("foo")))
@@ -51,6 +62,10 @@ class RedisDataEncoderTests: XCTestCase {
         validatEncodedMessage(expectedMessage: "$19\r\n\(myString)\r\n")
         XCTAssertNoThrow(try channel.writeOutbound(RedisData.bulkString("")))
         validatEncodedMessage(expectedMessage: "$0\r\n\r\n")
+
+        let data = Data(bytes: [0x00, 0x00, 0x01, 0x02, 0x03, 0xff])
+        XCTAssertNoThrow(try channel.writeOutbound(RedisData.bulkString(data)))
+        validatEncodedMessage(expectedData: "$\(data.count)\r\n".convertToData() + data + "\r\n".convertToData())
     }
 
     func testEncodingNil() throws {
