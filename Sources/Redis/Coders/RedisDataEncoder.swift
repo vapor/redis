@@ -16,28 +16,25 @@ final class RedisDataEncoder: MessageToByteEncoder {
         data: RedisDataEncoder.OutboundIn,
         out: inout ByteBuffer
     ) throws {
-        out.write(string: encode(data: data))
+        out.write(bytes: encode(data: data))
     }
 
     /// Base encoding method
-    private func encode(data: RedisData) -> String {
+    private func encode(data: RedisData) -> Data {
         switch data.storage {
         case let .basicString(basicString):
-            return "+\(basicString)\r\n"
+            return "+\(basicString)\r\n".convertToData()
         case let .error(err):
-            return "-\(err.reason)\r\n"
+            return "-\(err.reason)\r\n".convertToData()
         case let .integer(integer):
-            return ":\(integer)\r\n"
-        case let .bulkString(bulkString):
-            let bytes = [UInt8](bulkString)
-            // This is kind of primitive considering bulk strings can be 512mb... should this be chunked?
-            let string = String(bytes: bytes, encoding: .utf8) ?? ""
-            return "$\(bytes.count)\r\n\(string)\r\n"
+            return ":\(integer)\r\n".convertToData()
+        case let .bulkString(bulkData):
+            return "$\(bulkData.count)\r\n".convertToData() + bulkData + "\r\n".convertToData()
         case .null:
-            return "$-1\r\n"
+            return "$-1\r\n".convertToData()
         case let .array(array):
-            let stringEncodedArray = array.map { encode(data: $0) }.joined()
-            return "*\(array.count)\r\n\(stringEncodedArray)"
+            let dataEncodedArray = array.map { encode(data: $0) }.joined()
+            return "*\(array.count)\r\n".convertToData() + dataEncodedArray
         }
     }
 }

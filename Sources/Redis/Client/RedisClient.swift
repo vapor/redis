@@ -2,6 +2,8 @@ import NIO
 
 /// A Redis client.
 public final class RedisClient: DatabaseConnection, BasicWorker {
+    public typealias Database = RedisDatabase
+    
     /// See `BasicWorker`.
     public var eventLoop: EventLoop {
         return channel.eventLoop
@@ -62,7 +64,7 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
         guard !isClosed else {
             return eventLoop.newFailedFuture(error: closeError)
         }
-        
+
         // create a new promise and store it
         let promise = eventLoop.newPromise(Void.self)
         currentSend = promise
@@ -102,11 +104,16 @@ public struct RedisClientConfig: Codable {
     /// The Redis server's optional password.
     public var password: String?
 
+    /// The database to connect to automatically.
+    /// If nil, the connection will use the default 0.
+    public var database: Int?
+
     /// Create a new `RedisClientConfig`
     public init(url: URL) {
         self.hostname = url.host ?? "localhost"
         self.port = url.port ?? 6379
         self.password = url.password
+        self.database = Int(url.path)
     }
 
     public init() {
@@ -116,10 +123,18 @@ public struct RedisClientConfig: Codable {
 
     internal func toURL() throws -> URL {
         let urlString: String
-        if let password = password {
-            urlString = "redis://:\(password)@\(hostname):\(port)"
+        let databaseSuffix: String
+
+        if let database = database {
+            databaseSuffix = "/\(database)"
         } else {
-            urlString = "redis://\(hostname):\(port)"
+            databaseSuffix = ""
+        }
+
+        if let password = password {
+            urlString = "redis://:\(password)@\(hostname)\(databaseSuffix):\(port)"
+        } else {
+            urlString = "redis://\(hostname)\(databaseSuffix):\(port)"
         }
 
         guard let url = URL(string: urlString) else {
