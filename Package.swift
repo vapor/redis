@@ -14,7 +14,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/database-kit.git", from: "1.0.0")
     ],
     targets: [
-      .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "NIO", "COperatingSystem"]),
+      .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "COperatingSystem"]),
         .testTarget(name: "RedisTests", dependencies: ["Redis"])
     ]
 )
