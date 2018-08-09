@@ -5,6 +5,16 @@ public protocol RedisDataConvertible {
     func convertToRedisData() throws -> RedisData
 }
 
+extension RedisData: RedisDataConvertible {
+    public func convertToRedisData() throws -> RedisData {
+        return self
+    }
+
+    public static func convertFromRedisData(_ data: RedisData) throws -> RedisData {
+        return data
+    }
+}
+
 extension String: RedisDataConvertible {
     /// See `RedisDataConvertible.convertFromRedisData(_:)`
     public static func convertFromRedisData(_ data: RedisData) throws -> String {
