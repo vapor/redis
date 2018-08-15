@@ -91,7 +91,7 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
     }
 }
 
-private let closeError = RedisError(identifier: "closed", reason: "Connection is closed.", source: .capture())
+private let closeError = RedisError(identifier: "closed", reason: "Connection is closed.")
 
 /// MARK: Config
 
@@ -118,6 +118,7 @@ public struct RedisClientConfig: Codable {
         self.database = Int(url.path)
     }
 
+    /// Creates a new, default `RedisClientConfig`.
     public init() {
         self.hostname = "localhost"
         self.port = 6379
@@ -142,8 +143,7 @@ public struct RedisClientConfig: Codable {
         guard let url = URL(string: urlString) else {
             throw RedisError(
                 identifier: "URL creation",
-                reason: "Redis client config could not be transformed to url",
-                source: .capture())
+                reason: "Redis client config could not be transformed to url.")
         }
 
         return url

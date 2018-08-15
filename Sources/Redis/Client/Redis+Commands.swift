@@ -23,7 +23,7 @@ extension RedisClient {
     public func delete(_ keys: [String]) -> Future<Int> {
         let resp = command("DEL", keys.map(RedisData.init(bulk:))).map(to: Int.self) { data in
             guard let value = data.int else {
-                throw RedisError(identifier: "delete", reason: "Could not convert resp to int", source: .capture())
+                throw RedisError(identifier: "delete", reason: "Could not convert resp to int.")
             }
             return value
         }
@@ -31,10 +31,17 @@ extension RedisClient {
     }
 
     // MARK: Expire
+    
+    /// Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
+    /// A key with an associated timeout is often said to be volatile in Redis terminology.
+    ///
+    ///     let res = try redis.expire("foo", after: 42).wait()
+    ///
+    /// https://redis.io/commands/expire
     public func expire(_ key: String, after deadline: Int) -> Future<Int> {
         let resp = command("EXPIRE", [RedisData(stringLiteral:key), RedisData(integerLiteral: deadline)]).map(to: Int.self) { data in
             guard let value = data.int else {
-                throw RedisError(identifier: "expire", reason: "Could not convert resp to int", source: .capture())
+                throw RedisError(identifier: "expire", reason: "Could not convert resp to in.t")
             }
 
             return value
@@ -65,8 +72,7 @@ extension RedisClient {
             default:
                 throw RedisError(
                     identifier: "setData",
-                    reason: "Set data must be of type bulkString",
-                    source: .capture()
+                    reason: "Set data must be of type bulkString"
                 )
             }
             return self.rawSet(key, to: data)
@@ -130,7 +136,7 @@ extension RedisClient {
         let args = amount == nil ? [RedisData(bulk: key)] : [RedisData(bulk: key), RedisData(bulk: amount!.description)]
         let resp = command(name, args).map(to: Int.self) { data in
             guard let value = data.int else {
-                throw RedisError(identifier: "increment", reason: "Could not convert resp to int", source: .capture())
+                throw RedisError(identifier: "increment", reason: "Could not convert resp to int.")
             }
             return value
         }
@@ -143,7 +149,7 @@ extension RedisClient {
         let args = amount == nil ? [RedisData(bulk: key)] : [RedisData(bulk: key), RedisData(bulk: amount!.description)]
         let resp = command(name, args).map(to: Int.self) { data in
             guard let value = data.int else {
-                throw RedisError(identifier: "decrement", reason: "Could not convert resp to int", source: .capture())
+                throw RedisError(identifier: "decrement", reason: "Could not convert resp to int.")
             }
             return value
         }
@@ -167,7 +173,7 @@ extension RedisClient {
         args.insert(RedisData(bulk: list), at: 0)
         let resp = command("RPUSH", args).map(to: Int.self) { data in
             guard let value = data.int else {
-                throw RedisError(identifier: "rpush", reason: "Could not convert resp to int", source: .capture())
+                throw RedisError(identifier: "rpush", reason: "Could not convert resp to int.")
             }
             return value
         }
@@ -180,7 +186,7 @@ extension RedisClient {
         args.insert(RedisData(bulk: list), at: 0)
         let resp = command("LPUSH", args).map(to: Int.self) { data in
             guard let value = data.int else {
-                throw RedisError(identifier: "rpush", reason: "Could not convert resp to int", source: .capture())
+                throw RedisError(identifier: "rpush", reason: "Could not convert resp to int.")
             }
             return value
         }
@@ -196,7 +202,7 @@ extension RedisClient {
     public func length(of list: String) -> Future<Int> {
         let resp = command("LLEN", [RedisData(bulk: list)]).map(to: Int.self) { data in
             guard let value = data.int else {
-                throw RedisError(identifier: "length", reason: "Could not convert resp to int", source: .capture())
+                throw RedisError(identifier: "length", reason: "Could not convert resp to int.")
             }
             return value
         }
@@ -220,7 +226,18 @@ extension RedisClient {
         return command("RPOPLPUSH", [RedisData(bulk: source), RedisData(bulk: destination)])
     }
 
-    public func select(_ database: Int) -> Future<RedisData> {
-        return command("SELECT", [RedisData(bulk: database.description)])
+    /// Select the Redis logical database having the specified zero-based numeric index.
+    /// New connections always use the database 0.
+    ///
+    ///     let res = try redis.select(42).wait()
+    ///
+    /// https://redis.io/commands/select
+    public func select(_ database: Int) -> Future<String> {
+        return command("SELECT", [RedisData(bulk: database.description)]).map { data in
+            switch data.storage {
+            case .basicString(let string): return string
+            default: throw RedisError(identifier: "select", reason: "Unexpected response: \(data).")
+            }
+        }
     }
 }

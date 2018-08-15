@@ -25,7 +25,7 @@ extension String: RedisDataConvertible {
     /// See `RedisDataConvertible`.
     public static func convertFromRedisData(_ data: RedisData) throws -> String {
         guard let string = data.string else {
-            throw RedisError(identifier: "string", reason: "Could not convert to string: \(data)", source: .capture())
+            throw RedisError(identifier: "string", reason: "Could not convert to string: \(data).")
         }
         return string
     }
@@ -40,7 +40,7 @@ extension FixedWidthInteger {
     /// See `RedisDataConvertible`.
     public static func convertFromRedisData(_ data: RedisData) throws -> Self {
         guard let int = data.int else {
-            throw RedisError(identifier: "int", reason: "Could not convert to int: \(data)", source: .capture())
+            throw RedisError(identifier: "int", reason: "Could not convert to int: \(data).")
         }
         return Self(int)
     }
@@ -66,11 +66,11 @@ extension Double: RedisDataConvertible {
     /// See `RedisDataConvertible`.
     public static func convertFromRedisData(_ data: RedisData) throws -> Double {
         guard let string = data.string else {
-            throw RedisError(identifier: "string", reason: "Could not convert to string: \(data)", source: .capture())
+            throw RedisError(identifier: "string", reason: "Could not convert to string: \(data).")
         }
 
         guard let float = Double(string) else {
-            throw RedisError(identifier: "dobule", reason: "Could not convert to double: \(data)", source: .capture())
+            throw RedisError(identifier: "dobule", reason: "Could not convert to double: \(data).")
         }
 
         return float
@@ -86,11 +86,11 @@ extension Float: RedisDataConvertible {
     /// See `RedisDataConvertible`.
     public static func convertFromRedisData(_ data: RedisData) throws -> Float {
         guard let string = data.string else {
-            throw RedisError(identifier: "string", reason: "Could not convert to string: \(data)", source: .capture())
+            throw RedisError(identifier: "string", reason: "Could not convert to string: \(data).")
         }
 
         guard let float = Float(string) else {
-            throw RedisError(identifier: "float", reason: "Could not convert to float: \(data)", source: .capture())
+            throw RedisError(identifier: "float", reason: "Could not convert to float: \(data).")
         }
 
         return float
@@ -106,7 +106,7 @@ extension Data: RedisDataConvertible {
     /// See `RedisDataConvertible`.
     public static func convertFromRedisData(_ data: RedisData) throws -> Data {
         guard let theData = data.data else {
-            throw RedisError(identifier: "data", reason: "Could not convert to data: \(data)", source: .capture())
+            throw RedisError(identifier: "data", reason: "Could not convert to data: \(data).")
         }
         return theData
     }

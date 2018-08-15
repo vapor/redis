@@ -30,11 +30,14 @@ public struct RedisError: Debuggable {
         reason: String,
         possibleCauses: [String] = [],
         suggestedFixes: [String] = [],
-        source: SourceLocation
+        file: String = #file,
+        function: String = #function,
+        line: UInt = #line,
+        column: UInt = #column
     ) {
         self.identifier = identifier
         self.reason = reason
-        self.sourceLocation = source
+        self.sourceLocation = SourceLocation.init(file: file, function: function, line: line, column: column, range: nil)
         self.stackTrace = RedisError.makeStackTrace()
         self.possibleCauses = possibleCauses
         self.suggestedFixes = suggestedFixes

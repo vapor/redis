@@ -45,7 +45,7 @@ class RedisDataEncoderTests: XCTestCase {
 
     func testEncodingError() throws {
         let myReason = "My reasonable Error"
-        let err = RedisError(identifier: "serverSide", reason: myReason, source: .capture())
+        let err = RedisError(identifier: "serverSide", reason: myReason)
         XCTAssertNoThrow(try channel.writeOutbound(RedisData.error(err)))
         validatEncodedMessage(expectedMessage: "-\(myReason)\r\n")
     }
@@ -78,7 +78,7 @@ class RedisDataEncoderTests: XCTestCase {
         let bar = "bar"
         let baz = "baz"
         let number = 123
-        let redisError = RedisError(identifier: "serverSide", reason: bar, source: .capture())
+        let redisError = RedisError(identifier: "serverSide", reason: bar)
         let redisArray: [RedisData] = [
             .basicString(foo),
             .error(redisError),
