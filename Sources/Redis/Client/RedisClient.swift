@@ -55,6 +55,8 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
         return send([data]) { dataArr.append($0) }
             .map(to: RedisData.self) { dataArr.first!}
     }
+    
+    // MARK: Private
 
     private func send(_ messages: [RedisData], onResponse: @escaping (RedisData) throws -> Void) -> Future<Void> {
         // if currentSend is not nil, previous send has not completed
