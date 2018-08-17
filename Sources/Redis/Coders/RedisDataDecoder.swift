@@ -47,7 +47,7 @@ fileprivate extension RedisDataDecoder {
             return .parsed(.basicString(string))
         case .hyphen:
             guard let string = try parseSimpleString(at: &position, from: buffer) else { return .notYetParsed }
-            let error = RedisError(identifier: "serverSide", reason: string, source: .capture())
+            let error = RedisError(identifier: "serverSide", reason: string)
             return .parsed(.error(error))
         case .colon:
             guard let number = try integer(at: &position, from: buffer) else { return .notYetParsed }
@@ -59,8 +59,7 @@ fileprivate extension RedisDataDecoder {
         default:
             throw RedisError(
                 identifier: "invalidTypeToken",
-                reason: "Unexpected error while parsing RedisData.",
-                source: .capture()
+                reason: "Unexpected error while parsing RedisData."
             )
         }
     }
@@ -85,8 +84,7 @@ fileprivate extension RedisDataDecoder {
             guard case .parsed(let value) = partialRedisData else {
                 throw RedisError(
                     identifier: "parse",
-                    reason: "Unexpected error while parsing RedisData.",
-                    source: .capture()
+                    reason: "Unexpected error while parsing RedisData."
                 )
             }
             return value
@@ -142,8 +140,7 @@ fileprivate extension RedisDataDecoder {
         guard let number = Int(string) else {
             throw RedisError(
                 identifier: "parse",
-                reason: "Unexpected error while parsing RedisData.",
-                source: .capture()
+                reason: "Unexpected error while parsing RedisData."
             )
         }
         return number

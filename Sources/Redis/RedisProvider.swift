@@ -4,13 +4,10 @@ import Service
 
 /// Provides base `Redis` services such as database and connection.
 public final class RedisProvider: Provider {
-    /// See `Provider.repositoryName`
-    public static let repositoryName = "redis"
-
     /// Creates a new `RedisProvider`.
     public init() {}
 
-    /// See `Provider.register`
+    /// See `Provider`.
     public func register(_ services: inout Services) throws {
         try services.register(DatabaseKitProvider())
         services.register(RedisClientConfig.self)
@@ -25,7 +22,7 @@ public final class RedisProvider: Provider {
         }
     }
 
-    /// See `Provider.boot`
+    /// See `Provider`.
     public func didBoot(_ worker: Container) throws -> Future<Void> {
         return .done(on: worker)
     }
@@ -33,16 +30,17 @@ public final class RedisProvider: Provider {
 
 /// MARK: Services
 extension RedisClientConfig: ServiceType {
-    /// See `ServiceType.makeService(for:)`
+    /// See `ServiceType`.
     public static func makeService(for worker: Container) throws -> RedisClientConfig {
         return .init()
     }
 }
 extension RedisDatabase: ServiceType {
-    /// See `ServiceType.makeService(for:)`
+    /// See `ServiceType`.
     public static func makeService(for worker: Container) throws -> RedisDatabase {
         return try .init(config: worker.make())
     }
 }
 
+/// Convenience type-alias for a Redis-based cache.
 public typealias RedisCache = DatabaseKeyedCache<ConfiguredDatabase<RedisDatabase>>

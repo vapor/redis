@@ -1,3 +1,4 @@
+/// Creates instances of `RedisClient`.
 public final class RedisDatabase: Database {
     /// This client's configuration.
     public let config: RedisClientConfig
@@ -7,6 +8,7 @@ public final class RedisDatabase: Database {
         self.config = config
     }
 
+    /// Creates a new `RedisDatabase` from a Redis configuration URL.
     public init(url: URL) throws {
         self.config = RedisClientConfig(url: url)
     }

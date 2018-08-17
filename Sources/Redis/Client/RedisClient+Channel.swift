@@ -34,9 +34,8 @@ extension RedisClient {
         }
         guard let channel = array[1].string else {
             throw RedisError(
-                identifier: "channel data",
-                reason: "channel data did not contain identifier",
-                source: .capture()
+                identifier: "channel.data",
+                reason: "channel data did not contain identifier."
             )
         }
         return RedisChannelData(channel: channel, data: array[2])
