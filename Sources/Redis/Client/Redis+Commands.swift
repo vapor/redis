@@ -39,12 +39,13 @@ extension RedisClient {
     ///
     /// https://redis.io/commands/expire
     public func expire(_ key: String, after deadline: Int) -> Future<Int> {
-        let resp = command("EXPIRE", [RedisData(stringLiteral:key), RedisData(integerLiteral: deadline)]).map(to: Int.self) { data in
-            guard let value = data.int else {
-                throw RedisError(identifier: "expire", reason: "Could not convert resp to in.t")
-            }
+        let resp = command("EXPIRE", [RedisData(stringLiteral: key), RedisData(bulk: deadline.description)])
+            .map(to: Int.self) { data in
+                guard let value = data.int else {
+                    throw RedisError(identifier: "expire", reason: "Could not convert resp to int")
+                }
 
-            return value
+                return value
         }
 
         return resp
