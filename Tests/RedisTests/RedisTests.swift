@@ -162,12 +162,25 @@ class RedisTests: XCTestCase {
         _ = try redis.delete(["mylist", "list2"]).wait()
     }
 
+    func testExpire() throws {
+        let redis = try RedisClient.makeTest()
+        defer { redis.close() }
+        _ = try redis.command("FLUSHALL").wait()
+
+        try redis.set("foo", to: "bar").wait()
+        XCTAssertEqual(try redis.get("foo", as: String.self).wait(), "bar")
+        _ = try redis.expire("foo", after: 1).wait()
+        sleep(2)
+        XCTAssertEqual(try redis.get("foo", as: String.self).wait(), nil)
+    }
+
     static let allTests = [
         ("testCRUD", testCRUD),
         ("testPubSubSingleChannel", testPubSubSingleChannel),
         ("testPubSubMultiChannel", testPubSubMultiChannel),
         ("testStruct", testStruct),
         ("testStringCommands", testStringCommands),
-        ("testListCommands", testListCommands)
+        ("testListCommands", testListCommands),
+        ("testExpire", testExpire),
     ]
 }
