@@ -66,6 +66,7 @@ fileprivate extension RedisDataDecoder {
 
     private func parseArray(at position: inout Int, from buffer: ByteBuffer) throws -> PartialRedisData {
         guard let arraySize = try integer(at: &position, from: buffer) else { return .notYetParsed }
+        guard arraySize > -1 else { return .parsed(.null) }
 
         var array = [PartialRedisData](repeating: .notYetParsed, count: arraySize)
         for index in 0..<arraySize {
