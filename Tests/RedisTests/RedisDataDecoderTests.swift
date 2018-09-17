@@ -248,6 +248,28 @@ class RedisDataDecoderTests: XCTestCase {
         try assertArrayParsing(string: fooBar3Array, expectedElements: expectedElements)
         try assertWillParseNil(string: "*2\r\n$5\r\ntest0\r\n")
     }
+
+    // Test Null Array
+    func testNullArray() throws {
+        let embeddedChannel = EmbeddedChannel()
+        defer { _ = try? embeddedChannel.finish() }
+        try embeddedChannel.pipeline.add(handler: decoder).wait()
+        var buff = allocator.buffer(capacity: 256)
+        buff.write(string: "*-1\r")
+        try embeddedChannel.writeInbound(buff)
+        let maybeNil: RedisData? = embeddedChannel.readInbound()
+        XCTAssertNil(maybeNil)
+        var otherBuff = allocator.buffer(capacity: 256)
+        otherBuff.write(string: "\n")
+        try embeddedChannel.writeInbound(otherBuff)
+        guard let decoded: RedisData = embeddedChannel.readInbound() else { return XCTFail("no encoded data") }
+        switch decoded.storage {
+        case .null:
+            XCTAssert(true)
+        default:
+            XCTFail("null was not stored")
+        }
+    }
 }
 
 extension RedisDataDecoderTests {
@@ -263,6 +285,7 @@ extension RedisDataDecoderTests {
         static let bulkString = "$2\r\naa\r\n"
         static let nilString = "$-123\r\n"
         static let fooBar3Array = "*3\r\n+foo\r\n$3\r\nbar\r\n:3\r\n"
+        static let nilArray = "*-1\r\n"
     }
 
     func testAllTogether() throws {
@@ -276,6 +299,7 @@ extension RedisDataDecoderTests {
         buff.write(string: Data.bulkString)
         buff.write(string: Data.nilString)
         buff.write(string: Data.fooBar3Array)
+        buff.write(string: Data.nilArray)
         try embeddedChannel.writeInbound(buff)
         let decodedString: RedisData? = embeddedChannel.readInbound()
         let decodedError: RedisData? = embeddedChannel.readInbound()
@@ -283,6 +307,7 @@ extension RedisDataDecoderTests {
         let decodedBulkString: RedisData? = embeddedChannel.readInbound()
         let decodedNil: RedisData? = embeddedChannel.readInbound()
         let decodedArray: RedisData? = embeddedChannel.readInbound()
+        let decodedNilArray: RedisData? = embeddedChannel.readInbound()
         XCTAssertEqual(decodedString?.string, Data.expectedString)
         guard let errorStorage = decodedError?.storage else { return XCTFail("no decoded data stored") }
         switch errorStorage {
@@ -303,6 +328,13 @@ extension RedisDataDecoderTests {
         guard let array = decodedArray?.array else { return XCTFail("no decoded array found") }
         let expectedElements: [RedisData] = [.basicString("foo"), .bulkString("bar"), .integer(3)]
         compareAndValidateRedisArrays(redisArray: array, expectedElements: expectedElements)
+        guard let nilArrayStorage = decodedNilArray?.storage else { return XCTFail("no decoded data stored")}
+        switch nilArrayStorage {
+        case .null:
+            XCTAssert(true)
+        default:
+            XCTFail("No Error Found")
+        }
     }
 }
 
@@ -314,6 +346,7 @@ extension RedisDataDecoderTests {
         ("testBulkString", testBulkString),
         ("testNullBulkString", testNullBulkString),
         ("testArrays", testArrays),
+        ("testNullArray", testNullArray),
         ("testAllTogether", testAllTogether)
     ]
 }
