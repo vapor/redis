@@ -273,6 +273,7 @@ class RedisTests: XCTestCase {
         ("testListCommands", testListCommands),
         ("testExpire", testExpire),
         ("testSetCommands", testSetCommands),
+        ("testHashCommands", testHashCommands)
     ]
 }
 
