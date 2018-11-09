@@ -128,6 +128,42 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(number4, 0)
         _ = try redis.delete(["number"]).wait()
     }
+    
+    
+    func testHashCommands() throws {
+        let redis = try RedisClient.makeTest()
+        defer { redis.close() }
+        
+        // create hash value
+        let hsetResponse = try redis.hset("hello", field: "world", to: RedisData(bulk: "whatever")).wait()
+        XCTAssertEqual(hsetResponse, 1)
+        
+        // get all field names
+        let hkeysResponse = try redis.hkeys("hello").wait()
+        XCTAssertEqual(hkeysResponse.count, 1)
+        XCTAssertEqual(hkeysResponse.first, "world")
+        
+        // update hash value
+        let hsetResponse2 = try redis.hset("hello", field: "world", to: RedisData(bulk: "value")).wait()
+        XCTAssertEqual(hsetResponse2, 0)
+        
+        // get hash value
+        let hgetResponse = try redis.hget("hello", field: "world", as: String.self).wait()
+        XCTAssertNotNil(hgetResponse)
+        XCTAssertEqual(hgetResponse, "value")
+        
+        // delete hash value
+        let hdelResponse = try redis.hdel("hello", fields: "not-existing-field").wait()
+        XCTAssertEqual(hdelResponse, 0)
+        let hdelResponse2 = try redis.hdel("hello", fields: "world").wait()
+        XCTAssertEqual(hdelResponse2, 1)
+        
+        // get hash value
+        let hgetResponse2 = try redis.hget("hello", field: "world", as: String.self).wait()
+        XCTAssertNil(hgetResponse2)
+    }
+    
+    
 
     func testListCommands() throws {
         let redis = try RedisClient.makeTest()
