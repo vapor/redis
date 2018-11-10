@@ -138,6 +138,10 @@ class RedisTests: XCTestCase {
         let hsetResponse = try redis.hset("hello", field: "world", to: RedisData(bulk: "whatever")).wait()
         XCTAssertEqual(hsetResponse, 1)
         
+        // hash field must exist
+        let hexistsResponse = try redis.hexists("hello", field: "world").wait()
+        XCTAssertEqual(hexistsResponse, true)
+        
         // get all field names
         let hkeysResponse = try redis.hkeys("hello").wait()
         XCTAssertEqual(hkeysResponse.count, 1)
@@ -161,6 +165,10 @@ class RedisTests: XCTestCase {
         // get hash value
         let hgetResponse2 = try redis.hget("hello", field: "world", as: String.self).wait()
         XCTAssertNil(hgetResponse2)
+        
+        // hash field must not exist
+        let hexistsResponse2 = try redis.hexists("hello", field: "world").wait()
+        XCTAssertEqual(hexistsResponse2, false)
     }
     
     
