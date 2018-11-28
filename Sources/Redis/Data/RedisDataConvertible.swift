@@ -9,6 +9,13 @@ public protocol RedisDataConvertible {
     func convertToRedisData() throws -> RedisData
 }
 
+extension RedisDataConvertible where Self: CustomStringConvertible {
+    /// See `RedisDataConvertible`.
+    public func convertToRedisData() throws -> RedisData {
+        return .bulkString(Data(self.description.utf8))
+    }
+}
+
 extension RedisData: RedisDataConvertible {
     /// See `RedisDataConvertible`.
     public func convertToRedisData() throws -> RedisData {
@@ -39,15 +46,15 @@ extension String: RedisDataConvertible {
 extension FixedWidthInteger {
     /// See `RedisDataConvertible`.
     public static func convertFromRedisData(_ data: RedisData) throws -> Self {
-        guard let int = data.int else {
+        guard let string = data.string else {
+            throw RedisError(identifier: "string", reason: "Could not convert to string: \(data).")
+        }
+
+        guard let int = Self(string) else {
             throw RedisError(identifier: "int", reason: "Could not convert to int: \(data).")
         }
-        return Self(int)
-    }
 
-    /// See `RedisDataConvertible`.
-    public func convertToRedisData() throws -> RedisData {
-        return .bulkString(Data(self.description.utf8))
+        return int
     }
 }
 
@@ -75,11 +82,6 @@ extension Double: RedisDataConvertible {
 
         return float
     }
-
-    /// See `RedisDataConvertible`.
-    public func convertToRedisData() throws -> RedisData {
-        return .bulkString(Data(self.description.utf8))
-    }
 }
 
 extension Float: RedisDataConvertible {
@@ -94,11 +96,6 @@ extension Float: RedisDataConvertible {
         }
 
         return float
-    }
-
-    /// See `RedisDataConvertible`.
-    public func convertToRedisData() throws -> RedisData {
-        return .bulkString(Data(self.description.utf8))
     }
 }
 
