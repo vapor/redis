@@ -1,4 +1,19 @@
 extension RedisClient {
+    /// Select the Redis logical database having the specified zero-based numeric index.
+    /// New connections always use the database 0.
+    ///
+    ///     let res = try redis.select(42).wait()
+    ///
+    /// https://redis.io/commands/select
+    public func select(_ database: Int) -> Future<String> {
+        return command("SELECT", [RedisData(bulk: database.description)]).map { data in
+            switch data.storage {
+            case .basicString(let string): return string
+            default: throw RedisError(identifier: "select", reason: "Unexpected response: \(data).")
+            }
+        }
+    }
+
     // MARK: Auth
 
     /// Request for authentication in a password-protected Redis server
