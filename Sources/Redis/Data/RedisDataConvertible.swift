@@ -40,8 +40,17 @@ extension FixedWidthInteger {
     /// See `RedisDataConvertible`.
     public static func convertFromRedisData(_ data: RedisData) throws -> Self {
         guard let int = data.int else {
-            throw RedisError(identifier: "int", reason: "Could not convert to int: \(data).")
+            guard let string = data.string else {
+                throw RedisError(identifier: "string", reason: "Could not convert to string: \(data)")
+            }
+
+            guard let int = Self(string) else {
+                throw RedisError(identifier: "int", reason: "Could not convert to int: \(data)")
+            }
+
+            return int
         }
+
         return Self(int)
     }
 
