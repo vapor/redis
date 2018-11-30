@@ -174,6 +174,60 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(try redis.get("foo", as: String.self).wait(), nil)
     }
 
+    func testSetCommands() throws {
+        let redis = try RedisClient.makeTest()
+        defer { redis.close() }
+        _ = try redis.command("FLUSHALL").wait()
+
+        let dataSet = ["Hello", ",", "World", "!"]
+
+        let addResp1 = try redis.sadd("set1", items: [RedisData(bulk: dataSet[0])]).wait()
+        XCTAssertEqual(addResp1, 1)
+        let addResp2 = try redis.sadd(
+            "set1",
+            items: [RedisData(bulk: dataSet[1]), RedisData(bulk: dataSet[2]), RedisData(bulk: dataSet[3])]
+        ).wait()
+        XCTAssertEqual(addResp2, 3)
+        let addResp3 = try redis.sadd("set1", items: [RedisData(bulk: dataSet[1])]).wait()
+        XCTAssertEqual(addResp3, 0)
+
+        let countResp = try redis.scard("set1").wait()
+        XCTAssertEqual(countResp, 4)
+
+        let membersResp = try redis.smembers("set1").wait().array!.map { $0.string! }
+        XCTAssertTrue(membersResp.allSatisfy { dataSet.contains($0) })
+
+        let isMemberResp1 = try redis.sismember("set1", item: RedisData(bulk: dataSet[0])).wait()
+        XCTAssertTrue(isMemberResp1)
+        let isMemberResp2 = try redis.sismember("set1", item: RedisData(bulk: "Vapor")).wait()
+        XCTAssertFalse(isMemberResp2)
+
+        let randResp1 = try redis.srandmember("set1").wait().array!
+        XCTAssertTrue(dataSet.contains(randResp1[0].string!))
+        let randResp2 = try redis.srandmember("set1", max: 2).wait().array!
+        XCTAssertTrue(randResp2.allSatisfy { dataSet.contains($0.string!) })
+        let randResp3 = try redis.srandmember("set1", max: 5).wait().array!
+        XCTAssertTrue(randResp3.count == 4)
+        _ = try redis.sadd("set2", items: [RedisData(bulk: "Vapor"), RedisData(bulk: "Redis")]).wait()
+        let randResp4 = try redis.srandmember("set2", max: -3).wait().array!
+        XCTAssertTrue(randResp4.count == 3)
+        let randResp5 = try redis.srandmember("set2", max: 3).wait().array!
+        XCTAssertTrue(randResp5.count == 2)
+
+        let popResp = try redis.spop("set1").wait().string!
+        XCTAssertTrue(dataSet.contains(popResp))
+        XCTAssertEqual(try redis.scard("set1").wait(), 3)
+
+        let itemToRemove = dataSet.first(where: { $0 != popResp })!
+        let remResp1 = try redis.srem("set1", items: [RedisData(bulk: itemToRemove)]).wait()
+        XCTAssertEqual(remResp1, 1)
+        let remResp2 = try redis.srem("set1", items: [RedisData(bulk: "Vapor")]).wait()
+        XCTAssertEqual(remResp2, 0)
+        let remainingToRemove = dataSet.filter({ $0 != popResp && $0 != itemToRemove }).map { RedisData(bulk: $0) }
+        let remResp3 = try redis.srem("set1", items: remainingToRemove).wait()
+        XCTAssertEqual(remResp3, 2)
+    }
+
     static let allTests = [
         ("testCRUD", testCRUD),
         ("testPubSubSingleChannel", testPubSubSingleChannel),
@@ -182,5 +236,15 @@ class RedisTests: XCTestCase {
         ("testStringCommands", testStringCommands),
         ("testListCommands", testListCommands),
         ("testExpire", testExpire),
+        ("testSetCommands", testSetCommands),
     ]
 }
+
+#if swift(>=4.2)
+#else
+extension Sequence {
+    func allSatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
+        return try !contains { try !predicate($0) }
+    }
+}
+#endif
