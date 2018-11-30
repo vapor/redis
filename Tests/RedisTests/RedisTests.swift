@@ -240,8 +240,7 @@ class RedisTests: XCTestCase {
     ]
 }
 
-#if swift(>=4.2)
-#else
+#if !swift(>=4.2)
 extension Sequence {
     func allSatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try !contains { try !predicate($0) }
