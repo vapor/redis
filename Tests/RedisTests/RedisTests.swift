@@ -156,16 +156,37 @@ class RedisTests: XCTestCase {
         XCTAssertNotNil(hgetResponse)
         XCTAssertEqual(hgetResponse, "value")
         
+        
+        // create other 2 hash values
+        let _ = try redis.hset("hello", field: "world2", to: RedisData(bulk: "whatever2")).wait()
+        let _ = try redis.hset("hello", field: "world3", to: RedisData(bulk: "whatever3")).wait()
+        
+        // get all keys:values
+        let all = try redis.hgetall("hello").wait()
+        XCTAssertEqual(all.count, 3)
+        
+        // verify value
+        if let value = all["world2"] {
+            let convertedValue = try String.convertFromRedisData(value)
+            XCTAssertEqual(convertedValue, "whatever2")
+        } else {
+            XCTFail("value should exist")
+        }
+
         // delete hash value
         let hdelResponse = try redis.hdel("hello", fields: "not-existing-field").wait()
         XCTAssertEqual(hdelResponse, 0)
         let hdelResponse2 = try redis.hdel("hello", fields: "world").wait()
         XCTAssertEqual(hdelResponse2, 1)
-        
+        let hdelResponse3 = try redis.hdel("hello", fields: "world2").wait()
+        XCTAssertEqual(hdelResponse3, 1)
+        let hdelResponse4 = try redis.hdel("hello", fields: "world3").wait()
+        XCTAssertEqual(hdelResponse4, 1)
+
         // get hash value
         let hgetResponse2 = try redis.hget("hello", field: "world", as: String.self).wait()
         XCTAssertNil(hgetResponse2)
-        
+
         // hash field must not exist
         let hexistsResponse2 = try redis.hexists("hello", field: "world").wait()
         XCTAssertEqual(hexistsResponse2, false)
