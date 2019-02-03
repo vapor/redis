@@ -76,9 +76,35 @@ class RedisDatabaseTests: XCTestCase {
         XCTAssertNil(try redis.get("hello", as: String.self).wait())
     }
 
+    func testRace() throws {
+        let exp = expectation(description: "both futures completed")
+
+        let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        let config = RedisClientConfig.makeTest()
+
+        let database = try RedisDatabase(config: config)
+        let redis = try database.newConnection(on: group).wait()
+
+        let future1 = redis.get("hello", as: String.self)
+        let future2 = redis.get("hello", as: String.self)
+
+        future1.and(future2)
+            .do {
+                XCTAssertNil($0)
+                XCTAssertNil($1)
+                exp.fulfill()
+            }
+            .catch {
+                XCTFail("\($0)")
+            }
+
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
     static let allTests = [
         ("testConnection", testConnection),
         ("testSelect", testSelect),
         ("testSelectViaConfig", testSelectViaConfig),
+        ("testRace", testRace),
     ]
 }
