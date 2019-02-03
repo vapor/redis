@@ -21,9 +21,6 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
     /// The channel
     private let channel: Channel
 
-    /// Currently executing `send(...)` promise.
-    private var currentSend: Promise<Void>?
-
     /// Creates a new Redis client on the provided data source and sink.
     init(queue: QueueHandler<RedisData, RedisData>, channel: Channel) {
         self.queue = queue
@@ -32,7 +29,6 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
         self.isClosed = false
         channel.closeFuture.always {
             self.isClosed = true
-            self.currentSend?.fail(error: closeError)
         }
     }
 
@@ -59,8 +55,6 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
     // MARK: Private
 
     private func send(_ messages: [RedisData], onResponse: @escaping (RedisData) throws -> Void) -> Future<Void> {
-        // if currentSend is not nil, previous send has not completed
-        assert(currentSend == nil, "Attempting to call `send(...)` again before previous invocation has completed.")
 
         // ensure the connection is not closed
         guard !isClosed else {
@@ -69,16 +63,12 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
 
         // create a new promise and store it
         let promise = eventLoop.newPromise(Void.self)
-        currentSend = promise
 
         // cascade this enqueue to the newly created promise
         queue.enqueue(messages) { message in
             try onResponse(message)
             return true // redis is kind of one piece of redis data at time
         }.cascade(promise: promise)
-
-        // when the promise completes, remove the reference to it
-        promise.futureResult.always { self.currentSend = nil }
 
         // return the promise's future result (same as `queue.enqueue`)
         return promise.futureResult

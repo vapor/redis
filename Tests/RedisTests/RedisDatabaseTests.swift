@@ -85,13 +85,16 @@ class RedisDatabaseTests: XCTestCase {
         let database = try RedisDatabase(config: config)
         let redis = try database.newConnection(on: group).wait()
 
-        let future1 = redis.get("hello", as: String.self)
-        let future2 = redis.get("hello", as: String.self)
+        try redis.set("hello1", to: "foo").wait()
+        try redis.set("hello2", to: "bar").wait()
+
+        let future1 = redis.get("hello1", as: String.self)
+        let future2 = redis.get("hello2", as: String.self)
 
         future1.and(future2)
             .do {
-                XCTAssertNil($0)
-                XCTAssertNil($1)
+                XCTAssertEqual("foo", $0)
+                XCTAssertEqual("bar", $1)
                 exp.fulfill()
             }
             .catch {
