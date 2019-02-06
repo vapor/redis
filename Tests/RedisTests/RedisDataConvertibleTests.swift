@@ -28,8 +28,22 @@ class RedisDataConvertibleTests: XCTestCase {
         XCTAssertThrowsError(try Array<Int>.convertFromRedisData(data))
     }
 
+    func testIntToRedisData() throws {
+        let data = try RedisData(integerLiteral: 300).convertToRedisData()
+        XCTAssertNotNil(data.int)
+    }
+
+    func testIntFromData() throws {
+        var data = try Int.convertFromRedisData(RedisData(stringLiteral: "3"))
+        XCTAssertEqual(data, 3)
+        data = try .convertFromRedisData(1.convertToRedisData())
+        XCTAssertEqual(data, 1)
+    }
+
     static let allTests = [
         ("testArrayToRedisData", testArrayToRedisData),
         ("testArrayFromData", testArrayFromData),
+        ("testIntToRedisData", testIntToRedisData),
+        ("testIntFromData", testIntFromData),
     ]
 }
