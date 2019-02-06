@@ -103,6 +103,31 @@ public struct RedisData {
     }
 }
 
+extension RedisData.Storage: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .array(let array):
+            return array.description
+        case .basicString(let string):
+            return string.debugDescription
+        case .bulkString(let data):
+            return String(data: data, encoding: .utf8).flatMap { $0.debugDescription } ?? "<n/a>"
+        case .error(let error):
+            return error.description
+        case .integer(let int):
+            return int.description
+        case .null:
+            return "NULL"
+        }
+    }
+}
+
+extension RedisData: CustomStringConvertible {
+    public var description: String {
+        return self.storage.description
+    }
+}
+
 extension RedisData: ExpressibleByStringLiteral {
     /// Initializes a bulk string from a String literal
     public init(stringLiteral value: String) {

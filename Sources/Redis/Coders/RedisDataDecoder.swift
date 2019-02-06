@@ -33,6 +33,11 @@ final class RedisDataDecoder: ByteToMessageDecoder {
             return .continue
         }
     }
+    
+    public func decodeLast(ctx: ChannelHandlerContext, buffer: inout ByteBuffer) throws -> DecodingState {
+        // ignore
+        return .needMoreData
+    }
 }
 
 fileprivate extension RedisDataDecoder {
