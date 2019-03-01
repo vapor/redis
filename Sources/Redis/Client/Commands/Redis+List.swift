@@ -75,7 +75,7 @@ extension RedisClient {
     /// it blocks the connection when there are no elements to pop from any of the given lists
     ///
     /// https://redis.io/commands/blpop
-    public func blpop(_ lists: [String], timeout: Int=0) -> Future<(String, RedisData)?>{
+    public func blpop(_ lists: [String], timeout: Int = 0) -> Future<(String, RedisData)?>{
         let args = lists.map { RedisData(bulk: $0) } + [RedisData(bulk: String(timeout))]
 
         return command("BLPOP", args).map(to: (String, RedisData)?.self) { data in
@@ -86,7 +86,7 @@ extension RedisClient {
             guard let value = data.array else {
                 throw RedisError(identifier: "blpop", reason: "Could not convert resp to array.")
             }
-            return (value[0].string!, value[1])
+            return (value[0].string ?? "", value[1])
         }
     }
 
@@ -94,7 +94,7 @@ extension RedisClient {
     /// blocks the connection when there are no elements to pop from any of the given lists.
     ///
     /// https://redis.io/commands/brpop
-    public func brpop(_ lists: [String], timeout: Int=0) -> Future<(String, RedisData)?>{
+    public func brpop(_ lists: [String], timeout: Int = 0) -> Future<(String, RedisData)?>{
         let args = lists.map { RedisData(bulk: $0) } + [RedisData(bulk: String(timeout))]
 
         return command("BRPOP", args).map(to: (String, RedisData)?.self) { data in
@@ -105,7 +105,7 @@ extension RedisClient {
             guard let value = data.array else {
                 throw RedisError(identifier: "brpop", reason: "Could not convert resp to array.")
             }
-            return (value[0].string!, value[1])
+            return (value[0].string ?? "", value[1])
         }
     }
 
@@ -113,7 +113,7 @@ extension RedisClient {
     /// command behaves exactly like RPOPLPUSH
     ///
     /// https://redis.io/commands/brpoplpush
-    public func brpoplpush(_ source: String, _ dest: String, timeout: Int=0) -> Future<RedisData>{
+    public func brpoplpush(_ source: String, _ dest: String, timeout: Int = 0) -> Future<RedisData>{
         let args = [RedisData(bulk: source), RedisData(bulk: dest), RedisData(bulk: String(timeout))]
         return command("BRPOPLPUSH", args)
     }

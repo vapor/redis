@@ -4,7 +4,7 @@ extension RedisClient {
     /// to the sorted set stored at key
     ///
     /// https://redis.io/commands/zadd
-    public func zadd(_ key: String, items: [(String, RedisData)], options: [String]=[]) -> Future<Int> {
+    public func zadd(_ key: String, items: [(String, RedisData)], options: [String] = []) -> Future<Int> {
         var args = [RedisData(bulk: key)] + options.map { RedisData(bulk: $0) }
         for (score, member) in items {
             args.append(RedisData(bulk: score))
@@ -38,7 +38,7 @@ extension RedisClient {
     /// at key.
     ///
     /// https://redis.io/commands/zrange
-    public func zrange(_ key: String, start: Int, stop: Int, withScores: Bool=false) -> Future<[RedisData]> {
+    public func zrange(_ key: String, start: Int, stop: Int, withScores: Bool = false) -> Future<[RedisData]> {
         var args = [RedisData(bulk: key), RedisData(bulk: String(start)), RedisData(bulk: String(stop))]
         if withScores { args.append(RedisData(bulk: "WITHSCORES")) }
 
@@ -54,7 +54,7 @@ extension RedisClient {
     /// min and max (including elements with score equal to min or max)
     ///
     /// https://redis.io/commands/zrangebyscore
-    public func zrangebyscore(_ key: String, min: String, max: String, withScores: Bool=false, limit: (Int, Int)?=nil) -> Future<[RedisData]> {
+    public func zrangebyscore(_ key: String, min: String, max: String, withScores: Bool = false, limit: (Int, Int)?=nil) -> Future<[RedisData]> {
         var args = [RedisData(bulk: key), RedisData(bulk: min), RedisData(bulk: max)]
         if withScores { args.append(RedisData(bulk: "WITHSCORES")) }
         if let limit = limit { args += [RedisData(bulk: "LIMIT"), RedisData(bulk: String(limit.0)), RedisData(bulk: String(limit.1))] }
