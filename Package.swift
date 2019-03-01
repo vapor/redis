@@ -1,20 +1,17 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 import PackageDescription
 
 let package = Package(
-    name: "Redis",
+    name: "redis",
     products: [
         .library(name: "Redis", targets: ["Redis"])
     ],
     dependencies: [
-      // 🌎 Utility package containing tools for byte manipulation, Codable, OS APIs, and debugging.
-      .package(url: "https://github.com/vapor/core.git", from: "3.0.0"),
-
-        // Core services for creating database integrations.
-        .package(url: "https://github.com/vapor/database-kit.git", from: "1.0.0")
+        .package(url: "https://github.com/vapor/redis-kit.git", .branch("nio-kit")),
+        .package(url: "https://github.com/vapor/vapor.git", .branch("master")),
     ],
     targets: [
-      .target(name: "Redis", dependencies: ["Async", "Bits", "DatabaseKit", "Debugging", "COperatingSystem"]),
+        .target(name: "Redis", dependencies: ["RedisKit", "Vapor"]),
         .testTarget(name: "RedisTests", dependencies: ["Redis"])
     ]
 )
