@@ -224,6 +224,34 @@ class RedisTests: XCTestCase {
         let rpoplpush = try redis.rpoplpush(source: "mylist", destination: "list2").wait()
         XCTAssertEqual(rpoplpush.string, "hello2")
 
+        let lpopResp = try redis.lpop("list2").wait()
+        XCTAssertEqual(lpopResp.string, "hello2")
+
+        let blpopResp1 = try redis.blpop(["myList"], timeout: 1).wait()
+        XCTAssertNil(blpopResp1)
+
+        let _ = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
+        let blpopResp2 = try redis.blpop(["mylist"], timeout: 1).wait()
+        XCTAssertEqual(blpopResp2?.0, "mylist")
+        XCTAssertEqual(blpopResp2?.1.string, "hello")
+
+        let brpopResp1 = try redis.brpop(["mylist"], timeout: 1).wait()
+        XCTAssertNil(brpopResp1)
+
+        let _ = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
+        let brpopResp2 = try redis.brpop(["mylist"], timeout: 1).wait()
+        XCTAssertEqual(brpopResp2?.0, "mylist")
+        XCTAssertEqual(brpopResp2?.1.string, "hello")
+
+        let brpoplpushResp1 = try redis.brpoplpush("mylist", "list2", timeout: 1).wait()
+        XCTAssertEqual(brpoplpushResp1.isNull, true)
+
+        let _ = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
+        let brpoplpushResp2 = try redis.brpoplpush("mylist", "list2", timeout: 1).wait()
+        XCTAssertEqual(brpoplpushResp2.string, "hello")
+        let brpoplpushResp3 = try redis.lpop("list2").wait()
+        XCTAssertEqual(brpoplpushResp3.string, "hello")
+
         _ = try redis.delete(["mylist", "list2"]).wait()
     }
 
@@ -293,6 +321,43 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(remResp3, 2)
     }
 
+    func testSortedSetCommands() throws {
+        let redis = try RedisClient.makeTest()
+        defer { redis.close() }
+        _ = try redis.command("FLUSHALL").wait()
+
+        let dataSet = [("1", RedisData(bulk: "data1")),("2", RedisData(bulk: "data2")),("4", RedisData(bulk: "data3"))]
+
+        let addResp1 = try redis.zadd("zset1", items: dataSet).wait()
+        XCTAssertEqual(addResp1, 3)
+
+        let countResp1 = try redis.zcount("zset1", min: "1", max: "(3").wait()
+        XCTAssertEqual(countResp1, 2)
+
+        let addResp2 = try redis.zadd("zset1", items: [("3", RedisData(bulk: "data1"))], options: ["XX"]).wait()
+        XCTAssertEqual(addResp2, 0)
+
+        let countResp2 = try redis.zcount("zset1", min: "1", max: "(3").wait()
+        XCTAssertEqual(countResp2, 1)
+
+        let rangeResp1 = try redis.zrange("zset1", start: 0, stop: 0).wait()
+        XCTAssertEqual(rangeResp1.count, 1)
+        XCTAssertEqual(rangeResp1[0].string, "data2")
+
+        let rangeScoreResp1 = try redis.zrangebyscore("zset1", min: "3", max: "3").wait()
+        XCTAssertEqual(rangeScoreResp1.count, 1)
+        XCTAssertEqual(rangeScoreResp1[0].string, "data1")
+
+        let rangeScoreResp2 = try redis.zrangebyscore("zset1", min: "-100", max: "100", withScores: true, limit: (1,2)).wait()
+        XCTAssertEqual(rangeScoreResp2.count, 4)
+        XCTAssertEqual(rangeScoreResp2[0].string, "data1")
+        XCTAssertEqual(rangeScoreResp2[1].string, "3")
+        XCTAssertEqual(rangeScoreResp2[2].string, "data3")
+        XCTAssertEqual(rangeScoreResp2[3].string, "4")
+
+        let _ = try redis.delete(["zset1"]).wait()
+    }
+
     static let allTests = [
         ("testCRUD", testCRUD),
         ("testPubSubSingleChannel", testPubSubSingleChannel),
@@ -302,7 +367,8 @@ class RedisTests: XCTestCase {
         ("testListCommands", testListCommands),
         ("testExpire", testExpire),
         ("testSetCommands", testSetCommands),
-        ("testHashCommands", testHashCommands)
+        ("testHashCommands", testHashCommands),
+        ("testSortedSetCommands", testSortedSetCommands)
     ]
 }
 

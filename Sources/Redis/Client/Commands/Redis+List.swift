@@ -60,9 +60,63 @@ extension RedisClient {
         return command("RPOP", [RedisData(bulk: list)])
     }
 
+    /// Removes and returns the last element of the list stored at key.
+    public func lpop(_ list: String) -> Future<RedisData> {
+        return command("LPOP", [RedisData(bulk: list)])
+    }
+
     /// Atomically returns and removes the last element (tail) of the list stored at source,
     /// and pushes the element at the first element (head) of the list stored at destination.
     public func rpoplpush(source: String, destination: String) -> Future<RedisData> {
         return command("RPOPLPUSH", [RedisData(bulk: source), RedisData(bulk: destination)])
     }
+
+    /// BLPOP is a blocking list pop primitive. It is the blocking version of LPOP because
+    /// it blocks the connection when there are no elements to pop from any of the given lists
+    ///
+    /// https://redis.io/commands/blpop
+    public func blpop(_ lists: [String], timeout: Int = 0) -> Future<(String, RedisData)?>{
+        let args = lists.map { RedisData(bulk: $0) } + [RedisData(bulk: String(timeout))]
+
+        return command("BLPOP", args).map(to: (String, RedisData)?.self) { data in
+            if data.isNull {
+                return nil
+            }
+
+            guard let value = data.array else {
+                throw RedisError(identifier: "blpop", reason: "Could not convert resp to array.")
+            }
+            return (value[0].string ?? "", value[1])
+        }
+    }
+
+    /// BRPOP is a blocking list pop primitive. It is the blocking version of RPOP because it
+    /// blocks the connection when there are no elements to pop from any of the given lists.
+    ///
+    /// https://redis.io/commands/brpop
+    public func brpop(_ lists: [String], timeout: Int = 0) -> Future<(String, RedisData)?>{
+        let args = lists.map { RedisData(bulk: $0) } + [RedisData(bulk: String(timeout))]
+
+        return command("BRPOP", args).map(to: (String, RedisData)?.self) { data in
+            if data.isNull {
+                return nil
+            }
+
+            guard let value = data.array else {
+                throw RedisError(identifier: "brpop", reason: "Could not convert resp to array.")
+            }
+            return (value[0].string ?? "", value[1])
+        }
+    }
+
+    /// BRPOPLPUSH is the blocking variant of RPOPLPUSH. When source contains elements, this
+    /// command behaves exactly like RPOPLPUSH
+    ///
+    /// https://redis.io/commands/brpoplpush
+    public func brpoplpush(_ source: String, _ dest: String, timeout: Int = 0) -> Future<RedisData>{
+        let args = [RedisData(bulk: source), RedisData(bulk: dest), RedisData(bulk: String(timeout))]
+        return command("BRPOPLPUSH", args)
+    }
+
+
 }
