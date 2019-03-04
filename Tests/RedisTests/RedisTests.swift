@@ -252,9 +252,7 @@ class RedisTests: XCTestCase {
         let brpoplpushResp3 = try redis.lpop("list2").wait()
         XCTAssertEqual(brpoplpushResp3.string, "hello")
 
-        let _ = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
-        let _ = try redis.lpush([RedisData(bulk: "hello1")], into: "mylist").wait()
-        let _ = try redis.lpush([RedisData(bulk: "hello")], into: "mylist").wait()
+        let _ = try redis.lpush([RedisData(bulk: "hello"), RedisData(bulk: "hello1"), RedisData(bulk: "hello")], into: "mylist").wait()
 
         XCTAssertEqual(try redis.length(of: "mylist").wait(), 3)
         XCTAssertEqual(try redis.lrem("mylist", count: 1, value: "hello").wait(), 1)
