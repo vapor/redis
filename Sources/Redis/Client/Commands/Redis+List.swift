@@ -65,6 +65,19 @@ extension RedisClient {
         return command("LPOP", [RedisData(bulk: list)])
     }
 
+    /// Removes the first count occurrences of elements equal to value from the list
+    /// stored at key.
+    ///
+    /// https://redis.io/commands/LREM
+    public func lrem(_ list: String, count: Int, value: RedisData) -> Future<Int> {
+        return command("LREM", [RedisData(bulk: list), RedisData(bulk: String(count)), value]).map(to: Int.self) { data in
+            guard let value = data.int else {
+                throw RedisError(identifier: "lrem", reason: "Could not convert resp to int.")
+            }
+            return value
+        }
+    }
+
     /// Atomically returns and removes the last element (tail) of the list stored at source,
     /// and pushes the element at the first element (head) of the list stored at destination.
     public func rpoplpush(source: String, destination: String) -> Future<RedisData> {
