@@ -370,10 +370,10 @@ class RedisTests: XCTestCase {
         _ = try redis.command("FLUSHALL").wait()
         
         let pipeResp1 = try redis.pipeline { pipe in
-            pipe.command("INCR", [RedisData(bulk: "key1")])
-            pipe.command("INCR", [RedisData(bulk: "key1")])
-            pipe.command("INCR", [RedisData(bulk: "key2")])
-            pipe.command("INCR", [RedisData(bulk: "key1")])
+            pipe.command("INCR", args: [RedisData(bulk: "key1")])
+            pipe.command("INCR", args: [RedisData(bulk: "key1")])
+            pipe.command("INCR", args: [RedisData(bulk: "key2")])
+            pipe.command("INCR", args: [RedisData(bulk: "key1")])
         }.wait()
         
         XCTAssertEqual(pipeResp1.count, 4)
@@ -382,20 +382,31 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(pipeResp1[2].int, 1)
         XCTAssertEqual(pipeResp1[3].int, 3)
         
+        // Check the actual keys
+        XCTAssertEqual(try redis.get("key1", as: String.self).wait(), "3")
+        XCTAssertEqual(try redis.get("key2", as: String.self).wait(), "1")
+        
         let pipeResp2 = try redis.multi { pipe in
-            pipe.command("INCR", [RedisData(bulk: "key1")])
-            pipe.command("INCR", [RedisData(bulk: "key1")])
-            pipe.command("INCR", [RedisData(bulk: "key2")])
-            pipe.command("INCR", [RedisData(bulk: "key1")])
+            pipe.command("INCR", args: RedisData(bulk: "key1"))
+            pipe.command("GET", args: RedisData(bulk: "key3"))
+            pipe.command("SET", args: RedisData(bulk: "key3"), RedisData(bulk: "string"))
+            pipe.command("GET", args: [RedisData(bulk: "key3")])
+            pipe.command("PING")
             }.wait()
         
-        XCTAssertEqual(pipeResp2.count, 4)
+        XCTAssertEqual(pipeResp2.count, 5)
         XCTAssertEqual(pipeResp2[0].int, 4)
-        XCTAssertEqual(pipeResp2[1].int, 5)
-        XCTAssertEqual(pipeResp2[2].int, 2)
-        XCTAssertEqual(pipeResp2[3].int, 6)
+        XCTAssertEqual(pipeResp2[1].isNull, true)
+        XCTAssertEqual(pipeResp2[2].string, "OK")
+        XCTAssertEqual(pipeResp2[3].string, "string")
+        XCTAssertEqual(pipeResp2[4].string, "PONG")
         
-        let _ = try redis.delete(["key1", "key2"]).wait()
+        // Check the actual keys
+        XCTAssertEqual(try redis.get("key1", as: String.self).wait(), "4")
+        XCTAssertEqual(try redis.get("key2", as: String.self).wait(), "1")
+        XCTAssertEqual(try redis.get("key3", as: String.self).wait(), "string")
+        
+        let _ = try redis.delete(["key1", "key2", "key3"]).wait()
     }
 
     static let allTests = [

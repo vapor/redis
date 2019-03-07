@@ -5,9 +5,14 @@ public final class RedisPipeline {
     var commands = [RedisData]()
     
     /// Adds a command to the pipeline
-    public func command(_ command: String, _ arguments: [RedisData] = []) {
-        let command = RedisData.array([RedisData(bulk: command)] + arguments)
+    public func command(_ command: String, args: [RedisData] = []) {
+        let command = RedisData.array([RedisData(bulk: command)] + args)
         self.commands.append(command)
+    }
+    
+    /// Adds a command to the pipeline
+    public func command(_ command: String, args: RedisData...) {
+        self.command(command, args: args)
     }
 }
 
