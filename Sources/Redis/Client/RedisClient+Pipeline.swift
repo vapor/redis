@@ -23,6 +23,11 @@ extension RedisClient {
         let pipeline = RedisPipeline()
         closure(pipeline)
         
+        // Returns a empty fulfilled future if the transaction was empty
+        if pipeline.commands.count == 0 {
+            return eventLoop.newSucceededFuture(result: [RedisData]())
+        }
+        
         // Send the commands as a pipeline
         return send(pipeline: pipeline.commands)
     }
@@ -32,6 +37,11 @@ extension RedisClient {
         // Fill the pipeline with commnads
         let pipeline = RedisPipeline()
         closure(pipeline)
+        
+        // Returns a empty fulfilled future if the transaction was empty
+        if pipeline.commands.count == 0 {
+            return eventLoop.newSucceededFuture(result: [RedisData]())
+        }
         
         // Create the multi-exec list of commands
         let multiExec = [RedisData.array([.bulkString("MULTI")])] +

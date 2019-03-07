@@ -406,6 +406,18 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(try redis.get("key2", as: String.self).wait(), "1")
         XCTAssertEqual(try redis.get("key3", as: String.self).wait(), "string")
         
+        // Make sure executing empty pipeline does nothing
+        let pipeResp3 = try redis.pipeline { pipe in
+            }.wait()
+        
+        XCTAssertEqual(pipeResp3.count, 0)
+        
+        // Make sure executing empty multi does nothing
+        let pipeResp4 = try redis.multi { pipe in
+            }.wait()
+        
+        XCTAssertEqual(pipeResp4.count, 0)
+        
         let _ = try redis.delete(["key1", "key2", "key3"]).wait()
     }
 
