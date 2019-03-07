@@ -363,6 +363,40 @@ class RedisTests: XCTestCase {
 
         let _ = try redis.delete(["zset1"]).wait()
     }
+    
+    func testPipeline() throws {
+        let redis = try RedisClient.makeTest()
+        defer { redis.close() }
+        _ = try redis.command("FLUSHALL").wait()
+        
+        let pipeResp1 = try redis.pipeline { pipe in
+            pipe.command("INCR", [RedisData(bulk: "key1")])
+            pipe.command("INCR", [RedisData(bulk: "key1")])
+            pipe.command("INCR", [RedisData(bulk: "key2")])
+            pipe.command("INCR", [RedisData(bulk: "key1")])
+        }.wait()
+        
+        XCTAssertEqual(pipeResp1.count, 4)
+        XCTAssertEqual(pipeResp1[0].int, 1)
+        XCTAssertEqual(pipeResp1[1].int, 2)
+        XCTAssertEqual(pipeResp1[2].int, 1)
+        XCTAssertEqual(pipeResp1[3].int, 3)
+        
+        let pipeResp2 = try redis.multi { pipe in
+            pipe.command("INCR", [RedisData(bulk: "key1")])
+            pipe.command("INCR", [RedisData(bulk: "key1")])
+            pipe.command("INCR", [RedisData(bulk: "key2")])
+            pipe.command("INCR", [RedisData(bulk: "key1")])
+            }.wait()
+        
+        XCTAssertEqual(pipeResp2.count, 4)
+        XCTAssertEqual(pipeResp2[0].int, 4)
+        XCTAssertEqual(pipeResp2[1].int, 5)
+        XCTAssertEqual(pipeResp2[2].int, 2)
+        XCTAssertEqual(pipeResp2[3].int, 6)
+        
+        let _ = try redis.delete(["key1", "key2"]).wait()
+    }
 
     static let allTests = [
         ("testCRUD", testCRUD),
@@ -374,7 +408,8 @@ class RedisTests: XCTestCase {
         ("testExpire", testExpire),
         ("testSetCommands", testSetCommands),
         ("testHashCommands", testHashCommands),
-        ("testSortedSetCommands", testSortedSetCommands)
+        ("testSortedSetCommands", testSortedSetCommands),
+        ("testPipeline", testPipeline)
     ]
 }
 

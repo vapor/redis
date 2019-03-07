@@ -56,6 +56,12 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
             .map(to: RedisData.self) { dataArr.first!}
     }
     
+    /// Sends pipeline of `RedisData` to the server.
+    public func send(pipeline: [RedisData]) -> Future<[RedisData]> {
+        var dataArr = [RedisData]()
+        return send(pipeline) { dataArr.append($0) }.map(to: [RedisData].self) { dataArr }
+    }
+    
     // MARK: Private
 
     private func send(_ messages: [RedisData], onResponse: @escaping (RedisData) throws -> Void) -> Future<Void> {
@@ -71,10 +77,16 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
         let promise = eventLoop.newPromise(Void.self)
         currentSend = promise
 
-        // cascade this enqueue to the newly created promise
+        // cascade this enqueue to the newly created promise.
+        // Need to support multiple messages for pipeling
+        var messageCount = messages.count
         queue.enqueue(messages) { message in
             try onResponse(message)
-            return true // redis is kind of one piece of redis data at time
+            
+            // Keep returning responses until we get a response for every
+            // message sent
+            messageCount -= 1
+            return messageCount == 0
         }.cascade(promise: promise)
 
         // when the promise completes, remove the reference to it
