@@ -136,5 +136,33 @@ extension RedisClient {
                 return value != 0
         }
     }
+
+    /// Returns the values associated with the specified fields in the hash stored at key.
+    ///
+    /// https://redis.io/commands/hmget
+    public func hmget(_ key: String, fields: [String]) -> Future<[RedisData]> {
+        let args = [RedisData(bulk: key)] + fields.map{ RedisData(bulk: $0) }
+        return command("HMGET", args).map(to: [RedisData].self) { data in
+            guard let value = data.array else {
+                throw RedisError(identifier: "hmget", reason: "Could not convert resp to array.")
+            }
+            return value
+        }
+    }
     
+    /// Sets the specified fields to their respective values in the hash stored at key. 
+    ///
+    /// https://redis.io/commands/hmset
+    public func hmset(_ key: String, items: [(String, RedisData)]) -> Future<String> {
+        var args = [RedisData(bulk: key)]
+        for item in items {
+          args += [RedisData(bulk: item.0), item.1]
+        }
+        return command("HMSET", args).map(to: String.self) { data in
+            guard let value = data.string else {
+                throw RedisError(identifier: "hmset", reason: "Could not convert resp to string.")
+            }
+            return value
+        }
+    }
 }

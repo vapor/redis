@@ -190,6 +190,19 @@ class RedisTests: XCTestCase {
         // hash field must not exist
         let hexistsResponse2 = try redis.hexists("hello", field: "world").wait()
         XCTAssertEqual(hexistsResponse2, false)
+
+        // Multi set hash value
+        let hmsetResp = try redis.hmset("hash", items:[("param1", RedisData(bulk: "value1")), ("param2", RedisData(bulk: "value2"))]).wait()
+        XCTAssertEqual(hmsetResp, "OK")
+
+        // Mulit get hash value
+        let hmgetResp = try redis.hmget("hash", fields: ["param1", "bad", "param2"]).wait()
+        XCTAssertEqual(hmgetResp.count, 3)
+        XCTAssertEqual(hmgetResp[0].string, "value1")
+        XCTAssertEqual(hmgetResp[1].isNull, true)
+        XCTAssertEqual(hmgetResp[2].string, "value2")
+
+        _ = try redis.delete(["hash"]).wait()
     }
     
     
