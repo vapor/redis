@@ -137,7 +137,7 @@ fileprivate extension RedisDataDecoder {
     }
 
     /// Parses an integer associated with the token at the provided position
-    fileprivate func integer(at offset: inout Int, from input: ByteBuffer) throws -> Int? {
+    private func integer(at offset: inout Int, from input: ByteBuffer) throws -> Int? {
         // Parses a string
         guard let string = try parseSimpleString(at: &offset, from: input) else {
             return nil
@@ -153,7 +153,7 @@ fileprivate extension RedisDataDecoder {
     }
 
     /// Parse a bulk string out
-    fileprivate func parseBulkString(at position: inout Int, from buffer: ByteBuffer) throws -> PartialRedisData {
+    private func parseBulkString(at position: inout Int, from buffer: ByteBuffer) throws -> PartialRedisData {
         guard let size = try integer(at: &position, from: buffer) else {
             return .notYetParsed
         }
