@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/1342803/36625644-83750c70-18f1-11e8-9b9a-3bc0a867375c.png" height="64" alt="Redis">
+    <img src="https://user-images.githubusercontent.com/1342803/60044372-33cc6100-9690-11e9-8ec4-d69afc3dccb1.png" alt="Redis">
     <br>
     <br>
     <a href="https://docs.vapor.codes/3.0/">
@@ -15,6 +15,6 @@
         <img src="https://circleci.com/gh/vapor/redis.svg?style=shield" alt="Continuous Integration">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-4.1-brightgreen.svg" alt="Swift 4.1">
+        <img src="http://img.shields.io/badge/swift-5.0-brightgreen.svg" alt="Swift 5.0">
     </a>
 </p>
