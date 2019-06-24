@@ -3,7 +3,7 @@ version: 2
 jobs:
   11-bionic:
     docker:
-      - image: swift:5.0-bionic
+      - image: vapor/swift:5.1-bionic
       - image: redis:5
         name: redis
     steps:
@@ -12,7 +12,7 @@ jobs:
       - run: swift test
   bionic-release:
     docker:
-      - image: swift:5.0-bionic
+      - image: vapor/swift:5.1-bionic
     steps:
       - checkout
       - run: swift build -c release
