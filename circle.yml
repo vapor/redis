@@ -1,63 +1,25 @@
 version: 2
 
 jobs:
-  macos:
-    macos:
-      xcode: "9.2"
+  11-bionic:
+    docker:
+      - image: swift:5.0-bionic
+      - image: redis:5
+        name: redis
     steps:
       - checkout
       - run: swift build
       - run: swift test
-
-
-  linux:
+  bionic-release:
     docker:
-      - image: codevapor/swift:4.1
-      - image: redis:3.2
-    steps:
-      - checkout
-      - run: swift build
-      - run: swift test
-
-
-  linux-release:
-    docker:
-      - image: codevapor/swift:4.1
-      - image: redis:3.2
+      - image: swift:5.0-bionic
     steps:
       - checkout
       - run: swift build -c release
-
-  swiftlint:
-     docker:
-       - image: norionomura/swiftlint
-     steps:
-       - checkout
-       - run: swiftlint --strict
-       
-
-  linux-auth:
-    docker:
-      - image: codevapor/swift:4.1
-      - image: redis:3.2
-        command: >
-          --requirepass secret
-    steps:
-      - checkout
-      - run: swift build
-      - run:
-          name: Run Tests
-          command: swift test
-          environment:
-            REDIS_PASSWORD: secret
-      - run: swift build -c release
-    
 workflows:
   version: 2
   tests:
     jobs:
-      - linux
-      - linux-auth
-      - linux-release
-      # - swiftlint
-      # - macos
+      - 11-bionic
+      - bionic-release
+
