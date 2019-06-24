@@ -1,46 +1,29 @@
-import Async
-import DatabaseKit
-import Service
+import Vapor
 
-/// Provides base `Redis` services such as database and connection.
-public final class RedisProvider: Provider {
-    /// Creates a new `RedisProvider`.
-    public init() {}
+public struct RedisProvider: Provider {
+    public init() { }
 
-    /// See `Provider`.
-    public func register(_ services: inout Services) throws {
-        try services.register(DatabaseKitProvider())
-        services.register(RedisClientConfig.self)
-        services.register(RedisDatabase.self)
-        var databases = DatabasesConfig()
-        databases.add(database: RedisDatabase.self, as: .redis)
-        services.register(databases)
-        
-        services.register(KeyedCache.self) { container -> RedisCache in
-            let pool = try container.connectionPool(to: .redis)
-            return .init(pool: pool)
+    public func register(_ s: inout Services) {
+        s.register(RedisConnectionSource.self) { c in
+            return try RedisConnectionSource(config: c.make(), eventLoop: c.eventLoop)
+        }
+
+        s.register(ConnectionPoolConfig.self) { c in
+            return .init()
+        }
+
+        s.singleton(ConnectionPool<RedisConnectionSource>.self, boot: { c in
+            return try ConnectionPool(config: c.make(), source: c.make())
+        }, shutdown: { pool in
+            try pool.close().wait()
+        })
+
+        s.register(RedisClient.self) { c in
+            return try c.make(ConnectionPool<RedisConnectionSource>.self)
+        }
+
+        s.register(RedisConfiguration.self) { c in
+            return try RedisConfiguration(logger: c.make(Logger.self))
         }
     }
-
-    /// See `Provider`.
-    public func didBoot(_ worker: Container) throws -> Future<Void> {
-        return .done(on: worker)
-    }
 }
-
-/// MARK: Services
-extension RedisClientConfig: ServiceType {
-    /// See `ServiceType`.
-    public static func makeService(for worker: Container) throws -> RedisClientConfig {
-        return .init()
-    }
-}
-extension RedisDatabase: ServiceType {
-    /// See `ServiceType`.
-    public static func makeService(for worker: Container) throws -> RedisDatabase {
-        return try .init(config: worker.make())
-    }
-}
-
-/// Convenience type-alias for a Redis-based cache.
-public typealias RedisCache = DatabaseKeyedCache<ConfiguredDatabase<RedisDatabase>>
