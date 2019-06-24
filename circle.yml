@@ -8,6 +8,7 @@ jobs:
         name: redis
     steps:
       - checkout
+      - run: apt-get update; apt-get install -y libssl-dev zlib1g-dev
       - run: swift build
       - run: swift test
   bionic-release:
@@ -15,6 +16,7 @@ jobs:
       - image: vapor/swift:5.1-bionic
     steps:
       - checkout
+      - run: apt-get update; apt-get install -y libssl-dev zlib1g-dev
       - run: swift build -c release
 workflows:
   version: 2
