@@ -17,13 +17,12 @@ extension RedisClient {
         _ channels: Set<String>,
         subscriptionHandler: @escaping (RedisChannelData) -> Void
     ) throws -> Future<Void> {
-       let messages: [RedisData] = [.array([.bulkString("SUBSCRIBE")] + channels.map {.bulkString($0)})]
-        return queue.enqueue(messages) { [weak self] channelMessage in
-            if let redisChannelData = try self?.convert(channelMessage: channelMessage) {
-                subscriptionHandler(redisChannelData)
-            }
-            return false
+        self.queue.pubsubCallback = { [weak self] channelMessage in
+            guard let redisChannelData = try self?.convert(channelMessage: channelMessage) else { return }
+            subscriptionHandler(redisChannelData)
         }
+        return self.command("SUBSCRIBE", channels.map({ .bulkString($0) }))
+            .transform(to: ())
     }
 
     /// Maps RedisData.array to RedisChannelData, throws if map fails

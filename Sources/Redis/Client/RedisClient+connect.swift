@@ -10,7 +10,7 @@ extension RedisClient {
         on worker: Worker,
         onError: @escaping (Error) -> Void
     ) -> Future<RedisClient> {
-        let handler = QueueHandler<RedisData, RedisData>(on: worker, onError: onError)
+        let handler = RedisCommandHandler()
         let bootstrap = ClientBootstrap(group: worker.eventLoop)
             // Enable SO_REUSEADDR.
             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
