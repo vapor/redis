@@ -20,6 +20,9 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
 
     /// The channel
     private let channel: Channel
+    
+    /// Stores the inflight promises so they can be fulfilled when the channel drops
+    var inflightPromises: [String:EventLoopPromise<RedisData>] = [:]
 
     /// Creates a new Redis client on the provided data source and sink.
     init(queue: RedisCommandHandler, channel: Channel) {
@@ -28,6 +31,12 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
         self.extend = [:]
         self.isClosed = false
         channel.closeFuture.always {
+            // send closed error for the promises that have not been fulfilled
+            for promise in self.inflightPromises.values {
+                promise.fail(error: ChannelError.ioOnClosedChannel)
+            }
+            self.inflightPromises.removeAll()
+
             self.isClosed = true
         }
     }
@@ -54,6 +63,13 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
         
         // create a new promise to fulfill later
         let promise = eventLoop.newPromise(RedisData.self)
+        
+        // logic to store in-flight requests that can be cancelled when connection drops
+        let key = UUID().uuidString
+        self.inflightPromises[key] = promise
+        promise.futureResult.always {
+            self.inflightPromises.removeValue(forKey: key)
+        }
         
         // write the message and the promise to the channel, which the `RequestResponseHandler` will capture
         return self.channel.writeAndFlush((message, promise))
