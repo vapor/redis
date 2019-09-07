@@ -20,7 +20,7 @@ public final class RedisClient: DatabaseConnection, BasicWorker {
 
     /// The channel
     private let channel: Channel
-
+    
     /// Creates a new Redis client on the provided data source and sink.
     init(queue: RedisCommandHandler, channel: Channel) {
         self.queue = queue

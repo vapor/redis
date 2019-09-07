@@ -26,6 +26,34 @@ class RedisDatabaseTests: XCTestCase {
         try redis.delete("hello").wait()
         XCTAssertNil(try redis.get("hello", as: String.self).wait())
     }
+    
+    func testDroppedConnection() throws {
+        let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        let config = RedisClientConfig.makeTest()
+        let database = try RedisDatabase(config: config)
+        let redis = try database.newConnection(on: group).wait()
+        defer { redis.close() }
+        
+        let timeout: UInt32 = 1
+        var dataReceived = false
+        var errorReceived = false
+        
+        let command = RedisData.array(["brpop", "hello", "\(timeout)"].map { RedisData(bulk: $0) })
+        _ = redis.send(command).do { data in
+            dataReceived = true
+            }.catch { error in
+                errorReceived = true
+        }
+        
+        // Close the connection
+        redis.close()
+        
+        // Sleep for an extra second seconds to give the transaction time to complete
+        sleep(timeout+1)
+        
+        XCTAssertEqual(dataReceived, false)
+        XCTAssertEqual(errorReceived, true)
+    }
 
     func testSelect() throws {
         let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
