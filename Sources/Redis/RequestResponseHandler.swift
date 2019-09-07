@@ -116,4 +116,14 @@ final class RequestResponseHandler<Request, Response>: ChannelDuplexHandler {
             ctx.write(self.wrapOutboundOut(request), promise: promise)
         }
     }
+    
+    public func handlerAdded(ctx: ChannelHandlerContext) {
+        // handles returning "closed channel" for promises in flight when connection closes
+        ctx.channel.closeFuture.always {
+            for promise in self.promiseBuffer {
+                promise.fail(error: ChannelError.ioOnClosedChannel)
+            }
+            self.promiseBuffer.removeAll()
+        }
+    }
 }
