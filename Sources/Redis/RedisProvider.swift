@@ -9,10 +9,15 @@ public struct RedisProvider: Provider {
         }
 
         app.register(singleton: ConnectionPool<RedisConnectionSource>.self, boot: { app in
-            return ConnectionPool(configuration: app.make(), source: app.make(), logger: app.make(Logger.self), on: app.make())
-        }) { pool in
+            return ConnectionPool(
+                configuration: app.make(),
+                source: app.make(),
+                logger: app.make(Logger.self),
+                on: app.make()
+            )
+        }, shutdown: { pool in
             return pool.shutdown()
-        }
+        })
 
         app.register(RedisClient.self) { app in
             return app.make(ConnectionPool<RedisConnectionSource>.self)
