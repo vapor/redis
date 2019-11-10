@@ -3,27 +3,23 @@ import Vapor
 public struct RedisProvider: Provider {
     public init() { }
 
-    public func register(_ s: inout Services) {
-        s.register(RedisConnectionSource.self) { c in
-            return try RedisConnectionSource(config: c.make(), eventLoop: c.eventLoop)
+    public func register(_ app: Application) {
+        app.register(RedisConnectionSource.self) { app in
+            return RedisConnectionSource(configuration: app.make())
         }
 
-        s.register(ConnectionPoolConfig.self) { c in
-            return .init()
+        app.register(singleton: ConnectionPool<RedisConnectionSource>.self, boot: { app in
+            return ConnectionPool(configuration: app.make(), source: app.make(), logger: app.make(Logger.self), on: app.make())
+        }) { pool in
+            return pool.shutdown()
         }
 
-        s.singleton(ConnectionPool<RedisConnectionSource>.self, boot: { c in
-            return try ConnectionPool(config: c.make(), source: c.make())
-        }, shutdown: { pool in
-            try pool.close().wait()
-        })
-
-        s.register(RedisClient.self) { c in
-            return try c.make(ConnectionPool<RedisConnectionSource>.self)
+        app.register(RedisClient.self) { app in
+            return app.make(ConnectionPool<RedisConnectionSource>.self)
         }
 
-        s.register(RedisConfiguration.self) { c in
-            return try RedisConfiguration(logger: c.make(Logger.self))
+        app.register(RedisConfiguration.self) { app in
+            return RedisConfiguration(logger: app.make(Logger.self))
         }
     }
 }
