@@ -15,10 +15,12 @@ extension Application {
                 self.application.storage[ConfigurationKey.self]
             }
             nonmutating set {
+                if self.application.storage.contains(PoolKey.self) {
+                    fatalError("Cannot modify your Redis configuration after redis has been used")
+                }
                 self.application.storage[ConfigurationKey.self] = newValue
             }
         }
-
 
         struct PoolKey: StorageKey, LockKey {
             typealias Value = EventLoopGroupConnectionPool<RedisConnectionSource>
