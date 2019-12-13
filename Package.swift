@@ -10,8 +10,8 @@ let package = Package(
         .library(name: "Redis", targets: ["Redis"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/redis-kit.git", from: "1.0.0-beta.1"),
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.1"),
+        .package(url: "https://github.com/vapor/redis-kit.git", from: "1.0.0-beta.2"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.2.1"),
     ],
     targets: [
       .target(name: "Redis", dependencies: ["RedisKit", "Vapor"]),
