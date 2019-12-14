@@ -54,21 +54,25 @@ extension Application {
 }
 
 extension Application.Redis: RedisClient {
-    public var logger: Logger? {
+    public var logger: Logger {
         self.application.logger
     }
     
     public var eventLoop: EventLoop {
         self.application.eventLoopGroup.next()
     }
-    
+
+    public func setLogging(to logger: Logger) {
+        // cannot set logger
+    }
+
     public func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
         self.application.redis.pool.withConnection(
             logger: logger,
             on: nil
         ) {
-            $0.send(command: command, with: arguments)
+            $0.setLogging(to: self.logger)
+            return $0.send(command: command, with: arguments)
         }
     }
-    
 }
