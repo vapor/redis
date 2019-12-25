@@ -5,7 +5,9 @@ extension Application {
         .init(application: self)
     }
 
-    public struct Redis {
+    public class Redis: Extendable {
+        public var extend: Extend
+        
         struct ConfigurationKey: StorageKey {
             typealias Value = RedisConfiguration
         }
@@ -14,7 +16,7 @@ extension Application {
             get {
                 self.application.storage[ConfigurationKey.self]
             }
-            nonmutating set {
+            set {
                 if self.application.storage.contains(PoolKey.self) {
                     fatalError("Cannot modify your Redis configuration after redis has been used")
                 }
@@ -50,6 +52,11 @@ extension Application {
         }
 
         let application: Application
+        
+        internal init(application: Application) {
+            self.application = application
+            self.extend = .init()
+        }
     }
 }
 
