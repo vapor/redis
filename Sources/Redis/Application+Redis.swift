@@ -54,6 +54,8 @@ extension Application {
 }
 
 extension Application.Redis: RedisClient {
+    public var isConnected: Bool { true }
+
     public var logger: Logger {
         self.application.logger
     }

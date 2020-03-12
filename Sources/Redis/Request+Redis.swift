@@ -11,6 +11,8 @@ extension Request {
 }
 
 extension Request.Redis: RedisClient {
+    public var isConnected: Bool { true }
+    
     public var logger: Logger {
         self.request.logger
     }
