@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 import PackageDescription
 
 let package = Package(
@@ -10,11 +10,17 @@ let package = Package(
         .library(name: "Redis", targets: ["Redis"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/redis-kit.git", from: "1.0.0-beta.3"),
+        .package(url: "https://github.com/vapor/redis-kit.git", from: "1.0.0-beta.5"),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.4"),
     ],
     targets: [
-      .target(name: "Redis", dependencies: ["RedisKit", "Vapor"]),
+        .target(
+            name: "Redis",
+            dependencies: [
+                .product(name: "RedisKit", package: "redis-kit"),
+                .product(name: "Vapor", package: "vapor")
+            ]
+        ),
         .testTarget(name: "RedisTests", dependencies: ["Redis"])
     ]
 )
