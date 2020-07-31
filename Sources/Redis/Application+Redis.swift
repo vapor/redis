@@ -61,12 +61,12 @@ extension Application {
                         initialConnectionBackoffDelay: .milliseconds(100)
                     )
                 }
-                self.application.storage.set(PoolKey.self, to: pools) {
-                    try $0.values.forEach {
-                        let promise = $0.eventLoop.makePromise(of: Void.self)
-                        $0.close(promise: promise)
-                        try promise.futureResult.wait()
-                    }
+                self.application.storage.set(PoolKey.self, to: pools) { pools in
+                    try pools.values.map { pool in
+                        let promise = pool.eventLoop.makePromise(of: Void.self)
+                        pool.close(promise: promise)
+                        return promise.futureResult
+                    }.flatten(on: self.application.eventLoopGroup.next()).wait()
                 }
                 return pools
             }
