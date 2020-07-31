@@ -22,11 +22,19 @@ extension Application {
             }
         }
 
-        struct PoolKey: StorageKey, LockKey {
-            typealias Value = EventLoopGroupConnectionPool<RedisConnectionSource>
+        private struct PoolKey: StorageKey, LockKey {
+            typealias Value = [EventLoop.Key: RedisConnectionPool]
         }
 
-        internal var pool: EventLoopGroupConnectionPool<RedisConnectionSource> {
+        // must be event loop from this app's elg
+        internal func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
+            guard let pool = self.pools[eventLoop.key] else {
+                fatalError("EventLoop must be from Application's EventLoopGroup.")
+            }
+            return pool
+        }
+
+        private var pools: [EventLoop.Key: RedisConnectionPool] {
             if let existing = self.application.storage[PoolKey.self] {
                 return existing
             } else {
@@ -36,20 +44,42 @@ extension Application {
                 guard let configuration = self.configuration else {
                     fatalError("Redis not configured. Use app.redis.configuration = ...")
                 }
-                let new = EventLoopGroupConnectionPool(
-                    source: RedisConnectionSource(configuration: configuration, logger: self.application.logger),
-                    maxConnectionsPerEventLoop: 1,
-                    logger: self.application.logger,
-                    on: self.application.eventLoopGroup
-                )
-                self.application.storage.set(PoolKey.self, to: new) {
-                    $0.shutdown()
+                var pools = [EventLoop.Key: RedisConnectionPool]()
+                for eventLoop in self.application.eventLoopGroup.makeIterator() {
+                    pools[eventLoop.key] = RedisConnectionPool(
+                        serverConnectionAddresses: [
+                            configuration.serverAddress
+                        ],
+                        loop: eventLoop,
+                        maximumConnectionCount: .maximumActiveConnections(1),
+                        minimumConnectionCount: 1,
+                        connectionPassword: configuration.password,
+                        connectionLogger: self.application.logger,
+                        connectionTCPClient: nil,
+                        poolLogger: self.application.logger,
+                        connectionBackoffFactor: 2,
+                        initialConnectionBackoffDelay: .milliseconds(100)
+                    )
                 }
-                return new
+                self.application.storage.set(PoolKey.self, to: pools) {
+                    try $0.values.forEach {
+                        let promise = $0.eventLoop.makePromise(of: Void.self)
+                        $0.close(promise: promise)
+                        try promise.futureResult.wait()
+                    }
+                }
+                return pools
             }
         }
 
         let application: Application
+    }
+}
+
+private extension EventLoop {
+    typealias Key = ObjectIdentifier
+    var key: Key {
+        ObjectIdentifier(self)
     }
 }
 
@@ -69,12 +99,9 @@ extension Application.Redis: RedisClient {
     }
 
     public func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
-        self.application.redis.pool.withConnection(
-            logger: logger,
-            on: nil
-        ) {
-            $0.setLogging(to: self.logger)
-            return $0.send(command: command, with: arguments)
-        }
+        self.application.redis
+            .pool(for: self.eventLoop.next())
+            .logging(to: self.logger)
+            .send(command: command, with: arguments)
     }
 }

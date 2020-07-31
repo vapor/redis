@@ -26,12 +26,10 @@ extension Request.Redis: RedisClient {
     }
 
     public func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
-        self.request.application.redis.pool.withConnection(
-            logger: logger,
-            on: self.eventLoop
-        ) {
-            $0.setLogging(to: self.logger)
-            return $0.send(command: command, with: arguments)
-        }
+        self.request.application.redis
+            .pool(for: self.eventLoop)
+            .logging(to: self.logger)
+            .send(command: command, with: arguments)
+            .hop(to: self.eventLoop)
     }
 }
