@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "Redis", targets: ["Redis"])
     ],
     dependencies: [
-        .package(url: "https://gitlab.com/mordil/RediStack.git", .branch("tn-pool-close-promise")),
+        .package(url: "https://gitlab.com/mordil/RediStack.git", .branch("master")),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.4"),
     ],
     targets: [

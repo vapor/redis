@@ -1,5 +1,6 @@
 import Redis
 import Vapor
+import Logging
 import XCTVapor
 
 class RedisTests: XCTestCase {
@@ -13,9 +14,19 @@ class RedisTests: XCTestCase {
         )
 
         let info = try app.redis.send(command: "INFO").wait()
-        print(info)
+        XCTAssertContains(info.string, "redis_version")
+    }
+
+    override class func setUp() {
+        XCTAssert(isLoggingConfigured)
     }
 }
+
+let isLoggingConfigured: Bool = {
+    var env = Environment.testing
+    try! LoggingSystem.bootstrap(from: &env)
+    return true
+}()
 
 func env(_ name: String) -> String? {
     getenv(name).flatMap { String(cString: $0) }
