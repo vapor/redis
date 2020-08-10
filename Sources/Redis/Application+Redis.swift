@@ -82,24 +82,20 @@ private extension EventLoop {
 }
 
 extension Application.Redis: RedisClient {
-    public var isConnected: Bool { true }
-
-    public var logger: Logger {
-        self.application.logger
-    }
-    
     public var eventLoop: EventLoop {
         self.application.eventLoopGroup.next()
     }
 
-    public func setLogging(to logger: Logger) {
-        // cannot set logger
+    public func logging(to logger: Logger) -> RedisClient {
+        self.application.redis
+            .pool(for: self.eventLoop)
+            .logging(to: logger)
     }
 
     public func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
         self.application.redis
             .pool(for: self.eventLoop.next())
-            .logging(to: self.logger)
+            .logging(to: self.application.logger)
             .send(command: command, with: arguments)
     }
 }

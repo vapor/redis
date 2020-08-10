@@ -4,7 +4,7 @@ import Logging
 import XCTVapor
 
 class RedisTests: XCTestCase {
-    func testBasic() throws {
+    func testApplicationRedis() throws {
         let app = Application()
         defer { app.shutdown() }
 
@@ -15,6 +15,26 @@ class RedisTests: XCTestCase {
 
         let info = try app.redis.send(command: "INFO").wait()
         XCTAssertContains(info.string, "redis_version")
+    }
+
+    func testRouteHandlerRedis() throws {
+        let app = Application()
+        defer { app.shutdown() }
+
+        app.redis.configuration = try .init(
+            hostname: env("REDIS_HOSTNAME") ?? "localhost",
+            port: 6379
+        )
+
+        app.get("test") { req in
+            req.redis.send(command: "INFO").map {
+                $0.description
+            }
+        }
+
+        try app.test(.GET, "test") { res in
+            XCTAssertContains(res.body.string, "redis_version")
+        }
     }
 
     override class func setUp() {
