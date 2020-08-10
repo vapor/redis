@@ -26,6 +26,5 @@ extension Request.Redis: RedisClient {
             .pool(for: self.eventLoop)
             .logging(to: self.request.logger)
             .send(command: command, with: arguments)
-            .hop(to: self.eventLoop)
     }
 }
