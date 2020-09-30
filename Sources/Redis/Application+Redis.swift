@@ -69,6 +69,22 @@ extension Application {
                 return pools
             }
         }
+        struct PubSubKey: StorageKey, LockKey {
+            typealias Value = RedisClient
+        }
+        
+        var pubsubClient: RedisClient {
+            if let existing = self.application.storage[PubSubKey.self] {
+                return existing
+            } else {
+                let lock = self.application.locks.lock(for: PubSubKey.self)
+                lock.lock()
+                defer { lock.unlock() }
+                let pool = self.pool(for: self.eventLoop.next())
+                self.application.storage.set(PubSubKey.self, to: pool)
+                return pool
+            }
+        }
 
         let application: Application
     }
@@ -97,5 +113,43 @@ extension Application.Redis: RedisClient {
             .pool(for: self.eventLoop.next())
             .logging(to: self.application.logger)
             .send(command: command, with: arguments)
+    }
+    
+    public func subscribe(
+        to channels: [RedisChannelName],
+        messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
+        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+    ) -> EventLoopFuture<Void> {
+        return self.application.redis
+            .pubsubClient
+            .logging(to: self.application.logger)
+            .subscribe(to: channels, messageReceiver: receiver, onSubscribe: subscribeHandler, onUnsubscribe: unsubscribeHandler)
+    }
+    
+    public func unsubscribe(from channels: [RedisChannelName]) -> EventLoopFuture<Void> {
+        return self.application.redis
+            .pubsubClient
+            .logging(to: self.application.logger)
+            .unsubscribe(from: channels)
+    }
+    
+    public func psubscribe(
+        to patterns: [String],
+        messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
+        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+    ) -> EventLoopFuture<Void> {
+        return self.application.redis
+            .pubsubClient
+            .logging(to: self.application.logger)
+            .psubscribe(to: patterns, messageReceiver: receiver, onSubscribe: subscribeHandler, onUnsubscribe: unsubscribeHandler)
+    }
+    
+    public func punsubscribe(from patterns: [String]) -> EventLoopFuture<Void> {
+        return self.application.redis
+            .pubsubClient
+            .logging(to: self.application.logger)
+            .punsubscribe(from: patterns)
     }
 }
