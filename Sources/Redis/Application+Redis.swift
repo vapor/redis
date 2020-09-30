@@ -22,11 +22,19 @@ extension Application {
             }
         }
 
-        struct PoolKey: StorageKey, LockKey {
-            typealias Value = EventLoopGroupConnectionPool<RedisConnectionSource>
+        private struct PoolKey: StorageKey, LockKey {
+            typealias Value = [EventLoop.Key: RedisConnectionPool]
         }
 
-        internal var pool: EventLoopGroupConnectionPool<RedisConnectionSource> {
+        // must be event loop from this app's elg
+        internal func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
+            guard let pool = self.pools[eventLoop.key] else {
+                fatalError("EventLoop must be from Application's EventLoopGroup.")
+            }
+            return pool
+        }
+
+        private var pools: [EventLoop.Key: RedisConnectionPool] {
             if let existing = self.application.storage[PoolKey.self] {
                 return existing
             } else {
@@ -36,16 +44,29 @@ extension Application {
                 guard let configuration = self.configuration else {
                     fatalError("Redis not configured. Use app.redis.configuration = ...")
                 }
-                let new = EventLoopGroupConnectionPool(
-                    source: RedisConnectionSource(configuration: configuration, logger: self.application.logger),
-                    maxConnectionsPerEventLoop: 1,
-                    logger: self.application.logger,
-                    on: self.application.eventLoopGroup
-                )
-                self.application.storage.set(PoolKey.self, to: new) {
-                    $0.shutdown()
+                var pools = [EventLoop.Key: RedisConnectionPool]()
+                for eventLoop in self.application.eventLoopGroup.makeIterator() {
+                    pools[eventLoop.key] = RedisConnectionPool(
+                        serverConnectionAddresses: configuration.serverAddresses,
+                        loop: eventLoop,
+                        maximumConnectionCount: configuration.pool.maximumConnectionCount,
+                        minimumConnectionCount: configuration.pool.minimumConnectionCount,
+                        connectionPassword: configuration.password,
+                        connectionLogger: self.application.logger,
+                        connectionTCPClient: nil,
+                        poolLogger: self.application.logger,
+                        connectionBackoffFactor: configuration.pool.connectionBackoffFactor,
+                        initialConnectionBackoffDelay: configuration.pool.initialConnectionBackoffDelay
+                    )
                 }
-                return new
+                self.application.storage.set(PoolKey.self, to: pools) { pools in
+                    try pools.values.map { pool in
+                        let promise = pool.eventLoop.makePromise(of: Void.self)
+                        pool.close(promise: promise)
+                        return promise.futureResult
+                    }.flatten(on: self.application.eventLoopGroup.next()).wait()
+                }
+                return pools
             }
         }
 
@@ -53,28 +74,28 @@ extension Application {
     }
 }
 
-extension Application.Redis: RedisClient {
-    public var isConnected: Bool { true }
-
-    public var logger: Logger {
-        self.application.logger
+private extension EventLoop {
+    typealias Key = ObjectIdentifier
+    var key: Key {
+        ObjectIdentifier(self)
     }
-    
+}
+
+extension Application.Redis: RedisClient {
     public var eventLoop: EventLoop {
         self.application.eventLoopGroup.next()
     }
 
-    public func setLogging(to logger: Logger) {
-        // cannot set logger
+    public func logging(to logger: Logger) -> RedisClient {
+        self.application.redis
+            .pool(for: self.eventLoop)
+            .logging(to: logger)
     }
 
     public func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
-        self.application.redis.pool.withConnection(
-            logger: logger,
-            on: nil
-        ) {
-            $0.setLogging(to: self.logger)
-            return $0.send(command: command, with: arguments)
-        }
+        self.application.redis
+            .pool(for: self.eventLoop.next())
+            .logging(to: self.application.logger)
+            .send(command: command, with: arguments)
     }
 }
