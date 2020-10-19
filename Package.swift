@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://gitlab.com/mordil/RediStack.git", from: "1.0.0-rc.2"),
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.4"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
     ],
     targets: [
         .target(
