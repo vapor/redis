@@ -36,7 +36,19 @@ class RedisTests: XCTestCase {
             XCTAssertContains(res.body.string, "redis_version")
         }
     }
+    
+    func testInitConfigurationURL() throws {
+        let app = Application()
+        defer { app.shutdown() }
 
+        let urlStr = URL(string: "redis://name:password@localhost:6379/0")
+        
+        let redisConfigurations = try RedisConfiguration(url: urlStr!)
+        
+        XCTAssertEqual(redisConfigurations.password, "password")
+        XCTAssertEqual(redisConfigurations.database, 0)
+    }
+    
     override class func setUp() {
         XCTAssert(isLoggingConfigured)
     }
