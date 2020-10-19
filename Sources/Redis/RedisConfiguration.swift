@@ -49,7 +49,7 @@ public struct RedisConfiguration {
             hostname: url.host ?? "localhost",
             port: url.port ?? RedisConnection.defaultPort,
             password: url.password,
-            database: Int(url.path),
+            database: Int(url.lastPathComponent),
             pool: pool
         )
     }
