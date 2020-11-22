@@ -17,6 +17,13 @@ jobs:
     steps:
     - name: Checkout Redis
       uses: actions/checkout@v1
+    - name: CentOS 7 workaround
+      if: ${{ matrix.linux-dist == 'centos7' }}
+      run: |
+        yum install -y make libcurl-devel
+        git clone https://github.com/git/git -bv2.28.0 --depth 1
+        cd git
+        make prefix=/usr -j all install NO_OPENSSL=1 NO_EXPAT=1 NO_TCLTK=1 NO_GETTEXT=1 NO_PERL=1
     - name: Run tests with thread sanitizer
       run: swift test --enable-test-discovery --sanitize=thread
       env:
