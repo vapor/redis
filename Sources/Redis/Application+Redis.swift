@@ -47,17 +47,8 @@ extension Application {
                 var pools = [EventLoop.Key: RedisConnectionPool]()
                 for eventLoop in self.application.eventLoopGroup.makeIterator() {
                     pools[eventLoop.key] = RedisConnectionPool(
-                        serverConnectionAddresses: configuration.serverAddresses,
-                        loop: eventLoop,
-                        maximumConnectionCount: configuration.pool.maximumConnectionCount,
-                        minimumConnectionCount: configuration.pool.minimumConnectionCount,
-                        connectionPassword: configuration.password,
-                        connectionLogger: self.application.logger,
-                        connectionTCPClient: nil,
-                        poolLogger: self.application.logger,
-                        connectionBackoffFactor: configuration.pool.connectionBackoffFactor,
-                        initialConnectionBackoffDelay: configuration.pool.initialConnectionBackoffDelay,
-                        connectionRetryTimeout: configuration.pool.connectionRetryTimeout
+                        configuration: .init(configuration, defaultLogger: self.application.logger),
+                        boundEventLoop: eventLoop
                     )
                 }
                 self.application.storage.set(PoolKey.self, to: pools) { pools in
