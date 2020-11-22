@@ -2,31 +2,22 @@ name: test
 on:
 - pull_request
 jobs:
-  xenial:
-    container: 
-      image: vapor/swift:5.2-xenial
+  test-redis:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        linux-dist: ['xenial', 'bionic', 'focal', 'amazonlinux2', 'centos7', 'centos8']
+    container:
+      image: swift:5.2-${{ matrix.linux-dist }}
     services:
       redis:
         image: redis
         ports:
           - 6379:6379
-    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - run: swift test --enable-test-discovery --sanitize=thread
-      env:
-        REDIS_HOSTNAME: redis
-  bionic:
-    container: 
-      image: vapor/swift:5.2-bionic
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - run: swift test --enable-test-discovery --sanitize=thread
+    - name: Checkout Redis
+      uses: actions/checkout@v1
+    - name: Run tests with thread sanitizer
+      run: swift test --enable-test-discovery --sanitize=thread
       env:
         REDIS_HOSTNAME: redis
