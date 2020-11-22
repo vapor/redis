@@ -49,6 +49,33 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(redisConfigurations.database, 0)
     }
     
+    func testCodable() throws {
+        let app = Application()
+        defer { app.shutdown() }
+        app.redis.configuration = try .init(
+            hostname: env("REDIS_HOSTNAME") ?? "localhost",
+            port: 6379
+        )
+
+        struct Hello: Codable {
+            var message: String
+            var array: [Int]
+            var dict: [String: Bool]
+        }
+        
+        let hello = Hello(message: "world", array: [1, 2, 3], dict: ["yes": true, "false": false])
+        try app.redis.set("hello", toJSON: hello).wait()
+        
+        let get = try app.redis.get("hello", asJSON: Hello.self).wait()
+        XCTAssertEqual(get?.message, "world")
+        XCTAssertEqual(get?.array.first, 1)
+        XCTAssertEqual(get?.array.last, 3)
+        XCTAssertEqual(get?.dict["yes"], true)
+        XCTAssertEqual(get?.dict["false"], false)
+
+        let _ = try app.redis.delete(["hello"]).wait()
+    }
+    
     override class func setUp() {
         XCTAssert(isLoggingConfigured)
     }

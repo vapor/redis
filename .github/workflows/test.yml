@@ -2,31 +2,29 @@ name: test
 on:
 - pull_request
 jobs:
-  xenial:
-    container: 
-      image: vapor/swift:5.2-xenial
+  test-redis:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        linux-dist: ['xenial', 'bionic', 'focal', 'amazonlinux2', 'centos7', 'centos8']
+    container:
+      image: swift:5.2-${{ matrix.linux-dist }}
     services:
       redis:
         image: redis
         ports:
           - 6379:6379
-    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - run: swift test --enable-test-discovery --sanitize=thread
-      env:
-        REDIS_HOSTNAME: redis
-  bionic:
-    container: 
-      image: vapor/swift:5.2-bionic
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - run: swift test --enable-test-discovery --sanitize=thread
+    - name: Checkout Redis
+      uses: actions/checkout@v1
+    - name: CentOS 7 workaround
+      if: ${{ matrix.linux-dist == 'centos7' }}
+      run: |
+        yum install -y make libcurl-devel
+        git clone https://github.com/git/git -bv2.28.0 --depth 1
+        cd git
+        make prefix=/usr -j all install NO_OPENSSL=1 NO_EXPAT=1 NO_TCLTK=1 NO_GETTEXT=1 NO_PERL=1
+    - name: Run tests with thread sanitizer
+      run: swift test --enable-test-discovery --sanitize=thread
       env:
         REDIS_HOSTNAME: redis

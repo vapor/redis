@@ -4,6 +4,8 @@
 import enum NIO.SocketAddress
 
 public struct RedisConfiguration {
+    public typealias ValidationError = RedisConnection.Configuration.ValidationError
+
     public var serverAddresses: [SocketAddress]
     public var password: String?
     public var database: Int?
@@ -32,22 +34,21 @@ public struct RedisConfiguration {
     }
 
     public init(url string: String, pool: PoolOptions = .init()) throws {
-        guard let url = URL(string: string) else {
-            throw RedisError(reason: "Invalid URL string: \(string)")
-        }
+        guard let url = URL(string: string) else { throw ValidationError.invalidURLString }
         try self.init(url: url, pool: pool)
     }
 
     public init(url: URL, pool: PoolOptions = .init()) throws {
-        guard let scheme = url.scheme else {
-            throw RedisError(reason: "Missing URL scheme")
-        }
-        guard scheme == "redis" else {
-            throw RedisError(reason: "Invalid URL scheme: \(scheme)")
-        }
+        guard
+            let scheme = url.scheme,
+            !scheme.isEmpty
+        else { throw ValidationError.missingURLScheme }
+        guard scheme == "redis" else { throw ValidationError.invalidURLScheme }
+        guard let host = url.host, !host.isEmpty else { throw ValidationError.missingURLHost }
+
         try self.init(
-            hostname: url.host ?? "localhost",
-            port: url.port ?? RedisConnection.defaultPort,
+            hostname: host,
+            port: url.port ?? RedisConnection.Configuration.defaultPort,
             password: url.password,
             database: Int(url.lastPathComponent),
             pool: pool
@@ -55,12 +56,14 @@ public struct RedisConfiguration {
     }
 
     public init(
-        hostname: String = "localhost",
-        port: Int = RedisConnection.defaultPort,
+        hostname: String,
+        port: Int = RedisConnection.Configuration.defaultPort,
         password: String? = nil,
         database: Int? = nil,
         pool: PoolOptions = .init()
     ) throws {
+        if database != nil && database! < 0 { throw ValidationError.outOfBoundsDatabaseID }
+
         try self.init(
             serverAddresses: [.makeAddressResolvingHost(hostname, port: port)],
             password: password,
@@ -79,5 +82,25 @@ public struct RedisConfiguration {
         self.password = password
         self.database = database
         self.pool = pool
+    }
+}
+
+extension RedisConnectionPool.Configuration {
+    internal init(_ config: RedisConfiguration, defaultLogger: Logger) {
+        self.init(
+            initialServerConnectionAddresses: config.serverAddresses,
+            maximumConnectionCount: config.pool.maximumConnectionCount,
+            connectionFactoryConfiguration: .init(
+                connectionInitialDatabase: config.database,
+                connectionPassword: config.password,
+                connectionDefaultLogger: defaultLogger,
+                tcpClient: nil
+            ),
+            minimumConnectionCount: config.pool.minimumConnectionCount,
+            connectionBackoffFactor: config.pool.connectionBackoffFactor,
+            initialConnectionBackoffDelay: config.pool.initialConnectionBackoffDelay,
+            connectionRetryTimeout: config.pool.connectionRetryTimeout,
+            poolDefaultLogger: defaultLogger
+        )
     }
 }
