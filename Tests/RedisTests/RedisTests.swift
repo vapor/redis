@@ -76,6 +76,49 @@ class RedisTests: XCTestCase {
         let _ = try app.redis.delete(["hello"]).wait()
     }
     
+    func testSessions() throws {
+        let app = Application(.testing)
+        defer { app.shutdown() }
+        app.redis.configuration = try .init(
+            hostname: env("REDIS_HOSTNAME") ?? "localhost",
+            port: 6379
+        )
+
+        // Configure sessions.
+        app.sessions.use(.redis)
+        app.middleware.use(app.sessions.middleware)
+
+        // Setup routes.
+        app.get("set", ":value") { req -> HTTPStatus in
+            req.session.data["name"] = req.parameters.get("value")
+            return .ok
+        }
+        app.get("get") { req -> String in
+            req.session.data["name"] ?? "n/a"
+        }
+        app.get("del") { req -> HTTPStatus in
+            req.session.destroy()
+            return .ok
+        }
+
+        // Store session id.
+        var sessionID: String?
+        try app.test(.GET, "/set/vapor") { res in
+            sessionID = res.headers.setCookie?["vapor-session"]?.string
+            XCTAssertEqual(res.status, .ok)
+        }
+        XCTAssertNotNil(sessionID)
+
+        try app.test(.GET, "/get", beforeRequest: { req in
+            var cookies = HTTPCookies()
+            cookies["vapor-session"] = .init(string: sessionID!)
+            req.headers.cookie = cookies
+        }) { res in
+            XCTAssertEqual(res.status, .ok)
+            XCTAssertEqual(res.body.string, "vapor")
+        }
+    }
+    
     override class func setUp() {
         XCTAssert(isLoggingConfigured)
     }
