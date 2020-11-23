@@ -29,7 +29,7 @@ extension RedisSessionsDelegate {
         for _ in 0..<32 {
             bytes.append(.random(in: .min ..< .max))
         }
-        return .init(string: bytes.base64EncodedString())
+        return .init(string: "vrs-\(bytes.base64EncodedString())")
     }
 }
 
