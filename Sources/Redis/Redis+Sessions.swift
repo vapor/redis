@@ -51,10 +51,20 @@ extension Application.Redis {
     public var sessions: Sessions { .init() }
     
     public struct Sessions {
-        /// Factory method that creates a new Redis Sessions driver.
-        /// - Parameter delegate: An optional delegate object to use instead of the default. See `RedisSessionsDelegate`.
-        public func makeDriver(delegate: RedisSessionsDelegate? = nil) -> SessionDriver {
-            return RedisSessionsDriver(delegate: delegate ?? DefaultSessionsDriverDelegate())
+        /// Factory method that creates a new Redis Sessions driver with the provided delegate.
+        ///
+        /// See `RedisSessionsDelegate`.
+        /// - Parameter delegate: The delegate object to use instead of the default.
+        @inlinable
+        public func makeDriver<Delegate: RedisSessionsDelegate>(delegate: Delegate) -> some SessionDriver {
+            return RedisSessionsDriver(delegate: delegate)
+        }
+
+        /// Factory method that creates a new Redis Session driver with the default delegate.
+        ///
+        /// See `RedisSessionsDelegate`.
+        public func makeDriver() -> some SessionDriver {
+            return RedisSessionsDriver(delegate: DefaultSessionsDriverDelegate())
         }
     }
 }
@@ -66,7 +76,8 @@ extension Application.Sessions.Provider {
 
     /// Provides a Redis sessions driver using the provided delegate.
     /// - Parameter delegate: The delegate to use in the Redis sessions driver.
-    public static func redis(delegate: RedisSessionsDelegate) -> Self {
+    @inlinable
+    public static func redis<Delegate: RedisSessionsDelegate>(delegate: Delegate) -> Self {
         return .init {
             $0.sessions.use { $0.redis.sessions.makeDriver(delegate: delegate) }
         }
@@ -74,12 +85,14 @@ extension Application.Sessions.Provider {
 }
 
 // MARK: SessionDriver
-private struct RedisSessionsDriver: SessionDriver {
-    private let delegate: RedisSessionsDelegate
+@usableFromInline
+internal struct RedisSessionsDriver<Delegate: RedisSessionsDelegate>: SessionDriver {
+    private let delegate: Delegate
 
-    init(delegate: RedisSessionsDelegate) { self.delegate = delegate }
+    @usableFromInline
+    internal init(delegate: Delegate) { self.delegate = delegate }
 
-    func createSession(_ data: SessionData, for request: Request) -> EventLoopFuture<SessionID> {
+    public func createSession(_ data: SessionData, for request: Request) -> EventLoopFuture<SessionID> {
         let id = self.delegate.makeNewID()
         let key = self.delegate.makeRedisKey(for: id)
         return self.delegate
@@ -87,19 +100,19 @@ private struct RedisSessionsDriver: SessionDriver {
             .map { id }
     }
     
-    func readSession(_ sessionID: SessionID, for request: Request) -> EventLoopFuture<SessionData?> {
+    public func readSession(_ sessionID: SessionID, for request: Request) -> EventLoopFuture<SessionData?> {
         let key = self.delegate.makeRedisKey(for: sessionID)
         return self.delegate.redis(request.redis, fetchDataFor: key)
     }
     
-    func updateSession(_ sessionID: SessionID, to data: SessionData, for request: Request) -> EventLoopFuture<SessionID> {
+    public func updateSession(_ sessionID: SessionID, to data: SessionData, for request: Request) -> EventLoopFuture<SessionID> {
         let key = self.delegate.makeRedisKey(for: sessionID)
         return self.delegate
             .redis(request.redis, store: data, with: key)
             .map { sessionID }
     }
     
-    func deleteSession(_ sessionID: SessionID, for request: Request) -> EventLoopFuture<Void> {
+    public func deleteSession(_ sessionID: SessionID, for request: Request) -> EventLoopFuture<Void> {
         let key = self.delegate.makeRedisKey(for: sessionID)
         return request.redis.delete(key).map { _ in () }
     }
