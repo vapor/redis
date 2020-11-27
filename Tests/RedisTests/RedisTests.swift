@@ -107,7 +107,7 @@ class RedisTests: XCTestCase {
             sessionID = res.headers.setCookie?["vapor-session"]?.string
             XCTAssertEqual(res.status, .ok)
         }
-        XCTAssertNotNil(sessionID)
+        XCTAssertFalse(try XCTUnwrap(sessionID).contains("vrs-"), "session token has the redis key prefix!")
 
         try app.test(.GET, "/get", beforeRequest: { req in
             var cookies = HTTPCookies()
