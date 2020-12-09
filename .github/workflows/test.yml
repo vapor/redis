@@ -1,30 +1,46 @@
 name: test
-on:
-- pull_request
+on: { pull_request: {} }
+
 jobs:
-  test-redis:
+  getcidata:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        linux-dist: ['xenial', 'bionic', 'focal', 'amazonlinux2', 'centos7', 'centos8']
-    container:
-      image: swift:5.2-${{ matrix.linux-dist }}
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
+    outputs:
+      environments: ${{ steps.output.outputs.environments }}
     steps:
-    - name: Checkout Redis
-      uses: actions/checkout@v1
-    - name: CentOS 7 workaround
-      if: ${{ matrix.linux-dist == 'centos7' }}
-      run: |
-        yum install -y make libcurl-devel
-        git clone https://github.com/git/git -bv2.28.0 --depth 1
-        cd git
-        make prefix=/usr -j all install NO_OPENSSL=1 NO_EXPAT=1 NO_TCLTK=1 NO_GETTEXT=1 NO_PERL=1
-    - name: Run tests with thread sanitizer
-      run: swift test --enable-test-discovery --sanitize=thread
-      env:
-        REDIS_HOSTNAME: redis
+      - id: output
+        run: |
+          envblob="$(curl -fsSL https://raw.githubusercontent.com/vapor/ci/main/pr-environments.json | jq -cMj '.')"
+          echo "::set-output name=environments::${envblob}"
+
+
+  test-redis:
+    needs: getcidata
+    strategy:
+      fail-fast: false
+      matrix:
+        env: ${{ fromJSON(needs.getcidata.outputs.environments) }}
+        include:
+          - services: {}
+            redis_host: localhost
+          - env: { os: ubuntu-latest }
+            services: { redis: { image: redis, ports: [ '6379:6379' ] } }
+            redis_host: redis
+    runs-on: ${{ matrix.env.os }}
+    container: ${{ matrix.env.image }}
+    services: ${{ matrix.services }}
+    steps: 
+      - name: Select toolchain
+        uses: maxim-lobanov/setup-xcode@v1.2.1
+        with:
+          xcode-version: ${{ matrix.env.toolchain }}
+        if: ${{ matrix.env.toolchain != '' }}
+      - name: Set up Redis server via Homebrew
+        if: ${{ matrix.env.toolchain != '' }}
+        run: brew install redis && brew services start redis
+      - name: Check out Redis
+        uses: actions/checkout@v2
+      - name: Run tests with Thread Sanitizer
+        timeout-minutes: 20
+        run: swift test --enable-test-discovery --sanitize=thread
+        env:
+          REDIS_HOSTNAME: ${{ matrix.redis_host }}
