@@ -79,6 +79,9 @@ extension Application {
         }
 
         let application: Application
+        public init(application: Application) {
+            self.application = application
+        }
     }
 }
 
