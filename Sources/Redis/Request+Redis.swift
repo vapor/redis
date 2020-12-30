@@ -2,11 +2,21 @@ import Vapor
 
 extension Request {
     public var redis: Redis {
-        .init(request: self)
+        .init(request: self, redisID: nil)
+    }
+
+    public func redis(_ redisID: RedisID) -> Redis {
+        .init(request: self, redisID: redisID)
     }
 
     public struct Redis {
+        let redisID: RedisID?
         let request: Request
+
+        public init(request: Request, redisID: RedisID? = nil) {
+            self.request = request
+            self.redisID = redisID
+        }
     }
 }
 
@@ -16,13 +26,13 @@ extension Request.Redis: RedisClient {
     }
 
     public func logging(to logger: Logger) -> RedisClient {
-        self.request.application.redis
+        self.request.application.redis(self.redisID)
             .pool(for: self.eventLoop)
             .logging(to: logger)
     }
 
     public func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
-        self.request.application.redis
+        self.request.application.redis(self.redisID)
             .pool(for: self.eventLoop)
             .logging(to: self.request.logger)
             .send(command: command, with: arguments)
@@ -34,14 +44,14 @@ extension Request.Redis: RedisClient {
         onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
         onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
     ) -> EventLoopFuture<Void> {
-        return self.request.application.redis
+        return self.request.application.redis(self.redisID)
             .pubsubClient
             .logging(to: self.request.logger)
             .subscribe(to: channels, messageReceiver: receiver, onSubscribe: subscribeHandler, onUnsubscribe: unsubscribeHandler)
     }
     
     public func unsubscribe(from channels: [RedisChannelName]) -> EventLoopFuture<Void> {
-        return self.request.application.redis
+        return self.request.application.redis(self.redisID)
             .pubsubClient
             .logging(to: self.request.logger)
             .unsubscribe(from: channels)
@@ -53,14 +63,14 @@ extension Request.Redis: RedisClient {
         onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
         onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
     ) -> EventLoopFuture<Void> {
-        return self.request.application.redis
+        return self.request.application.redis(self.redisID)
             .pubsubClient
             .logging(to: self.request.logger)
             .psubscribe(to: patterns, messageReceiver: receiver, onSubscribe: subscribeHandler, onUnsubscribe: unsubscribeHandler)
     }
     
     public func punsubscribe(from patterns: [String]) -> EventLoopFuture<Void> {
-        return self.request.application.redis
+        return self.request.application.redis(self.redisID)
             .pubsubClient
             .logging(to: self.request.logger)
             .punsubscribe(from: patterns)
