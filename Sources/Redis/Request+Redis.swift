@@ -7,6 +7,10 @@ extension Request {
 
     public struct Redis {
         let request: Request
+
+        public init(request: Request) {
+            self.request = request
+        }
     }
 }
 
