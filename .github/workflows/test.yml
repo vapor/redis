@@ -19,16 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         env: ${{ fromJSON(needs.getcidata.outputs.environments) }}
-        include:
-          - services: {}
-            redis_url_1: redis://localhost:6379
-            redis_url_2: redis://localhost:6380
-          - env: { os: ubuntu-latest }
-            services: 
-              redis: { image: redis, ports: [ '6379:6379' ] } 
-              redis2: { image: redis, ports: [ '6380:6379' ] } 
-            redis_url_1: redis://localhost:6379
-            redis_url_2: redis://localhost:6380
     runs-on: ${{ matrix.env.os }}
     container: ${{ matrix.env.image }}
     services: ${{ matrix.services }}
@@ -40,13 +30,20 @@ jobs:
         if: ${{ matrix.env.toolchain != '' }}
       - name: Check out source code
         uses: actions/checkout@v2
+
       - name: Set up Redis servers via Homebrew
         if: ${{ matrix.env.toolchain != '' }}
-        run: brew install redis && redis-server .github/redis1.conf && redis-server .github/redis2.conf 
+        run: brew install redis 
 
-      - name: Set up Redis cli servers via apt-get
+      - name: Set up Redis servers via apt-get
         if: ${{ matrix.env.toolchain == '' }}
-        run: apt-get install -y redis
+        run: apt-get update && apt-get install -y redis
+
+      - name: start redis 1
+        run: redis-server .github/redis1.conf
+      - name: start redis 2
+        run: redis-server .github/redis1.conf
+
       - name: Test Redis 1 connection
         run: redis-cli -u ${{ matrix.redis_url_1 }} INFO
       - name: Test Redis 2 connection
