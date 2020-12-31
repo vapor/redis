@@ -2,7 +2,6 @@ import Vapor
 
 extension Application {
     public struct Redis {
-        // must be event loop from this app's elg
         internal func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
 
             guard let pools = self.application.redises.allPools[eventLoop.key] else {

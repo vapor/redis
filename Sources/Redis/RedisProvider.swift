@@ -1,6 +1,4 @@
-import Foundation
 import Vapor
-
 
 extension Application {
     private struct RedisesStorageKey: StorageKey {

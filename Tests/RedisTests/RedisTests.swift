@@ -3,8 +3,6 @@ import Vapor
 import Logging
 import XCTVapor
 
-
-
 class RedisTests: XCTestCase {
     var redisConfig: RedisConfiguration!
 
