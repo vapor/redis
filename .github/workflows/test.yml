@@ -30,11 +30,11 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
 
-      - name: Set up Redis servers via Homebrew (Mac)
+      - name: Install Redis via Homebrew (Mac)
         if: ${{ matrix.env.toolchain != '' }}
         run: brew install redis 
 
-      - name: Set up Redis servers via apt-get (Ubuntu)
+      - name: Install Redis via apt-get (Ubuntu)
         if: ${{ matrix.env.toolchain == '' }}
         run: apt-get update && apt-get install -y redis
 
@@ -54,5 +54,5 @@ jobs:
         env:
           REDIS_HOST: localhost
           REDIS_PORT: 6379
-          REDIS_2_HOST: localhost
-          REDIS_2_PORT: 6380
+          REDIS_HOST_2: localhost
+          REDIS_PORT_2: 6380

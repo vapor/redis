@@ -14,10 +14,10 @@ class MultipleRedisTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        redisConfig = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
-                                             port: Environment.get("REDIS_PORT")?.int ?? 6379)
-        redisConfig2 = try RedisConfiguration(hostname: Environment.get("REDIS_2_HOSTNAME") ?? "localhost",
-                                             port: Environment.get("REDIS_2_PORT")?.int ?? 6380)
+        redisConfig = try RedisConfiguration(hostname:  Environment.get("REDIS_HOSTNAME") ?? "localhost",
+                                             port:      Environment.get("REDIS_PORT")?.int ?? 6379)
+        redisConfig2 = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME_2") ?? "localhost",
+                                             port:      Environment.get("REDIS_PORT_2")?.int ?? 6380)
     }
 
     func testApplicationRedis() throws {
