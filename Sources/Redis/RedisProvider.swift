@@ -25,27 +25,27 @@ extension Redises {
             defer {
                 self.redises.lock.unlock()
             }
-            var allPools = [EventLoop.Key: [RedisID: RedisConnectionPool]]()
+            var allPools = [AllPoolsKey: RedisConnectionPool]()
             for eventLoop in application.eventLoopGroup.makeIterator() {
-                var eventLoopPools = [RedisID: RedisConnectionPool]()
+
                 for configuration in redises.configurations {
-                    eventLoopPools[configuration.key] = RedisConnectionPool(
+                    let newPool = RedisConnectionPool(
                         configuration: .init(configuration.value, defaultLogger: application.logger),
                         boundEventLoop: eventLoop
                     )
+                    let newKey: AllPoolsKey = AllPoolsKey(eventLoopKey: eventLoop.key, redisID: configuration.key)
+                    allPools[newKey] = newPool
                 }
-                allPools[eventLoop.key] = eventLoopPools
             }
             self.redises.allPools = allPools
         }
 
         func shutdown(_ application: Application) {
-            let shutdownFuture = redises.allPools.values.map { pools in
-                return pools.values.map { pool in
-                    let promise = pool.eventLoop.makePromise(of: Void.self)
-                    pool.close(promise: promise)
-                    return promise.futureResult
-                }.flatten(on: application.eventLoopGroup.next())
+            let shutdownFuture = redises.allPools.values.map { pool in
+                let promise = pool.eventLoop.makePromise(of: Void.self)
+                pool.close(promise: promise)
+                return promise.futureResult
+
             }.flatten(on: application.eventLoopGroup.next())
 
             do {
@@ -57,11 +57,16 @@ extension Redises {
     }
 }
 
+struct AllPoolsKey: Hashable {
+    let eventLoopKey: EventLoop.Key
+    let redisID: RedisID
+}
+
 public class Redises {
     private var lock: Lock
     private var configurations: [RedisID: RedisConfiguration]
     private var defaultID: RedisID?
-    internal fileprivate(set) var allPools: [EventLoop.Key: [RedisID: RedisConnectionPool]] = [:]
+    internal fileprivate(set) var allPools: [AllPoolsKey: RedisConnectionPool] = [:]
 
     public init() {
         self.configurations = [:]
@@ -80,27 +85,13 @@ public class Redises {
         self.defaultID = id
     }
 
-    public func configuration(for id: RedisID? = nil) -> RedisConfiguration? {
+    public func configuration(for id: RedisID = .default) -> RedisConfiguration? {
         self.lock.lock()
         defer { self.lock.unlock() }
-        return self.configurations[id ?? self._requireDefaultID()]
+        return self.configurations[id]
     }
 
     public func ids() -> Set<RedisID> {
         return self.lock.withLock { Set(self.configurations.keys) }
-    }
-
-    private func _requireConfiguration(for id: RedisID) -> RedisConfiguration {
-        guard let configuration = self.configurations[id] else {
-            fatalError("No redis configuration registered for \(id).")
-        }
-        return configuration
-    }
-
-    private func _requireDefaultID() -> RedisID {
-        guard let id = self.defaultID else {
-            fatalError("No default redis configured.")
-        }
-        return id
     }
 }

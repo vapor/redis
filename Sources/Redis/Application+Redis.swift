@@ -3,14 +3,11 @@ import Vapor
 extension Application {
     public struct Redis {
         internal func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
-
-            guard let pools = self.application.redises.allPools[eventLoop.key] else {
-                fatalError("The app may not have finished booting: EventLoop must be from Application's EventLoopGroup.")
+            let key = AllPoolsKey(eventLoopKey: eventLoop.key, redisID: self.redisID)
+            guard let pool = self.application.redises.allPools[key] else {
+                fatalError("The app may not have finished booting. EventLoop must be from Application's EventLoopGroup.")
             }
-            guard let p = pools[self.redisID] else {
-                fatalError("No pool found for key \(self.redisID)")
-            }
-            return p
+            return pool
         }
 
         struct PubSubKey: StorageKey, LockKey {
