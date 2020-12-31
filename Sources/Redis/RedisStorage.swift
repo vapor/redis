@@ -14,12 +14,49 @@ extension Application {
     }
 }
 
+public class RedisStorage {
+    private var lock: Lock
+    private var configurations: [RedisID: RedisConfiguration]
+    fileprivate var pools: [PoolKey: RedisConnectionPool]
+
+    public init() {
+        self.configurations = [:]
+        self.pools = [:]
+        self.lock = .init()
+    }
+
+    public func use(_ redisConfiguration: RedisConfiguration, as id: RedisID = .default) {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        self.configurations[id] = redisConfiguration
+    }
+
+    public func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
+        let key = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
+        guard let pool = pools[key] else {
+            fatalError("No redis found for id \(redisID), or the app may not have finished booting. Also, the eventLoop must be from Application's EventLoopGroup.")
+        }
+        return pool
+    }
+
+    public func configuration(for id: RedisID = .default) -> RedisConfiguration? {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        return self.configurations[id]
+    }
+
+    public func ids() -> Set<RedisID> {
+        return self.lock.withLock { Set(self.configurations.keys) }
+    }
+}
+
 extension RedisStorage {
     class Lifecycle: LifecycleHandler {
         unowned let redisStorage: RedisStorage
         init(redisStorage: RedisStorage) {
             self.redisStorage = redisStorage
         }
+
         func willBoot(_ application: Application) throws {
             self.redisStorage.lock.lock()
             defer {
@@ -44,7 +81,6 @@ extension RedisStorage {
                 let promise = pool.eventLoop.makePromise(of: Void.self)
                 pool.close(promise: promise)
                 return promise.futureResult
-
             }.flatten(on: application.eventLoopGroup.next())
 
             do {
@@ -67,41 +103,5 @@ private extension EventLoop {
     typealias Key = ObjectIdentifier
     var key: Key {
         ObjectIdentifier(self)
-    }
-}
-
-public class RedisStorage {
-    private var lock: Lock
-    private var configurations: [RedisID: RedisConfiguration]
-    fileprivate var pools: [PoolKey: RedisConnectionPool]
-
-    public init() {
-        self.configurations = [:]
-        self.pools = [:]
-        self.lock = .init()
-    }
-
-    public func use(_ redisConfiguration: RedisConfiguration, as id: RedisID = .default) {
-        self.lock.lock()
-        defer { self.lock.unlock() }
-        self.configurations[id] = redisConfiguration
-    }
-
-    public func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
-        let key = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
-        guard let pool = pools[key] else {
-            fatalError("The app may not have finished booting. EventLoop must be from Application's EventLoopGroup.")
-        }
-        return pool
-    }
-
-    public func configuration(for id: RedisID = .default) -> RedisConfiguration? {
-        self.lock.lock()
-        defer { self.lock.unlock() }
-        return self.configurations[id]
-    }
-
-    public func ids() -> Set<RedisID> {
-        return self.lock.withLock { Set(self.configurations.keys) }
     }
 }

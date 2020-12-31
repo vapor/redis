@@ -22,6 +22,17 @@ class RedisTests: XCTestCase {
         XCTAssertContains(info.string, "redis_version")
     }
 
+    func testDeprecationAdapter() throws {
+        let app = Application()
+        defer { app.shutdown() }
+
+        app.redis.configuration = redisConfig
+        try app.boot()
+
+        let info = try app.redis.send(command: "INFO").wait()
+        XCTAssertContains(info.string, "redis_version")
+    }
+
     func testRouteHandlerRedis() throws {
         let app = Application()
         defer { app.shutdown() }

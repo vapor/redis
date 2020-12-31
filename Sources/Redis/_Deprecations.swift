@@ -2,11 +2,11 @@ import Vapor
 
 extension Application.Redis {
     @available(*, deprecated, message: "use `app.redises.use(_: RedisConfiguration, as: RedisID)`")
-    var configuration: RedisConfiguration? {
+    public var configuration: RedisConfiguration? {
         get {
             self.application.redises.configuration(for: self.redisID)
         }
-        set {
+        nonmutating set {
             guard let newConfig = newValue else {
                 return
             }
