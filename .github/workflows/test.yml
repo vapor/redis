@@ -38,15 +38,20 @@ jobs:
         with:
           xcode-version: ${{ matrix.env.toolchain }}
         if: ${{ matrix.env.toolchain != '' }}
+      - name: Check out source code
+        uses: actions/checkout@v2
       - name: Set up Redis servers via Homebrew
         if: ${{ matrix.env.toolchain != '' }}
         run: brew install redis && redis-server github-actions/redis1.conf && redis-server github-actions/redis2.conf 
+
+      - name: Set up Redis servers via Homebrew
+        if: ${{ matrix.env.toolchain == '' }}
+        run: sudo apt-get install -y redis
       - name: Test Redis 1 connection
         run: redis-cli -u ${{ matrix.redis_url_1 }} INFO
       - name: Test Redis 2 connection
         run: redis-cli -u ${{ matrix.redis_url_2 }} INFO
-      - name: Check out Redis
-        uses: actions/checkout@v2
+      - run: cat .github/workflows/test.yml
       - name: Run tests with Thread Sanitizer
         timeout-minutes: 20
         run: swift test --enable-test-discovery --sanitize=thread
