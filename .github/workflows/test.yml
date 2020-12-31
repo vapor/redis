@@ -32,14 +32,15 @@ jobs:
 
       - name: Set up Redis servers via Homebrew (Mac)
         if: ${{ matrix.env.toolchain != '' }}
-        run: brew install redis 
+        run: brew install redis && brew service start redis
 
       - name: Set up Redis servers via apt-get (Ubuntu)
         if: ${{ matrix.env.toolchain == '' }}
         run: apt-get update && apt-get install -y redis
 
-      - name: Start Redis 1
+      - name: Start Redis 1 (Ubuntu)
         run: mkdir -p /tmp/redis1 && redis-server .github/redis1.conf
+        if: ${{ matrix.env.toolchain == '' }}
       - name: Start Redis 2
         run: mkdir -p /tmp/redis2 && redis-server .github/redis2.conf
 
