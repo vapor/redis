@@ -14,24 +14,33 @@ extension Application {
     }
 }
 
-public class RedisStorage {
+class RedisStorage {
     private var lock: Lock
     private var configurations: [RedisID: RedisConfiguration]
-    fileprivate var pools: [PoolKey: RedisConnectionPool]
+    fileprivate var pools: [PoolKey: RedisConnectionPool] {
+        willSet {
+            if didBoot {
+                fatalError("editing pools after application has booted is not supported")
+            } else {
+                didBoot = true
+            }
+        }
+    }
+    private var didBoot: Bool = false
 
-    public init() {
+    init() {
         self.configurations = [:]
         self.pools = [:]
         self.lock = .init()
     }
 
-    public func use(_ redisConfiguration: RedisConfiguration, as id: RedisID = .default) {
+    func use(_ redisConfiguration: RedisConfiguration, as id: RedisID = .default) {
         self.lock.lock()
         defer { self.lock.unlock() }
         self.configurations[id] = redisConfiguration
     }
 
-    public func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
+    func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
         let key = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
         guard let pool = pools[key] else {
             fatalError("No redis found for id \(redisID), or the app may not have finished booting. Also, the eventLoop must be from Application's EventLoopGroup.")
@@ -39,18 +48,20 @@ public class RedisStorage {
         return pool
     }
 
-    public func configuration(for id: RedisID = .default) -> RedisConfiguration? {
+    func configuration(for id: RedisID = .default) -> RedisConfiguration? {
         self.lock.lock()
         defer { self.lock.unlock() }
         return self.configurations[id]
     }
 
-    public func ids() -> Set<RedisID> {
+    func ids() -> Set<RedisID> {
         return self.lock.withLock { Set(self.configurations.keys) }
     }
 }
 
 extension RedisStorage {
+    /// Lifecyle Handler for Redis Storage. On boot, it creates a RedisConnectionPool for each
+    /// configurated `RedisID` on each `EventLoop`.
     class Lifecycle: LifecycleHandler {
         unowned let redisStorage: RedisStorage
         init(redisStorage: RedisStorage) {
@@ -74,12 +85,16 @@ extension RedisStorage {
                 }
             }
 
-            
             self.redisStorage.pools = newPools
         }
 
+        /// Close each connection pool
         func shutdown(_ application: Application) {
-            let shutdownFuture = redisStorage.pools.values.map { pool in
+            self.redisStorage.lock.lock()
+            defer {
+                self.redisStorage.lock.unlock()
+            }
+            let shutdownFuture: EventLoopFuture<Void> = redisStorage.pools.values.map { pool in
                 let promise = pool.eventLoop.makePromise(of: Void.self)
                 pool.close(promise: promise)
                 return promise.futureResult
@@ -88,13 +103,15 @@ extension RedisStorage {
             do {
                 try shutdownFuture.wait()
             } catch {
-                application.logger.error("Error shutting down redis connection pools, possibly because it was never connected: \(error)")
+                application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
             }
         }
     }
 }
 
 private extension RedisStorage {
+    /// Since a `RedisConnectionPool` is created for each `RedisID` on each `EventLoop`, combining
+    /// the `RedisID` and the `EventLoop` into one key simplifies the storage dictionary
     struct PoolKey: Hashable, StorageKey {
         typealias Value = RedisConnectionPool
 
