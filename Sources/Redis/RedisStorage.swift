@@ -69,10 +69,13 @@ extension RedisStorage {
                         configuration: .init(configuration.value, defaultLogger: application.logger),
                         boundEventLoop: eventLoop
                     )
+                    application.storage.set(PoolKey.self, to: newPool) { pools in }
                     let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: configuration.key)
                     newPools[newKey] = newPool
                 }
             }
+
+            
             self.redisStorage.pools = newPools
         }
 
@@ -93,7 +96,9 @@ extension RedisStorage {
 }
 
 private extension RedisStorage {
-    struct PoolKey: Hashable {
+    struct PoolKey: Hashable, StorageKey {
+        typealias Value = RedisConnectionPool
+
         let eventLoopKey: EventLoop.Key
         let redisID: RedisID
     }
