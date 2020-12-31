@@ -64,13 +64,12 @@ extension RedisStorage {
             }
             var newPools = [PoolKey: RedisConnectionPool]()
             for eventLoop in application.eventLoopGroup.makeIterator() {
-                for configuration in redisStorage.configurations {
+                for (redisID, configuration) in redisStorage.configurations {
                     let newPool = RedisConnectionPool(
-                        configuration: .init(configuration.value, defaultLogger: application.logger),
-                        boundEventLoop: eventLoop
-                    )
-                    application.storage.set(PoolKey.self, to: newPool) { pools in }
-                    let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: configuration.key)
+                        configuration: .init(configuration, defaultLogger: application.logger),
+                        boundEventLoop: eventLoop)
+
+                    let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
                     newPools[newKey] = newPool
                 }
             }
