@@ -21,13 +21,14 @@ jobs:
         env: ${{ fromJSON(needs.getcidata.outputs.environments) }}
         include:
           - services: {}
-            redis_url_1: localhost
+            redis_url_1: redis://localhost:6379
+            redis_url_2: redis://localhost:6380
           - env: { os: ubuntu-latest }
             services: 
               redis: { image: redis, ports: [ '6379:6379' ] } 
-              redis2: { image: redis, ports: [ '6380:6379' ] } 
+              redis2: { image: redis, ports: [ '6379:6379' ] } 
             redis_url_1: redis://redis:6379
-            redis_url_2: redis://redis2:6380
+            redis_url_2: redis://redis2:6379
     runs-on: ${{ matrix.env.os }}
     container: ${{ matrix.env.image }}
     services: ${{ matrix.services }}
