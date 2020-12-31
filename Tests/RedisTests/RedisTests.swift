@@ -3,15 +3,22 @@ import Vapor
 import Logging
 import XCTVapor
 
+
+
 class RedisTests: XCTestCase {
+    var redisConfig: RedisConfiguration!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        redisConfig = try RedisConfiguration(hostname: env("REDIS_HOSTNAME") ?? "localhost", port: 6379)
+    }
+
     func testApplicationRedis() throws {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis.configuration = try .init(
-            hostname: env("REDIS_HOSTNAME") ?? "localhost",
-            port: 6379
-        )
+        app.redises.use(redisConfig)
+        try app.boot()
 
         let info = try app.redis.send(command: "INFO").wait()
         XCTAssertContains(info.string, "redis_version")
@@ -21,10 +28,7 @@ class RedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis.configuration = try .init(
-            hostname: env("REDIS_HOSTNAME") ?? "localhost",
-            port: 6379
-        )
+        app.redises.use(redisConfig)
 
         app.get("test") { req in
             req.redis.send(command: "INFO").map {
@@ -38,24 +42,19 @@ class RedisTests: XCTestCase {
     }
     
     func testInitConfigurationURL() throws {
-        let app = Application()
-        defer { app.shutdown() }
-
         let urlStr = URL(string: "redis://name:password@localhost:6379/0")
         
-        let redisConfigurations = try RedisConfiguration(url: urlStr!)
+        let redisConfiguration = try RedisConfiguration(url: urlStr!)
         
-        XCTAssertEqual(redisConfigurations.password, "password")
-        XCTAssertEqual(redisConfigurations.database, 0)
+        XCTAssertEqual(redisConfiguration.password, "password")
+        XCTAssertEqual(redisConfiguration.database, 0)
     }
     
     func testCodable() throws {
         let app = Application()
         defer { app.shutdown() }
-        app.redis.configuration = try .init(
-            hostname: env("REDIS_HOSTNAME") ?? "localhost",
-            port: 6379
-        )
+        app.redises.use(redisConfig)
+        try app.boot()
 
         struct Hello: Codable {
             var message: String
@@ -79,10 +78,8 @@ class RedisTests: XCTestCase {
     func testSessions() throws {
         let app = Application(.testing)
         defer { app.shutdown() }
-        app.redis.configuration = try .init(
-            hostname: env("REDIS_HOSTNAME") ?? "localhost",
-            port: 6379
-        )
+        
+        app.redises.use(redisConfig)
 
         // Configure sessions.
         app.sessions.use(.redis)
