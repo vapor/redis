@@ -44,13 +44,13 @@ jobs:
         run: mkdir -p /tmp/redis2 && redis-server .github/redis2.conf
 
       - name: Test Redis 1 connection
-        run: redis-cli -u redis://localhost:6379/0 INFO
+        run: redis-cli -u redis://127.0.0.1:6379/0 INFO
       - name: Test Redis 2 connection
-        run: redis-cli -u redis://localhost:6380/0 INFO
+        run: redis-cli -u redis://127.0.0.1:6380/0 INFO
 
       - name: Run tests with Thread Sanitizer
         timeout-minutes: 20
         run: swift test --enable-test-discovery --sanitize=thread
         env:
-          REDIS_URL_1: redis://localhost:6379/0
-          REDIS_URL_2: redis://localhost:6380/0 
+          REDIS_URL_1: redis://127.0.0.1:6379/0
+          REDIS_URL_2: redis://127.0.0.1:6380/0 

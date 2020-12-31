@@ -13,8 +13,8 @@ class MultipleRedisTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        redisConfig1 = try RedisConfiguration(url: Environment.get("REDIS_URL_1") ?? "redis://localhost:6379/0")
-        redisConfig2 = try RedisConfiguration(url: Environment.get("REDIS_URL_2") ?? "redis://localhost:6380/0")
+        redisConfig1 = try RedisConfiguration(url: Environment.get("REDIS_URL_1") ?? "redis://127.0.0.1:6379/0")
+        redisConfig2 = try RedisConfiguration(url: Environment.get("REDIS_URL_2") ?? "redis://127.0.0.1:6380/0")
     }
 
     func testApplicationRedis() throws {
