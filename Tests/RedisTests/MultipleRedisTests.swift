@@ -8,20 +8,23 @@ class MultipleRedisTests: XCTestCase {
     let one = RedisID(string: "one")
     let two = RedisID(string: "two")
 
-    var redisConfig1: RedisConfiguration!
+    var redisConfig: RedisConfiguration!
     var redisConfig2: RedisConfiguration!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        redisConfig1 = try RedisConfiguration(url: Environment.get("REDIS_URL_1") ?? "redis://127.0.0.1:6379/0")
-        redisConfig2 = try RedisConfiguration(url: Environment.get("REDIS_URL_2") ?? "redis://127.0.0.1:6380/0")
+
+        redisConfig = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
+                                             port: Environment.get("REDIS_PORT")?.int ?? 6379)
+        redisConfig2 = try RedisConfiguration(hostname: Environment.get("REDIS_2_HOSTNAME") ?? "localhost",
+                                             port: Environment.get("REDIS_2_PORT")?.int ?? 6380)
     }
 
     func testApplicationRedis() throws {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redises.use(redisConfig1, as: one)
+        app.redises.use(redisConfig, as: one)
         app.redises.use(redisConfig2, as: two)
 
         try app.boot()
@@ -37,7 +40,7 @@ class MultipleRedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redises.use(redisConfig1, as: one)
+        app.redises.use(redisConfig, as: one)
         app.redises.use(redisConfig2, as: two)
 
         try app.boot()
