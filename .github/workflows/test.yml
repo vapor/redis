@@ -32,26 +32,25 @@ jobs:
 
       - name: Set up Redis servers via Homebrew (Mac)
         if: ${{ matrix.env.toolchain != '' }}
-        run: brew install redis && brew services start redis
+        run: brew install redis 
 
       - name: Set up Redis servers via apt-get (Ubuntu)
         if: ${{ matrix.env.toolchain == '' }}
         run: apt-get update && apt-get install -y redis
 
-      - name: Start Redis 1 (Ubuntu)
+      - name: Start Redis 1
         run: mkdir -p /tmp/redis1 && redis-server .github/redis1.conf
-        if: ${{ matrix.env.toolchain == '' }}
       - name: Start Redis 2
         run: mkdir -p /tmp/redis2 && redis-server .github/redis2.conf
 
       - name: Test Redis 1 connection
-        run: redis-cli -u redis://127.0.0.1:6379/0 INFO
+        run: redis-cli -u redis://localhost:6379/0 INFO
       - name: Test Redis 2 connection
-        run: redis-cli -u redis://127.0.0.1:6380/0 INFO
+        run: redis-cli -u redis://localhost:6380/0 INFO
 
       - name: Run tests with Thread Sanitizer
         timeout-minutes: 20
         run: swift test --enable-test-discovery --sanitize=thread
         env:
-          REDIS_URL_1: redis://127.0.0.1:6379/0
-          REDIS_URL_2: redis://127.0.0.1:6380/0 
+          REDIS_URL_1: redis://localhost:6379/0
+          REDIS_URL_2: redis://localhost:6380/0 
