@@ -52,7 +52,7 @@ jobs:
         timeout-minutes: 20
         run: swift test --enable-test-discovery --sanitize=thread
         env:
-          REDIS_HOST: localhost
+          REDIS_HOSTNAME: localhost
           REDIS_PORT: 6379
-          REDIS_HOST_2: localhost
+          REDIS_HOSTNAME_2: localhost
           REDIS_PORT_2: 6380
