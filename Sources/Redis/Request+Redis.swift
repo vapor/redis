@@ -5,7 +5,7 @@ extension Request {
         let redisID: RedisID
         let request: Request
 
-        init(request: Request, redisID: RedisID = .default) {
+        init(request: Request, redisID: RedisID) {
             self.request = request
             self.redisID = redisID
         }

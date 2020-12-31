@@ -1,15 +1,12 @@
 import Foundation
 import Vapor
 
-public struct RedisID: Hashable, Codable, CustomStringConvertible {
-    public typealias Value = RedisClient
+public struct RedisID: Hashable, Codable {
 
     public let string: String
     public init(string: String) {
         self.string = string
     }
-
-    public var description: String { string }
 
     public static let `default` = RedisID(string: "default")
 }

@@ -8,7 +8,7 @@ extension Application {
 
         let redisID: RedisID
         let application: Application
-        init(application: Application, redisID: RedisID = .default) {
+        init(application: Application, redisID: RedisID) {
             self.application = application
             self.redisID = redisID
         }
