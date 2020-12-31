@@ -8,7 +8,7 @@ class RedisTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        redisConfig = try RedisConfiguration(hostname: env("REDIS_HOSTNAME") ?? "localhost", port: 6379)
+        redisConfig = try RedisConfiguration(url: env("REDIS_URL_1") ?? "redis://localhost:6379/0")
     }
 
     func testApplicationRedis() throws {

@@ -1,1 +1,8 @@
-#error("Please test with `swift test --enable-test-discovery`")
+import XCTest
+
+import RedisTests
+
+var tests = [XCTestCaseEntry]()
+tests += RedisTests.__allTests()
+
+XCTMain(tests)

@@ -1,5 +1,5 @@
 name: test
-on: { pull_request: {} }
+on: { pull_request: {}, push: {} }
 
 jobs:
   getcidata:
@@ -21,10 +21,13 @@ jobs:
         env: ${{ fromJSON(needs.getcidata.outputs.environments) }}
         include:
           - services: {}
-            redis_host: localhost
+            redis_url_1: localhost
           - env: { os: ubuntu-latest }
-            services: { redis: { image: redis, ports: [ '6379:6379' ] } }
-            redis_host: redis
+            services: 
+              redis: { image: redis, ports: [ '6379:6379' ] } 
+              redis2: { image: redis, ports: [ '6380:6379' ] } 
+            redis_url_1: redis://redis:6379
+            redis_url_2: redis://redis2:6380
     runs-on: ${{ matrix.env.os }}
     container: ${{ matrix.env.image }}
     services: ${{ matrix.services }}
@@ -36,11 +39,12 @@ jobs:
         if: ${{ matrix.env.toolchain != '' }}
       - name: Set up Redis server via Homebrew
         if: ${{ matrix.env.toolchain != '' }}
-        run: brew install redis && brew services start redis
+        run: brew install redis && redis-server /usr/local/etc/redis.conf --sentinel --daemonize yes && redis-server /usr/local/etc/redis.conf --sentinel --daemonize yes --port 6380
       - name: Check out Redis
         uses: actions/checkout@v2
       - name: Run tests with Thread Sanitizer
         timeout-minutes: 20
         run: swift test --enable-test-discovery --sanitize=thread
         env:
-          REDIS_HOSTNAME: ${{ matrix.redis_host }}
+          REDIS_URL_1: ${{ matrix.redis_url_1 }}
+          REDIS_URL_2: ${{ matrix.redis_url_2 }}
