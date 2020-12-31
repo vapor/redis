@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  tests:
+    build: 
+      context: .
+      dockerfile: tests.Dockerfile
+    environment:
+      - REDIS_URL_1=redis://redis:6379
+      - REDIS_URL_2=redis://redis2:6379
+    depends_on: [redis, redis2]
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  redis2:
+    image: redis
+    ports:
+      - 6380:6379
+

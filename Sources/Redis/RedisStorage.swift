@@ -89,7 +89,7 @@ extension RedisStorage {
             do {
                 try shutdownFuture.wait()
             } catch {
-                application.logger.error("Error shutting down redis connection pools: \(error)")
+                application.logger.error("Error shutting down redis connection pools, possibly because it was never connected: \(error)")
             }
         }
     }
