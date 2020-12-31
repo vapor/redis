@@ -20,7 +20,7 @@ class MultipleRedisTests: XCTestCase {
         redisConfig  = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME")    ?? "localhost",
                                               port:     Environment.get("REDIS_PORT")?.int   ?? 6379)
         redisConfig2 = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME_2")  ?? "localhost",
-                                              port:     Environment.get("REDIS_PORT_2")?.int ?? 6380)
+                                              port:     Environment.get("REDIS_PORT_2")?.int ?? 6379)
     }
 
     func testApplicationRedis() throws {
@@ -49,12 +49,12 @@ class MultipleRedisTests: XCTestCase {
         app.redis(.two).configuration = redisConfig2
 
         app.get("test1") { req in
-            req.redis(.one).send(command: "INFO").map {
+            req.redis(.one).get("name").map {
                 $0.description
             }
         }
         app.get("test2") { req in
-            req.redis(.two).send(command: "INFO").map {
+            req.redis(.two).get("name").map {
                 $0.description
             }
         }

@@ -6,8 +6,10 @@ services:
       context: .
       dockerfile: tests.Dockerfile
     environment:
-      - REDIS_URL_1=redis://redis:6379
-      - REDIS_URL_2=redis://redis2:6379
+      - REDIS_HOSTNAME=redis
+      - REDIS_PORT=6379
+      - REDIS_HOSTNAME_2=redis2
+      - REDIS_PORT_2=6379
     depends_on: [redis, redis2]
 
   redis:
