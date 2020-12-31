@@ -2,52 +2,16 @@ import Vapor
 
 extension Application {
     public struct Redis {
-        internal func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
-            let key = AllPoolsKey(eventLoopKey: eventLoop.key, redisID: self.redisID)
-            guard let pool = self.application.redises.allPools[key] else {
-                fatalError("The app may not have finished booting. EventLoop must be from Application's EventLoopGroup.")
-            }
-            return pool
-        }
-
-        struct PubSubKey: StorageKey, LockKey {
-            typealias Value = [RedisID: RedisClient]
-        }
-        
-        var pubsubClient: RedisClient {
-            if let existing = self.application.storage[PubSubKey.self]?[self.redisID] {
-                return existing
-            } else {
-                let lock = self.application.locks.lock(for: PubSubKey.self)
-                lock.lock()
-                defer { lock.unlock() }
-
-                let pool = self.pool(for: self.eventLoop.next())
-
-                if let existing = self.application.storage[PubSubKey.self] {
-                    var copy = existing
-                    copy[self.redisID] = pool
-                    self.application.storage.set(PubSubKey.self, to: copy)
-                } else {
-                    self.application.storage.set(PubSubKey.self, to: [self.redisID: pool])
-                }
-                return pool
-            }
+        func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
+            self.application.redises.pool(for: self.eventLoop.next(), id: self.redisID)
         }
 
         let redisID: RedisID
         let application: Application
-        public init(application: Application, redisID: RedisID = .default) {
+        init(application: Application, redisID: RedisID = .default) {
             self.application = application
             self.redisID = redisID
         }
-    }
-}
-
-extension EventLoop {
-    typealias Key = ObjectIdentifier
-    var key: Key {
-        ObjectIdentifier(self)
     }
 }
 

@@ -30,3 +30,13 @@ extension Application {
         .init(application: self, redisID: id)
     }
 }
+
+extension Request {
+    public var redis: Redis {
+        redis(.default)
+    }
+
+    public func redis(_ id: RedisID) -> Redis {
+        .init(request: self, redisID: id)
+    }
+}

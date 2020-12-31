@@ -2,46 +2,45 @@ import Vapor
 
 extension Application {
     private struct RedisesStorageKey: StorageKey {
-        typealias Value = Redises
+        typealias Value = RedisStorage
     }
-    public var redises: Redises {
+    public var redises: RedisStorage {
         if self.storage[RedisesStorageKey.self] == nil {
-            let new = Redises()
-            self.storage[RedisesStorageKey.self] = new
-            self.lifecycle.use(Redises.Lifecycle(redises: new))
+            let redisStorage = RedisStorage()
+            self.storage[RedisesStorageKey.self] = redisStorage
+            self.lifecycle.use(RedisStorage.Lifecycle(redisStorage: redisStorage))
         }
         return self.storage[RedisesStorageKey.self]!
     }
 }
 
-extension Redises {
+extension RedisStorage {
     class Lifecycle: LifecycleHandler {
-        let redises: Redises
-        init(redises: Redises) {
-            self.redises = redises
+        unowned let redisStorage: RedisStorage
+        init(redisStorage: RedisStorage) {
+            self.redisStorage = redisStorage
         }
         func willBoot(_ application: Application) throws {
-            self.redises.lock.lock()
+            self.redisStorage.lock.lock()
             defer {
-                self.redises.lock.unlock()
+                self.redisStorage.lock.unlock()
             }
-            var allPools = [AllPoolsKey: RedisConnectionPool]()
+            var newPools = [PoolKey: RedisConnectionPool]()
             for eventLoop in application.eventLoopGroup.makeIterator() {
-
-                for configuration in redises.configurations {
+                for configuration in redisStorage.configurations {
                     let newPool = RedisConnectionPool(
                         configuration: .init(configuration.value, defaultLogger: application.logger),
                         boundEventLoop: eventLoop
                     )
-                    let newKey: AllPoolsKey = AllPoolsKey(eventLoopKey: eventLoop.key, redisID: configuration.key)
-                    allPools[newKey] = newPool
+                    let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: configuration.key)
+                    newPools[newKey] = newPool
                 }
             }
-            self.redises.allPools = allPools
+            self.redisStorage.pools = newPools
         }
 
         func shutdown(_ application: Application) {
-            let shutdownFuture = redises.allPools.values.map { pool in
+            let shutdownFuture = redisStorage.pools.values.map { pool in
                 let promise = pool.eventLoop.makePromise(of: Void.self)
                 pool.close(promise: promise)
                 return promise.futureResult
@@ -57,19 +56,28 @@ extension Redises {
     }
 }
 
-struct AllPoolsKey: Hashable {
-    let eventLoopKey: EventLoop.Key
-    let redisID: RedisID
+private extension RedisStorage {
+    struct PoolKey: Hashable {
+        let eventLoopKey: EventLoop.Key
+        let redisID: RedisID
+    }
 }
 
-public class Redises {
+private extension EventLoop {
+    typealias Key = ObjectIdentifier
+    var key: Key {
+        ObjectIdentifier(self)
+    }
+}
+
+public class RedisStorage {
     private var lock: Lock
     private var configurations: [RedisID: RedisConfiguration]
-    private var defaultID: RedisID?
-    internal fileprivate(set) var allPools: [AllPoolsKey: RedisConnectionPool] = [:]
+    fileprivate var pools: [PoolKey: RedisConnectionPool]
 
     public init() {
         self.configurations = [:]
+        self.pools = [:]
         self.lock = .init()
     }
 
@@ -79,10 +87,12 @@ public class Redises {
         self.configurations[id] = redisConfiguration
     }
 
-    public func `default`(to id: RedisID) {
-        self.lock.lock()
-        defer { self.lock.unlock() }
-        self.defaultID = id
+    public func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
+        let key = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
+        guard let pool = pools[key] else {
+            fatalError("The app may not have finished booting. EventLoop must be from Application's EventLoopGroup.")
+        }
+        return pool
     }
 
     public func configuration(for id: RedisID = .default) -> RedisConfiguration? {
