@@ -20,18 +20,18 @@ class RedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redises.use(redisConfig)
+        app.redis.configuration = redisConfig
         try app.boot()
 
         let info = try app.redis.send(command: "INFO").wait()
         XCTAssertContains(info.string, "redis_version")
     }
 
-    func testBackwardsCompatibility() throws {
+    func testAlternateSyntax() throws {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis.configuration = redisConfig
+        app.redises.use(redisConfig)
         try app.boot()
 
         let info = try app.redis.send(command: "INFO").wait()
@@ -42,7 +42,7 @@ class RedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redises.use(redisConfig)
+        app.redis.configuration = redisConfig
 
         app.get("test") { req in
             req.redis.send(command: "INFO").map {
@@ -67,7 +67,7 @@ class RedisTests: XCTestCase {
     func testCodable() throws {
         let app = Application()
         defer { app.shutdown() }
-        app.redises.use(redisConfig)
+        app.redis.configuration = redisConfig
         try app.boot()
 
         struct Hello: Codable {
