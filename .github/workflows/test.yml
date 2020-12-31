@@ -30,24 +30,24 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
 
-      - name: Set up Redis servers via Homebrew
+      - name: Set up Redis servers via Homebrew (Mac)
         if: ${{ matrix.env.toolchain != '' }}
         run: brew install redis 
 
-      - name: Set up Redis servers via apt-get
+      - name: Set up Redis servers via apt-get (Ubuntu)
         if: ${{ matrix.env.toolchain == '' }}
         run: apt-get update && apt-get install -y redis
 
-      - name: start redis 1
+      - name: Start Redis 1
         run: mkdir -p /usr/local/var/db/redis1 && redis-server .github/redis1.conf
-      - name: start redis 2
+      - name: Start Redis 2
         run: mkdir -p /usr/local/var/db/redis2 && redis-server .github/redis2.conf
 
       - name: Test Redis 1 connection
         run: redis-cli -u redis://localhost:6379/0 INFO
       - name: Test Redis 2 connection
-        run: redis-cli -u redis://localhost:6380/0  INFO
-      - run: cat .github/workflows/test.yml
+        run: redis-cli -u redis://localhost:6380/0 INFO
+
       - name: Run tests with Thread Sanitizer
         timeout-minutes: 20
         run: swift test --enable-test-discovery --sanitize=thread
