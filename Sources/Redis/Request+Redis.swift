@@ -2,7 +2,7 @@ import Vapor
 
 extension Request {
     public var redis: Redis {
-        .init(request: self, redisID: nil)
+        .init(request: self)
     }
 
     public func redis(_ redisID: RedisID) -> Redis {
@@ -10,10 +10,10 @@ extension Request {
     }
 
     public struct Redis {
-        let redisID: RedisID?
+        let redisID: RedisID
         let request: Request
 
-        public init(request: Request, redisID: RedisID? = nil) {
+        public init(request: Request, redisID: RedisID = .default) {
             self.request = request
             self.redisID = redisID
         }
