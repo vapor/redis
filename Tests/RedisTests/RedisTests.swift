@@ -27,17 +27,6 @@ class RedisTests: XCTestCase {
         XCTAssertContains(info.string, "redis_version")
     }
 
-    func testAlternateSyntax() throws {
-        let app = Application()
-        defer { app.shutdown() }
-
-        app.redises.use(redisConfig)
-        try app.boot()
-
-        let info = try app.redis.send(command: "INFO").wait()
-        XCTAssertContains(info.string, "redis_version")
-    }
-
     func testRouteHandlerRedis() throws {
         let app = Application()
         defer { app.shutdown() }
@@ -93,7 +82,7 @@ class RedisTests: XCTestCase {
         let app = Application(.testing)
         defer { app.shutdown() }
         
-        app.redises.use(redisConfig)
+        app.redis.configuration = redisConfig
 
         // Configure sessions.
         app.sessions.use(.redis)

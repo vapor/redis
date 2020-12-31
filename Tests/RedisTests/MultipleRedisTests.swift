@@ -27,8 +27,8 @@ class MultipleRedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redises.use(redisConfig, as: .one)
-        app.redises.use(redisConfig2, as: .two)
+        app.redis(.one).configuration = redisConfig
+        app.redis(.two).configuration = redisConfig2
 
         try app.boot()
 

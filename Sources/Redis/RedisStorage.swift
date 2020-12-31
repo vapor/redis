@@ -4,7 +4,7 @@ extension Application {
     private struct RedisesStorageKey: StorageKey {
         typealias Value = RedisStorage
     }
-    public var redises: RedisStorage {
+    var redisStorage: RedisStorage {
         if self.storage[RedisesStorageKey.self] == nil {
             let redisStorage = RedisStorage()
             self.storage[RedisesStorageKey.self] = redisStorage
