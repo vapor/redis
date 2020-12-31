@@ -42,11 +42,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Set up Redis servers via Homebrew
         if: ${{ matrix.env.toolchain != '' }}
-        run: brew install redis && redis-server github-actions/redis1.conf && redis-server github-actions/redis2.conf 
+        run: brew install redis && redis-server .github/redis1.conf && redis-server .github/redis2.conf 
 
-      - name: Set up Redis servers via Homebrew
+      - name: Set up Redis cli servers via apt-get
         if: ${{ matrix.env.toolchain == '' }}
-        run: sudo apt-get install -y redis
+        run: apt-get install -y redis
       - name: Test Redis 1 connection
         run: redis-cli -u ${{ matrix.redis_url_1 }} INFO
       - name: Test Redis 2 connection
