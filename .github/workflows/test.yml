@@ -41,6 +41,10 @@ jobs:
       - name: Set up Redis servers via Homebrew
         if: ${{ matrix.env.toolchain != '' }}
         run: brew install redis && redis-server github-actions/redis1.conf && redis-server github-actions/redis2.conf 
+      - name: Test Redis 1 connection
+        run: redis-cli -u ${{ matrix.redis_url_1 }} INFO
+      - name: Test Redis 2 connection
+        run: redis-cli -u ${{ matrix.redis_url_2 }} INFO
       - name: Check out Redis
         uses: actions/checkout@v2
       - name: Run tests with Thread Sanitizer
