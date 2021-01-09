@@ -6,7 +6,7 @@ extension Application.Redis {
     }
 
     var pubsubClient: RedisClient {
-        if let existing = self.application.storage[PubSubKey.self]?[self.redisID] {
+        if let existing = self.application.storage[PubSubKey.self]?[self.id] {
             return existing
         } else {
             let lock = self.application.locks.lock(for: PubSubKey.self)
@@ -17,10 +17,10 @@ extension Application.Redis {
 
             if let existingStorage = self.application.storage[PubSubKey.self] {
                 var copy = existingStorage
-                copy[self.redisID] = pool
+                copy[self.id] = pool
                 self.application.storage.set(PubSubKey.self, to: copy)
             } else {
-                self.application.storage.set(PubSubKey.self, to: [self.redisID: pool])
+                self.application.storage.set(PubSubKey.self, to: [self.id: pool])
             }
             return pool
         }

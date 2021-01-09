@@ -7,13 +7,13 @@ extension Application.Redis {
     /// when `extension RedisID { static let myRedisID = RedisID(...) }` has been defined.
     public var configuration: RedisConfiguration? {
         get {
-            self.application.redisStorage.configuration(for: self.redisID)
+            self.application.redisStorage.configuration(for: self.id)
         }
         nonmutating set {
             guard let newConfig = newValue else {
                 return
             }
-            self.application.redisStorage.use(newConfig, as: self.redisID)
+            self.application.redisStorage.use(newConfig, as: self.id)
         }
     }
 }
