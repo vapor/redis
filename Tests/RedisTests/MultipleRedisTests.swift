@@ -5,8 +5,8 @@ import Logging
 import XCTVapor
 
 fileprivate extension RedisID {
-    static let one = RedisID(string: "one")
-    static let two = RedisID(string: "two")
+    static let one: RedisID = "one"
+    static let two: RedisID = "two"
 }
 
 class MultipleRedisTests: XCTestCase {

@@ -1,10 +1,9 @@
 import Vapor
 
 extension Application.Redis {
-    /// Configure Redis connection information.
-    /// In `configure.swift`, write `app.redis.configuration = RedisConfiguration(...)`
-    /// Or for alternate Redis IDs, `app.redis(.myRedisId).configuration = RedisConfiguration(...)`
-    /// when `extension RedisID { static let myRedisID = RedisID(...) }` has been defined.
+    /// The Redis configuration to use to communicate with a Redis instance.
+    ///
+    /// See `Application.Redis.id`
     public var configuration: RedisConfiguration? {
         get {
             self.application.redisStorage.configuration(for: self.id)
