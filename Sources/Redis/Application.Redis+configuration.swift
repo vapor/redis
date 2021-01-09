@@ -10,7 +10,7 @@ extension Application.Redis {
         }
         nonmutating set {
             guard let newConfig = newValue else {
-                return
+                fatalError("editing pools after application has booted is not supported")
             }
             self.application.redisStorage.use(newConfig, as: self.id)
         }
