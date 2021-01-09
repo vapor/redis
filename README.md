@@ -20,16 +20,3 @@
 
 <span>This project is based off the Redis driver <a href="https://gitlab.com/Mordil/RediStack" target="_blank"><bold>RediStack</bold></a>. For the majority of API documentation, refer to <a href="https://docs.redistack.info" target="_blank">docs.redistack.info</a>.</span>
 </p>
-
-
-<h2>Tests</h2>
-To run the tests during local development
-<code>
-docker-compose up
-REDIS_PORT_2=6380 swift test
-</code>
-
-or use docker-compose:
-<code>
-docker-compose -f docker-compose.tests.yml run --rm tests
-</code>

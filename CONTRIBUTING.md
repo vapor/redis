@@ -32,6 +32,17 @@ New features are little more complex. If you come up with an idea, you should fo
 
 - After everything is approved, one of the maintainers will merge the PR and tag a new release. Congratulations on your contribution!
 
+# Running tests
+
+
+To run the tests during local development
+
+```
+docker-compose up
+swift test
+```
+
+
 # Maintainers
 
 - [@pedantix](https://github.com/pedantix)
