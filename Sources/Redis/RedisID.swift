@@ -28,12 +28,10 @@ public struct RedisID: Hashable,
         self.rawValue = rawValue
     }
 
-    public init(_ string: String){
+    public init(_ string: String) {
         self.rawValue = string
     }
 
-    public typealias RawValue = String
-    public typealias StringLiteralType = String
     public var description: String { rawValue }
     public static func < (lhs: RedisID, rhs: RedisID) -> Bool { lhs.rawValue < rhs.rawValue }
 
