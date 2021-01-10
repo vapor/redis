@@ -39,9 +39,9 @@ jobs:
         run: apt-get update && apt-get install -y redis
 
       - name: Start Redis 1
-        run: mkdir -p /tmp/redis1 && redis-server .github/redis1.conf
+        run: redis-server .github/redis1.conf
       - name: Start Redis 2
-        run: mkdir -p /tmp/redis2 && redis-server .github/redis2.conf
+        run: redis-server .github/redis2.conf
 
       - name: Test Redis 1 connection
         run: redis-cli -u redis://localhost:6379/0 INFO
