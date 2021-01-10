@@ -66,6 +66,6 @@ extension Request {
     /// - Parameter id: The Redis ID that identifies the specific connection to be used.
     /// - Returns: A Redis connection that is identified by the given `id`.
     public func redis(_ id: RedisID) -> Redis {
-        .init(request: self, redisID: id)
+        .init(request: self, id: id)
     }
 }
