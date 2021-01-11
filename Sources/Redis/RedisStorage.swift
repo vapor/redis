@@ -1,16 +1,16 @@
 import Vapor
 
 extension Application {
-    private struct RedisesStorageKey: StorageKey {
+    private struct RedisStorageKey: StorageKey {
         typealias Value = RedisStorage
     }
     var redisStorage: RedisStorage {
-        if self.storage[RedisesStorageKey.self] == nil {
+        if self.storage[RedisStorageKey.self] == nil {
             let redisStorage = RedisStorage()
-            self.storage[RedisesStorageKey.self] = redisStorage
+            self.storage[RedisStorageKey.self] = redisStorage
             self.lifecycle.use(RedisStorage.Lifecycle(redisStorage: redisStorage))
         }
-        return self.storage[RedisesStorageKey.self]!
+        return self.storage[RedisStorageKey.self]!
     }
 }
 
@@ -19,14 +19,11 @@ class RedisStorage {
     private var configurations: [RedisID: RedisConfiguration]
     fileprivate var pools: [PoolKey: RedisConnectionPool] {
         willSet {
-            if didBoot {
+            guard pools.isEmpty else {
                 fatalError("editing pools after application has booted is not supported")
-            } else {
-                didBoot = true
             }
         }
     }
-    private var didBoot: Bool = false
 
     init() {
         self.configurations = [:]
@@ -35,9 +32,15 @@ class RedisStorage {
     }
 
     func use(_ redisConfiguration: RedisConfiguration, as id: RedisID = .default) {
-        self.lock.lock()
-        defer { self.lock.unlock() }
         self.configurations[id] = redisConfiguration
+    }
+
+    func configuration(for id: RedisID = .default) -> RedisConfiguration? {
+        self.configurations[id]
+    }
+
+    func ids() -> Set<RedisID> {
+        Set(self.configurations.keys)
     }
 
     func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
@@ -48,15 +51,7 @@ class RedisStorage {
         return pool
     }
 
-    func configuration(for id: RedisID = .default) -> RedisConfiguration? {
-        self.lock.lock()
-        defer { self.lock.unlock() }
-        return self.configurations[id]
-    }
 
-    func ids() -> Set<RedisID> {
-        return self.lock.withLock { Set(self.configurations.keys) }
-    }
 }
 
 extension RedisStorage {
@@ -68,19 +63,21 @@ extension RedisStorage {
             self.redisStorage = redisStorage
         }
 
-        func willBoot(_ application: Application) throws {
+        func didBoot(_ application: Application) throws {
             self.redisStorage.lock.lock()
             defer {
                 self.redisStorage.lock.unlock()
             }
-            var newPools = [PoolKey: RedisConnectionPool]()
+            var newPools: [PoolKey: RedisConnectionPool] = [:]
             for eventLoop in application.eventLoopGroup.makeIterator() {
                 for (redisID, configuration) in redisStorage.configurations {
+
+                    let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
+
                     let newPool = RedisConnectionPool(
                         configuration: .init(configuration, defaultLogger: application.logger),
                         boundEventLoop: eventLoop)
 
-                    let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
                     newPools[newKey] = newPool
                 }
             }
