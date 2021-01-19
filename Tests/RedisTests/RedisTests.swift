@@ -12,8 +12,10 @@ class RedisTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        redisConfig = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
-                                             port:     Environment.get("REDIS_PORT")?.int ?? 6379)
+        redisConfig = try RedisConfiguration(
+            hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
+            port: Environment.get("REDIS_PORT")?.int ?? 6379
+        )
     }
 
     func testApplicationRedis() throws {

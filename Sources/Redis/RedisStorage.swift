@@ -5,22 +5,24 @@ extension Application {
         typealias Value = RedisStorage
     }
     var redisStorage: RedisStorage {
-        if self.storage[RedisStorageKey.self] == nil {
-            let redisStorage = RedisStorage()
-            self.storage[RedisStorageKey.self] = redisStorage
-            self.lifecycle.use(RedisStorage.Lifecycle(redisStorage: redisStorage))
+        if let existing = self.storage[RedisStorageKey.self] {
+            return existing
         }
-        return self.storage[RedisStorageKey.self]!
+
+        let redisStorage = RedisStorage()
+        self.storage[RedisStorageKey.self] = redisStorage
+        self.lifecycle.use(RedisStorage.Lifecycle(redisStorage: redisStorage))
+        return redisStorage
     }
 }
 
-class RedisStorage {
+final class RedisStorage {
     private var lock: Lock
     private var configurations: [RedisID: RedisConfiguration]
     fileprivate var pools: [PoolKey: RedisConnectionPool] {
         willSet {
             guard pools.isEmpty else {
-                fatalError("editing pools after application has booted is not supported")
+                fatalError("Modifying connection pools after application has booted is not supported")
             }
         }
     }
@@ -50,14 +52,12 @@ class RedisStorage {
         }
         return pool
     }
-
-
 }
 
 extension RedisStorage {
     /// Lifecyle Handler for Redis Storage. On boot, it creates a RedisConnectionPool for each
     /// configurated `RedisID` on each `EventLoop`.
-    class Lifecycle: LifecycleHandler {
+    final class Lifecycle: LifecycleHandler {
         unowned let redisStorage: RedisStorage
         init(redisStorage: RedisStorage) {
             self.redisStorage = redisStorage

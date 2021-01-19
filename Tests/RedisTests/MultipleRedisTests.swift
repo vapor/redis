@@ -17,10 +17,12 @@ class MultipleRedisTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        redisConfig  = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME")    ?? "localhost",
-                                              port:     Environment.get("REDIS_PORT")?.int   ?? 6379)
-        redisConfig2 = try RedisConfiguration(hostname: Environment.get("REDIS_HOSTNAME_2")  ?? "localhost",
-                                              port:     Environment.get("REDIS_PORT_2")?.int ?? 6380)
+        redisConfig  = try RedisConfiguration(
+            hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
+            port: Environment.get("REDIS_PORT")?.int ?? 6379)
+        redisConfig2 = try RedisConfiguration(
+            hostname: Environment.get("REDIS_HOSTNAME_2") ?? "localhost",
+            port: Environment.get("REDIS_PORT_2")?.int ?? 6380)
     }
 
     func testApplicationRedis() throws {
@@ -38,8 +40,6 @@ class MultipleRedisTests: XCTestCase {
         let info2 = try app.redis(.two).send(command: "INFO").wait()
         XCTAssertContains(info2.string, "redis_version")
     }
-
-    
 
     func testSetAndGet() throws {
         let app = Application()
@@ -71,7 +71,6 @@ class MultipleRedisTests: XCTestCase {
         try app.test(.GET, "test2") { res in
             XCTAssertContains(res.body.string, "redis2")
         }
-
 
         XCTAssertEqual("redis1", try app.redis(.one).get("name").wait().string)
         XCTAssertEqual("redis2", try app.redis(.two).get("name").wait().string)
