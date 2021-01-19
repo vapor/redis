@@ -4,7 +4,7 @@ import Vapor
 import Logging
 import XCTVapor
 
-fileprivate extension RedisID {
+private extension RedisID {
     static let one: RedisID = "one"
     static let two: RedisID = "two"
 }
@@ -17,7 +17,7 @@ class MultipleRedisTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        redisConfig  = try RedisConfiguration(
+        redisConfig = try RedisConfiguration(
             hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
             port: Environment.get("REDIS_PORT")?.int ?? 6379)
         redisConfig2 = try RedisConfiguration(
@@ -65,17 +65,14 @@ class MultipleRedisTests: XCTestCase {
         try app.redis(.two).set("name", to: "redis2").wait()
 
         try app.test(.GET, "test1") { res in
-            XCTAssertContains(res.body.string, "redis1")
+            XCTAssertEqual(res.body.string, "redis1")
         }
 
         try app.test(.GET, "test2") { res in
-            XCTAssertContains(res.body.string, "redis2")
+            XCTAssertEqual(res.body.string, "redis2")
         }
 
         XCTAssertEqual("redis1", try app.redis(.one).get("name").wait().string)
         XCTAssertEqual("redis2", try app.redis(.two).get("name").wait().string)
-
-        XCTAssertNotEqual("redis1", try app.redis(.two).get("name").wait().string)
-        XCTAssertNotEqual("redis2", try app.redis(.one).get("name").wait().string)
     }
 }
