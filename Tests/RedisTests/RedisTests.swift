@@ -119,6 +119,21 @@ class RedisTests: XCTestCase {
         }
     }
     
+    func testCache() throws {
+        let app = Application()
+        defer { app.shutdown() }
+        
+        app.caches.use(.redis)
+        app.redis.configuration = try .init(
+            hostname: env("REDIS_HOSTNAME") ?? "localhost",
+            port: 6379
+        )
+
+        try XCTAssertNil(app.cache.get("foo", as: String.self).wait())
+        try app.cache.set("foo", to: "bar").wait()
+        try XCTAssertEqual(app.cache.get("foo", as: String.self).wait(), "bar")
+    }
+    
     override class func setUp() {
         XCTAssert(isLoggingConfigured)
     }
