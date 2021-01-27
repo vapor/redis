@@ -1,5 +1,5 @@
 name: test
-on: { pull_request: {}, push: {} }
+on: { pull_request: {}, push: { branches: [master, main] } }
 
 jobs:
   getcidata:
@@ -37,6 +37,10 @@ jobs:
       - name: Install Redis via apt-get (Ubuntu)
         if: ${{ startsWith(matrix.env.os, 'ubuntu') }}
         run: apt-get update && apt-get install -y redis
+
+      - name: Install Redis via ??? (Windows)
+        if: ${{ startsWith(matrix.env.os, 'windows') }}
+        run: echo NOT IMPLEMENTED; exit 1
 
       - name: Start Redis 1
         run: redis-server .github/redis1.conf
