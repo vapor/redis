@@ -3,7 +3,6 @@
 @_exported import struct NIO.TimeAmount
 import enum NIO.SocketAddress
 
-/// Configuration for connecting to a Redis instance
 public struct RedisConfiguration {
     public typealias ValidationError = RedisConnection.Configuration.ValidationError
 
