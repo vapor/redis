@@ -3,7 +3,7 @@ import Vapor
 extension Application {
     public struct Redis {
         func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
-            self.application.redisStorage.pool(for: self.eventLoop.next(), id: self.id)
+            self.application.redisStorage.pool(for: eventLoop, id: self.id)
         }
 
         public let id: RedisID
