@@ -125,10 +125,7 @@ class RedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
         
-        app.redis.configuration = try .init(
-            hostname: env("REDIS_HOSTNAME") ?? "localhost",
-            port: 6379
-        )
+        app.redis.configuration = redisConfig
         app.caches.use(.redis)
 
         try XCTAssertNil(app.cache.get("foo", as: String.self).wait())
