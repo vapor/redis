@@ -1,5 +1,5 @@
 name: test
-on: { pull_request: {} }
+on: { pull_request: {}, push: { branches: [master, main] } }
 
 jobs:
   getcidata:
@@ -19,28 +19,43 @@ jobs:
       fail-fast: false
       matrix:
         env: ${{ fromJSON(needs.getcidata.outputs.environments) }}
-        include:
-          - services: {}
-            redis_host: localhost
-          - env: { os: ubuntu-latest }
-            services: { redis: { image: redis, ports: [ '6379:6379' ] } }
-            redis_host: redis
     runs-on: ${{ matrix.env.os }}
     container: ${{ matrix.env.image }}
-    services: ${{ matrix.services }}
     steps: 
       - name: Select toolchain
         uses: maxim-lobanov/setup-xcode@v1.2.1
         with:
           xcode-version: ${{ matrix.env.toolchain }}
         if: ${{ matrix.env.toolchain != '' }}
-      - name: Set up Redis server via Homebrew
-        if: ${{ matrix.env.toolchain != '' }}
-        run: brew install redis && brew services start redis
-      - name: Check out Redis
+      - name: Check out source code
         uses: actions/checkout@v2
-      - name: Run tests with Thread Sanitizer
+
+      - name: Install Redis via Homebrew (Mac)
+        if: ${{ startsWith(matrix.env.os, 'macos') }}
+        run: brew install redis 
+
+      - name: Install Redis via apt-get (Ubuntu)
+        if: ${{ startsWith(matrix.env.os, 'ubuntu') }}
+        run: apt-get update && apt-get install -y redis
+
+      - name: Install Redis via ??? (Windows)
+        if: ${{ startsWith(matrix.env.os, 'windows') }}
+        run: echo NOT IMPLEMENTED; exit 1
+
+      - name: Start Redis 1
+        run: redis-server .github/redis1.conf
+      - name: Start Redis 2
+        run: redis-server .github/redis2.conf
+
+      - name: Test Redis 1 connection
+        run: redis-cli -u redis://localhost:6379/0 INFO
+      - name: Test Redis 2 connection
+        run: redis-cli -u redis://localhost:6380/0 INFO
+
+      - name: Run 'RedisTests' tests with Thread Sanitizer
         timeout-minutes: 20
-        run: swift test --enable-test-discovery --sanitize=thread
-        env:
-          REDIS_HOSTNAME: ${{ matrix.redis_host }}
+        run: swift test --enable-test-discovery --sanitize=thread --filter RedisTests
+
+      - name: Run 'MultipleRedisTests' tests with Thread Sanitizer
+        timeout-minutes: 20
+        run: swift test --enable-test-discovery --sanitize=thread --filter MultipleRedisTests
