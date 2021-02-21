@@ -127,6 +127,7 @@ class RedisTests: XCTestCase {
         
         app.redis.configuration = redisConfig
         app.caches.use(.redis)
+        try app.boot()
 
         try XCTAssertNil(app.cache.get("foo", as: String.self).wait())
         try app.cache.set("foo", to: "bar").wait()

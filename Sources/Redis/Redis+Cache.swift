@@ -2,14 +2,22 @@ import Vapor
 
 extension Application.Caches {
     public var redis: Cache {
-        RedisCache(client: self.application.redis)
+        self.redis(.default)
+    }
+  
+    public func redis(_ id: RedisID) -> Cache {
+        RedisCache(client: self.application.redis(id))
     }
 }
 
 extension Application.Caches.Provider {
     public static var redis: Self {
+        self.redis(.default)
+    }
+
+    public static func redis(_ id: RedisID) -> Self {
         .init {
-            $0.caches.use { $0.caches.redis }
+            $0.caches.use { $0.caches.redis(id) }
         }
     }
 }
