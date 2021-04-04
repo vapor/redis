@@ -48,4 +48,4 @@ swift test
 - [@pedantix](https://github.com/pedantix)
 - [@Mordil](https://github.com/Mordil)
 
-See the [Vapor maintainers doc](https://github.com/vapor/vapor/blob/master/Docs/maintainers.md) for more information. 
+See the [Vapor maintainers doc](https://github.com/vapor/vapor/blob/main/Docs/maintainers.md) for more information. 
