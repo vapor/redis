@@ -132,6 +132,12 @@ class RedisTests: XCTestCase {
         try XCTAssertNil(app.cache.get("foo", as: String.self).wait())
         try app.cache.set("foo", to: "bar").wait()
         try XCTAssertEqual(app.cache.get("foo", as: String.self).wait(), "bar")
+        
+        // Test expiration
+        try app.cache.set("foo2", to: "bar2", expiresIn: .seconds(1)).wait()
+        try XCTAssertEqual(app.cache.get("foo2", as: String.self).wait(), "bar2")
+        sleep(1)
+        try XCTAssertNil(app.cache.get("foo2", as: String.self).wait())
     }
     
     override class func setUp() {

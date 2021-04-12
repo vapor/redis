@@ -34,17 +34,24 @@ private struct RedisCache: Cache {
     {
         self.client.get(RedisKey(key), asJSON: T.self)
     }
-    
-    func set<T>(_ key: String, to value: T?) -> EventLoopFuture<Void>
+
+    func set<T>(_ key: String, to value: T?, expiresIn expirationTime: CacheExpirationTime?) -> EventLoopFuture<Void>
         where T: Encodable
-    
     {
         if let value = value {
-            return self.client.set(RedisKey(key), toJSON: value)
+            if let expirationTime = expirationTime {
+                return self.client.setex(RedisKey(key), toJSON: value, expirationInSeconds: expirationTime.seconds)
+            } else {
+                return self.client.set(RedisKey(key), toJSON: value)
+            }
         } else {
             return self.client.delete(RedisKey(key))
                 .transform(to: ())
         }
+    }
+    
+    func set<T>(_ key: String, to value: T?) -> EventLoopFuture<Void> where T : Encodable {
+        self.set(key, to: value, expiresIn: nil)
     }
     
     func `for`(_ request: Request) -> Self {
