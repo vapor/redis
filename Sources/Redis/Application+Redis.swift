@@ -2,19 +2,24 @@ import Vapor
 
 extension Application {
     public struct Redis {
-        func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
-            self.application.redisStorage.pool(for: eventLoop, id: self.id)
-        }
-
         public let id: RedisID
-        let application: Application
-        init(application: Application, redisID: RedisID) {
+
+        @usableFromInline
+        internal let application: Application
+
+        internal init(application: Application, redisID: RedisID) {
             self.application = application
             self.id = redisID
+        }
+
+        @usableFromInline
+        internal func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
+            self.application.redisStorage.pool(for: eventLoop, id: self.id)
         }
     }
 }
 
+// MARK: RedisClient
 extension Application.Redis: RedisClient {
     public var eventLoop: EventLoop {
         self.application.eventLoopGroup.next()
@@ -28,7 +33,7 @@ extension Application.Redis: RedisClient {
 
     public func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
         self.application.redis(self.id)
-            .pool(for: self.eventLoop.next())
+            .pool(for: self.eventLoop)
             .logging(to: self.application.logger)
             .send(command: command, with: arguments)
     }
@@ -69,5 +74,22 @@ extension Application.Redis: RedisClient {
             .pubsubClient
             .logging(to: self.application.logger)
             .punsubscribe(from: patterns)
+    }
+}
+
+// MARK: Connection Leasing
+extension Application.Redis {
+    /// Provides temporary exclusive access to a single Redis client.
+    ///
+    /// See `RedisConnectionPool.leaseConnection(_:)` for more details.
+    @inlinable
+    public func withBorrowedConnection<Result>(
+        _ operation: @escaping (RedisClient) -> EventLoopFuture<Result>
+    ) -> EventLoopFuture<Result> {
+        return self.application.redis(self.id)
+            .pool(for: self.eventLoop)
+            .leaseConnection {
+                return operation($0.logging(to: self.application.logger))
+            }
     }
 }

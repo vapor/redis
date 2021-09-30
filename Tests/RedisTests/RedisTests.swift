@@ -7,8 +7,12 @@ extension String {
     var int: Int? { Int(self) }
 }
 
-class RedisTests: XCTestCase {
+final class RedisTests: XCTestCase {
     var redisConfig: RedisConfiguration!
+
+    override class func setUp() {
+        XCTAssert(isLoggingConfigured)
+    }
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -17,7 +21,10 @@ class RedisTests: XCTestCase {
             port: Environment.get("REDIS_PORT")?.int ?? 6379
         )
     }
+}
 
+// MARK: Core RediStack integration
+extension RedisTests {
     func testApplicationRedis() throws {
         let app = Application()
         defer { app.shutdown() }
@@ -45,7 +52,11 @@ class RedisTests: XCTestCase {
             XCTAssertContains(res.body.string, "redis_version")
         }
     }
-    
+}
+
+// MARK: Configuration Validation
+
+extension RedisTests {
     func testInitConfigurationURL() throws {
         let urlStr = URL(string: "redis://name:password@localhost:6379/0")
         
@@ -54,7 +65,10 @@ class RedisTests: XCTestCase {
         XCTAssertEqual(redisConfiguration.password, "password")
         XCTAssertEqual(redisConfiguration.database, 0)
     }
-    
+}
+
+// MARK: Redis extensions
+extension RedisTests {
     func testCodable() throws {
         let app = Application()
         defer { app.shutdown() }
@@ -79,7 +93,61 @@ class RedisTests: XCTestCase {
 
         let _ = try app.redis.delete(["hello"]).wait()
     }
-    
+
+    func testRequestConnectionLeasing() throws {
+        let app = Application()
+        defer { app.shutdown() }
+        app.redis.configuration = self.redisConfig
+
+        app.get("test") {
+            $0.redis
+                .withBorrowedClient { client in
+                    return client.send(command: "MULTI")
+                        .flatMap { _ in client.send(command: "PING") }
+                        .flatMap { queuedResponse -> EventLoopFuture<RESPValue> in
+                            XCTAssertEqual(queuedResponse.string, "QUEUED")
+                            return client.send(command: "EXEC")
+                        }
+                }
+                .map { result -> [String] in
+                    guard let response = result.array else { return [] }
+                    return response.compactMap(String.init(fromRESP:))
+                }
+        }
+
+        try app.test(.GET, "test") {
+            XCTAssertEqual($0.body.string, #"["PONG"]"#)
+        }
+    }
+
+    func testApplicationConnectionLeasing() throws {
+        let app = Application()
+        defer { app.shutdown() }
+
+        app.redis.configuration = self.redisConfig
+        try app.boot()
+
+        let result = try app.redis
+            .withBorrowedConnection { client in
+                return client.send(command: "MULTI")
+                  .flatMap { _ in client.send(command: "PING") }
+                  .flatMap { queuedResponse -> EventLoopFuture<RESPValue> in
+                      XCTAssertEqual(queuedResponse.string, "QUEUED")
+                      return client.send(command: "EXEC")
+                  }
+            }
+            .map { result -> [String] in
+                guard let response = result.array else { return [] }
+                return response.compactMap(String.init(fromRESP:))
+            }
+            .wait()
+
+        XCTAssertEqual(result, ["PONG"])
+    }
+}
+
+// MARK: Vapor integration
+extension RedisTests {
     func testSessions() throws {
         let app = Application(.testing)
         defer { app.shutdown() }
@@ -139,11 +207,9 @@ class RedisTests: XCTestCase {
         sleep(1)
         try XCTAssertNil(app.cache.get("foo2", as: String.self).wait())
     }
-    
-    override class func setUp() {
-        XCTAssert(isLoggingConfigured)
-    }
 }
+
+// MARK: Test Helpers
 
 let isLoggingConfigured: Bool = {
     var env = Environment.testing
