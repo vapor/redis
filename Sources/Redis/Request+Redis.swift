@@ -3,15 +3,18 @@ import Vapor
 extension Request {
     public struct Redis {
         public let id: RedisID
-        let request: Request
 
-        init(request: Request, id: RedisID) {
+        @usableFromInline
+        internal let request: Request
+
+        internal init(request: Request, id: RedisID) {
             self.request = request
             self.id = id
         }
     }
 }
 
+// MARK: RedisClient
 extension Request.Redis: RedisClient {
     public var eventLoop: EventLoop {
         self.request.eventLoop
@@ -66,5 +69,22 @@ extension Request.Redis: RedisClient {
             .pubsubClient
             .logging(to: self.request.logger)
             .punsubscribe(from: patterns)
+    }
+}
+
+// MARK: Connection Leasing
+extension Request.Redis {
+    /// Provides temporary exclusive access to a single Redis client.
+    ///
+    /// See `RedisConnectionPool.leaseConnection(_:)` for more details.
+    @inlinable
+    public func withBorrowedClient<Result>(
+        _ operation: @escaping (RedisClient) -> EventLoopFuture<Result>
+    ) -> EventLoopFuture<Result> {
+        return self.request.application.redis(self.id)
+            .pool(for: self.eventLoop)
+            .leaseConnection {
+                return operation($0.logging(to: self.request.logger))
+            }
     }
 }
