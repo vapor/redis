@@ -207,6 +207,29 @@ extension RedisTests {
         sleep(1)
         try XCTAssertNil(app.cache.get("foo2", as: String.self).wait())
     }
+    
+    func testCacheCustomCoders() throws {
+        let app = Application()
+        defer { app.shutdown() }
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        
+        app.redis.configuration = redisConfig
+        app.caches.use(.redis(encoder: encoder, decoder: decoder))
+        try app.boot()
+        
+        let date = Date(timeIntervalSince1970: 10_000_000_000)
+        let isoDate = ISO8601DateFormatter().string(from: date)
+        
+        try app.cache.set("test", to: date).wait()
+        let rawValue = try XCTUnwrap(app.redis.get("test", as: String.self).wait())
+        XCTAssertEqual(rawValue, #""\#(isoDate)""#)
+        let value = try XCTUnwrap(app.cache.get("test", as: Date.self).wait())
+        XCTAssertEqual(value, date)
+    }
 }
 
 // MARK: Test Helpers
