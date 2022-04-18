@@ -24,6 +24,11 @@ final class RedisTests: XCTestCase {
 }
 
 // MARK: Core RediStack integration
+
+extension RedisCommand {
+    fileprivate static var info: RedisCommand<String> { .init(keyword: "INFO", arguments: []) }
+}
+
 extension RedisTests {
     func testApplicationRedis() throws {
         let app = Application()
@@ -32,8 +37,9 @@ extension RedisTests {
         app.redis.configuration = redisConfig
         try app.boot()
 
-        let info = try app.redis.send(command: "INFO").wait()
-        XCTAssertContains(info.string, "redis_version")
+
+        let info = try app.redis.send(.info).wait()
+        XCTAssertContains(info, "redis_version")
     }
 
     func testRouteHandlerRedis() throws {
@@ -43,9 +49,7 @@ extension RedisTests {
         app.redis.configuration = redisConfig
 
         app.get("test") { req in
-            req.redis.send(command: "INFO").map {
-                $0.description
-            }
+            req.redis.send(.info)
         }
 
         try app.test(.GET, "test") { res in
@@ -102,11 +106,11 @@ extension RedisTests {
         app.get("test") {
             $0.redis
                 .withBorrowedClient { client in
-                    return client.send(command: "MULTI")
-                        .flatMap { _ in client.send(command: "PING") }
+                    return client.send(RedisCommand<String>(keyword: "MULTI", arguments: []), eventLoop: nil, logger: nil)
+                        .flatMap { _ in client.send(.ping(), eventLoop: nil, logger: nil) }
                         .flatMap { queuedResponse -> EventLoopFuture<RESPValue> in
-                            XCTAssertEqual(queuedResponse.string, "QUEUED")
-                            return client.send(command: "EXEC")
+                            XCTAssertEqual(queuedResponse, "QUEUED")
+                            return client.send(RedisCommand<RESPValue>(keyword: "EXEC", arguments: []), eventLoop: nil, logger: nil)
                         }
                 }
                 .map { result -> [String] in
@@ -129,12 +133,12 @@ extension RedisTests {
 
         let result = try app.redis
             .withBorrowedConnection { client in
-                return client.send(command: "MULTI")
-                  .flatMap { _ in client.send(command: "PING") }
-                  .flatMap { queuedResponse -> EventLoopFuture<RESPValue> in
-                      XCTAssertEqual(queuedResponse.string, "QUEUED")
-                      return client.send(command: "EXEC")
-                  }
+                return client.send(RedisCommand<String>(keyword: "MULTI", arguments: []), eventLoop: nil, logger: nil)
+                    .flatMap { _ in client.send(.ping(), eventLoop: nil, logger: nil) }
+                    .flatMap { queuedResponse -> EventLoopFuture<RESPValue> in
+                        XCTAssertEqual(queuedResponse, "QUEUED")
+                        return client.send(RedisCommand<RESPValue>(keyword: "EXEC", arguments: []), eventLoop: nil, logger: nil)
+                    }
             }
             .map { result -> [String] in
                 guard let response = result.array else { return [] }
