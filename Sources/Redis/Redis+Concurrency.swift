@@ -21,8 +21,8 @@ extension Application.Redis {
         eventLoop: EventLoop? = nil,
         logger: Logger? = nil,
         messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
-        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
-        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+        onSubscribe subscribeHandler: RedisSubscribeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisUnsubscribeHandler?
     ) async throws {
         try await self.application.redis(self.id)
             .pubsubClient
@@ -44,8 +44,8 @@ extension Application.Redis {
         eventLoop: EventLoop? = nil,
         logger: Logger? = nil,
         messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
-        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
-        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+        onSubscribe subscribeHandler: RedisSubscribeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisUnsubscribeHandler?
     ) async throws {
         try await self.application.redis(self.id)
             .pubsubClient
@@ -107,8 +107,8 @@ extension Request.Redis {
         eventLoop: EventLoop? = nil,
         logger: Logger? = nil,
         messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
-        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
-        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+        onSubscribe subscribeHandler: RedisSubscribeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisUnsubscribeHandler?
     ) async throws {
         try await self.request.application.redis(self.id)
             .pubsubClient
@@ -130,8 +130,8 @@ extension Request.Redis {
         eventLoop: EventLoop? = nil,
         logger: Logger? = nil,
         messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
-        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
-        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+        onSubscribe subscribeHandler: RedisSubscribeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisUnsubscribeHandler?
     ) async throws {
         try await self.request.application.redis(self.id)
             .pubsubClient

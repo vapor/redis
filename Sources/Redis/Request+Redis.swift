@@ -41,8 +41,8 @@ extension Request.Redis: RedisClient {
         eventLoop: EventLoop? = nil,
         logger: Logger? = nil,
         messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
-        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
-        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+        onSubscribe subscribeHandler: RedisSubscribeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisUnsubscribeHandler?
     ) -> EventLoopFuture<Void> {
         self.request.application.redis(self.id)
             .pubsubClient
@@ -62,8 +62,8 @@ extension Request.Redis: RedisClient {
         eventLoop: EventLoop? = nil,
         logger: Logger? = nil,
         messageReceiver receiver: @escaping RedisSubscriptionMessageReceiver,
-        onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
-        onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
+        onSubscribe subscribeHandler: RedisSubscribeHandler?,
+        onUnsubscribe unsubscribeHandler: RedisUnsubscribeHandler?
     ) -> EventLoopFuture<Void> {
         self.request.application.redis(self.id)
             .pubsubClient
