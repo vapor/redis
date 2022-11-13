@@ -1,4 +1,4 @@
-#if compiler(>=5.5) && canImport(_Concurrency)
+#if canImport(_Concurrency)
 import NIOCore
 import Vapor
 
@@ -148,6 +148,5 @@ extension Request.Redis {
             .get()
     }
 }
-
 
 #endif

@@ -66,8 +66,8 @@ extension RedisTests {
         
         let redisConfiguration = try RedisConfiguration(url: urlStr!)
         
-        XCTAssertEqual(redisConfiguration.password, "password")
-        XCTAssertEqual(redisConfiguration.database, 0)
+        XCTAssertEqual(redisConfiguration.connectionConfiguration.password, "password")
+        XCTAssertEqual(redisConfiguration.connectionConfiguration.initialDatabase, 0)
     }
 }
 

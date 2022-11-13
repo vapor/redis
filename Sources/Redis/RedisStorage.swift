@@ -1,3 +1,4 @@
+import struct NIOConcurrencyHelpers.NIOLock
 import Vapor
 
 extension Application {
@@ -17,7 +18,7 @@ extension Application {
 }
 
 final class RedisStorage {
-    private var lock: Lock
+    private var lock: NIOLock
     private var configurations: [RedisID: RedisConfiguration]
     fileprivate var pools: [PoolKey: RedisConnectionPool] {
         willSet {
@@ -75,7 +76,7 @@ extension RedisStorage {
                     let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
 
                     let newPool = RedisConnectionPool(
-                        configuration: .init(configuration, defaultLogger: application.logger),
+                        configuration: configuration.logging(to: application.logger),
                         boundEventLoop: eventLoop)
 
                     newPools[newKey] = newPool

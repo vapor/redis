@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "Redis", targets: ["Redis"])
     ],
     dependencies: [
-        .package(url: "https://gitlab.com/mordil/RediStack.git", .revisionItem("9da5773e7a45f3fc38293ae1d66849a3f9093f56")),
+        .package(url: "https://gitlab.com/mordil/RediStack.git", .revisionItem("0465b34ef3f45c45d751100ef572c1afb4b1b50c")),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.50.0"),
     ],
     targets: [

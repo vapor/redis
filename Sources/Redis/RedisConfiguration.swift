@@ -3,43 +3,68 @@
 @_exported import struct NIO.TimeAmount
 import enum NIO.SocketAddress
 
-/// Configuration for connecting to a Redis instance
-public struct RedisConfiguration {
+/// Configuration for connection to one or more Redis instances with Vapor.
+public typealias RedisConfiguration = RedisConnectionPool.Configuration
+
+extension RedisConfiguration {
     public typealias ValidationError = RedisConnection.Configuration.ValidationError
 
-    public var serverAddresses: [SocketAddress]
-    public var password: String?
-    public var database: Int?
-    public var pool: PoolOptions
+    public static var defaultConnectionCountBehavior: RedisConnectionPool.ConnectionCountBehavior {
+        return .strict(maximumConnectionCount: 2, minimumConnectionCount: 0)
+    }
+    public static var defaultRetryStrategy: RedisConnectionPool.PoolConnectionRetryStrategy { .exponentialBackoff() }
+}
 
-    public struct PoolOptions {
-        public var maximumConnectionCount: RedisConnectionPoolSize
-        public var minimumConnectionCount: Int
-        public var connectionBackoffFactor: Float32
-        public var initialConnectionBackoffDelay: TimeAmount
-        public var connectionRetryTimeout: TimeAmount?
+// MARK: Convenience Initializers
 
-        public init(
-            maximumConnectionCount: RedisConnectionPoolSize = .maximumActiveConnections(2),
-            minimumConnectionCount: Int = 0,
-            connectionBackoffFactor: Float32 = 2,
-            initialConnectionBackoffDelay: TimeAmount = .milliseconds(100),
-            connectionRetryTimeout: TimeAmount? = nil
-        ) {
-            self.maximumConnectionCount = maximumConnectionCount
-            self.minimumConnectionCount = minimumConnectionCount
-            self.connectionBackoffFactor = connectionBackoffFactor
-            self.initialConnectionBackoffDelay = initialConnectionBackoffDelay
-            self.connectionRetryTimeout = connectionRetryTimeout
-        }
+extension RedisConfiguration {
+    public init(
+        hostname: String,
+        port: Int = RedisConnection.Configuration.defaultPort,
+        password: String? = nil,
+        database: Int? = nil,
+        connectionCountBehavior: RedisConnectionPool.ConnectionCountBehavior = Self.defaultConnectionCountBehavior,
+        connectionRetryStrategy: RedisConnectionPool.PoolConnectionRetryStrategy = Self.defaultRetryStrategy,
+        poolDefaultLogger: Logger? = nil,
+        connectionDefaultLogger: Logger? = nil
+    ) throws {
+        self.init(
+            initialServerConnectionAddresses: [try .makeAddressResolvingHost(hostname, port: port)],
+            connectionCountBehavior: connectionCountBehavior,
+            connectionConfiguration: .init(
+                initialDatabase: database,
+                password: password,
+                defaultLogger: connectionDefaultLogger
+            ),
+            retryStrategy: connectionRetryStrategy,
+            poolDefaultLogger: poolDefaultLogger
+        )
     }
 
-    public init(url string: String, pool: PoolOptions = .init()) throws {
+    public init(
+        url string: String,
+        connectionCountBehavior: RedisConnectionPool.ConnectionCountBehavior = Self.defaultConnectionCountBehavior,
+        connectionRetryStrategy: RedisConnectionPool.PoolConnectionRetryStrategy = Self.defaultRetryStrategy,
+        poolDefaultLogger: Logger? = nil,
+        connectionDefaultLogger: Logger? = nil
+    ) throws {
         guard let url = URL(string: string) else { throw ValidationError.invalidURLString }
-        try self.init(url: url, pool: pool)
+        try self.init(
+            url: url,
+            connectionCountBehavior: connectionCountBehavior,
+            connectionRetryStrategy: connectionRetryStrategy,
+            poolDefaultLogger: poolDefaultLogger,
+            connectionDefaultLogger: connectionDefaultLogger
+        )
     }
 
-    public init(url: URL, pool: PoolOptions = .init()) throws {
+    public init(
+        url: URL,
+        connectionCountBehavior: RedisConnectionPool.ConnectionCountBehavior = Self.defaultConnectionCountBehavior,
+        connectionRetryStrategy: RedisConnectionPool.PoolConnectionRetryStrategy = Self.defaultRetryStrategy,
+        poolDefaultLogger: Logger? = nil,
+        connectionDefaultLogger: Logger? = nil
+    ) throws {
         guard
             let scheme = url.scheme,
             !scheme.isEmpty
@@ -52,24 +77,10 @@ public struct RedisConfiguration {
             port: url.port ?? RedisConnection.Configuration.defaultPort,
             password: url.password,
             database: Int(url.lastPathComponent),
-            pool: pool
-        )
-    }
-
-    public init(
-        hostname: String,
-        port: Int = RedisConnection.Configuration.defaultPort,
-        password: String? = nil,
-        database: Int? = nil,
-        pool: PoolOptions = .init()
-    ) throws {
-        if database != nil && database! < 0 { throw ValidationError.outOfBoundsDatabaseID }
-
-        try self.init(
-            serverAddresses: [.makeAddressResolvingHost(hostname, port: port)],
-            password: password,
-            database: database,
-            pool: pool
+            connectionCountBehavior: connectionCountBehavior,
+            connectionRetryStrategy: connectionRetryStrategy,
+            poolDefaultLogger: poolDefaultLogger,
+            connectionDefaultLogger: connectionDefaultLogger
         )
     }
 
@@ -77,31 +88,46 @@ public struct RedisConfiguration {
         serverAddresses: [SocketAddress],
         password: String? = nil,
         database: Int? = nil,
-        pool: PoolOptions = .init()
-    ) throws {
-        self.serverAddresses = serverAddresses
-        self.password = password
-        self.database = database
-        self.pool = pool
+        connectionCountBehavior: RedisConnectionPool.ConnectionCountBehavior = Self.defaultConnectionCountBehavior,
+        connectionRetryStrategy: RedisConnectionPool.PoolConnectionRetryStrategy = Self.defaultRetryStrategy,
+        poolDefaultLogger: Logger? = nil,
+        connectionDefaultLogger: Logger? = nil
+    ) {
+        self.init(
+            initialServerConnectionAddresses: serverAddresses,
+            connectionCountBehavior: connectionCountBehavior,
+            connectionConfiguration: .init(
+                initialDatabase: database,
+                password: password,
+                defaultLogger: connectionDefaultLogger
+            ),
+            retryStrategy: connectionRetryStrategy,
+            poolDefaultLogger: poolDefaultLogger
+        )
+    }
+}
+
+// MARK: Internal Configuration Creation
+
+extension RedisConnectionPool.PoolConnectionConfiguration {
+    internal func logging(to newLogger: Logger) -> Self {
+        return .init(
+            initialDatabase: self.initialDatabase,
+            password: self.password,
+            defaultLogger: newLogger,
+            tcpClient: self.tcpClient
+        )
     }
 }
 
 extension RedisConnectionPool.Configuration {
-    internal init(_ config: RedisConfiguration, defaultLogger: Logger) {
-        self.init(
-            initialServerConnectionAddresses: config.serverAddresses,
-            maximumConnectionCount: config.pool.maximumConnectionCount,
-            connectionFactoryConfiguration: .init(
-                connectionInitialDatabase: config.database,
-                connectionPassword: config.password,
-                connectionDefaultLogger: defaultLogger,
-                tcpClient: nil
-            ),
-            minimumConnectionCount: config.pool.minimumConnectionCount,
-            connectionBackoffFactor: config.pool.connectionBackoffFactor,
-            initialConnectionBackoffDelay: config.pool.initialConnectionBackoffDelay,
-            connectionRetryTimeout: config.pool.connectionRetryTimeout,
-            poolDefaultLogger: defaultLogger
+    internal func logging(to newLogger: Logger) -> Self {
+        return .init(
+            initialServerConnectionAddresses: self.initialConnectionAddresses,
+            connectionCountBehavior: self.connectionCountBehavior,
+            connectionConfiguration: self.connectionConfiguration.logging(to: newLogger),
+            retryStrategy: self.retryStrategy,
+            poolDefaultLogger: newLogger
         )
     }
 }
