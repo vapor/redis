@@ -1,4 +1,5 @@
 import Vapor
+import NIOConcurrencyHelpers
 
 extension Application {
     private struct RedisStorageKey: StorageKey {
