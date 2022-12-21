@@ -17,7 +17,7 @@ extension Application {
 }
 
 final class RedisStorage {
-    private var lock: Lock
+    private var lock: NIOLock
     private var configurations: [RedisID: RedisConfiguration]
     fileprivate var pools: [PoolKey: RedisConnectionPool] {
         willSet {
