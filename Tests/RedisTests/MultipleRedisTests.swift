@@ -34,11 +34,13 @@ class MultipleRedisTests: XCTestCase {
 
         try app.boot()
 
-        let info1 = try app.redis(.one).send(command: "INFO").wait()
-        XCTAssertContains(info1.string, "redis_version")
+        let infoCommand = RedisCommand<String>(keyword: "INFO", arguments: [])
 
-        let info2 = try app.redis(.two).send(command: "INFO").wait()
-        XCTAssertContains(info2.string, "redis_version")
+        let info1 = try app.redis(.one).send(infoCommand).wait()
+        XCTAssertContains(info1, "redis_version")
+
+        let info2 = try app.redis(.two).send(infoCommand).wait()
+        XCTAssertContains(info2, "redis_version")
     }
 
     func testSetAndGet() throws {
@@ -49,14 +51,10 @@ class MultipleRedisTests: XCTestCase {
         app.redis(.two).configuration = redisConfig2
 
         app.get("test1") { req in
-            req.redis(.one).get("name").map {
-                $0.description
-            }
+            req.redis(.one).get("name").map { $0 ?? "nil" }
         }
         app.get("test2") { req in
-            req.redis(.two).get("name").map {
-                $0.description
-            }
+            req.redis(.two).get("name").map { $0 ?? "nil" }
         }
 
         try app.boot()
@@ -72,7 +70,7 @@ class MultipleRedisTests: XCTestCase {
             XCTAssertEqual(res.body.string, "redis2")
         }
 
-        XCTAssertEqual("redis1", try app.redis(.one).get("name").wait().string)
-        XCTAssertEqual("redis2", try app.redis(.two).get("name").wait().string)
+        XCTAssertEqual("redis1", try app.redis(.one).get("name").wait())
+        XCTAssertEqual("redis2", try app.redis(.two).get("name").wait())
     }
 }

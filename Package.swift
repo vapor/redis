@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "Redis", targets: ["Redis"])
     ],
     dependencies: [
-        .package(url: "https://gitlab.com/mordil/RediStack.git", from: "1.1.0"),
+        .package(url: "https://gitlab.com/mordil/RediStack.git", .revisionItem("0465b34ef3f45c45d751100ef572c1afb4b1b50c")),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.50.0"),
     ],
     targets: [

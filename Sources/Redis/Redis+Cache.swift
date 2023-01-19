@@ -82,7 +82,7 @@ private struct RedisCache<CacheEncoder: RedisCacheEncoder, CacheDecoder: RedisCa
             .tryFuture { try self.encoder.encode(value) }
             .flatMap {
                 if let expirationTime = expirationTime {
-                    return self.client.setex(RedisKey(key), to: $0, expirationInSeconds: expirationTime.seconds)
+                    return self.client.send(.setex(RedisKey(key), to: $0, expirationInSeconds: expirationTime.seconds), eventLoop: nil, logger: nil)
                 } else {
                     return self.client.set(RedisKey(key), to: $0)
                 }
