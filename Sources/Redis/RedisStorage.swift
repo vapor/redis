@@ -79,7 +79,8 @@ extension RedisStorage {
                     let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
 
                     let redisTLSClient: ClientBootstrap? = {
-                        guard let tlsConfig = configuration.tlsConfiguration, let tlsHost = configuration.tlsHostname else { return nil }
+                        guard let tlsConfig = configuration.tlsConfiguration,
+                                let tlsHost = configuration.tlsHostname else { return nil }
 
                         return ClientBootstrap(group: eventLoop)
                             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
@@ -87,7 +88,8 @@ extension RedisStorage {
                                 do {
                                     let sslContext = try NIOSSLContext(configuration: tlsConfig)
                                     return EventLoopFuture.andAllSucceed([
-                                        channel.pipeline.addHandler(try NIOSSLClientHandler(context: sslContext, serverHostname: tlsHost)),
+                                        channel.pipeline.addHandler(try NIOSSLClientHandler(context: sslContext,
+                                                                                            serverHostname: tlsHost)),
                                         channel.pipeline.addBaseRedisHandlers()
                                     ], on: channel.eventLoop)
                                 } catch {
