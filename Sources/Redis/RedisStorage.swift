@@ -1,5 +1,8 @@
 import Vapor
 import NIOConcurrencyHelpers
+import NIOCore
+import NIOPosix
+import NIOSSL
 
 extension Application {
     private struct RedisStorageKey: StorageKey {
@@ -75,8 +78,28 @@ extension RedisStorage {
 
                     let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
 
+                    let redisTLSClient: ClientBootstrap? = {
+                        guard let tlsConfig = configuration.tlsConfiguration,
+                                let tlsHost = configuration.tlsHostname else { return nil }
+
+                        return ClientBootstrap(group: eventLoop)
+                            .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
+                            .channelInitializer { channel in
+                                do {
+                                    let sslContext = try NIOSSLContext(configuration: tlsConfig)
+                                    return EventLoopFuture.andAllSucceed([
+                                        channel.pipeline.addHandler(try NIOSSLClientHandler(context: sslContext,
+                                                                                            serverHostname: tlsHost)),
+                                        channel.pipeline.addBaseRedisHandlers()
+                                    ], on: channel.eventLoop)
+                                } catch {
+                                    return channel.eventLoop.makeFailedFuture(error)
+                                }
+                            }
+                    }()
+
                     let newPool = RedisConnectionPool(
-                        configuration: .init(configuration, defaultLogger: application.logger),
+                        configuration: .init(configuration, defaultLogger: application.logger, customClient: redisTLSClient),
                         boundEventLoop: eventLoop)
 
                     newPools[newKey] = newPool
