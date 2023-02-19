@@ -59,3 +59,17 @@ jobs:
       - name: Run 'MultipleRedisTests' tests with Thread Sanitizer
         timeout-minutes: 20
         run: swift test --enable-test-discovery --sanitize=thread --filter MultipleRedisTests
+
+  test-exports:
+      name: Test exports
+      runs-on: ubuntu-latest
+      steps:
+        - name: Check out Vapor
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        - name: Remove exports
+          run: |
+            rm -rf Sources/Redis/Exports.swift
+        - name: Build
+          run: swift build
