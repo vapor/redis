@@ -46,7 +46,7 @@ jobs:
   
   # TODO: Use reusable workflow
 
-test-exports:
+  test-exports:
       name: Test exports
       runs-on: ubuntu-latest
       steps:
