@@ -37,10 +37,8 @@ jobs:
     services:
       redis:
         image: redis:6
-        ports: ["6379:6379"]
       redis-2:
         image: redis:6
-        ports: ["6379:6379"]
     runs-on: ubuntu-latest
     steps:
       - name: Check out package
