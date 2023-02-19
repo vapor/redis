@@ -3,6 +3,7 @@ import NIOConcurrencyHelpers
 import NIOCore
 import NIOPosix
 import NIOSSL
+import RediStack
 
 extension Application {
     private struct RedisStorageKey: StorageKey {

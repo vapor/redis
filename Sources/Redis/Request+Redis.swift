@@ -1,4 +1,5 @@
 import Vapor
+import RediStack
 
 extension Request {
     public struct Redis {

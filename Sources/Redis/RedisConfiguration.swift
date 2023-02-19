@@ -4,6 +4,7 @@ import NIOPosix
 @_exported import struct Logging.Logger
 @_exported import struct NIO.TimeAmount
 import enum NIO.SocketAddress
+import RediStack
 
 /// Configuration for connecting to a Redis instance
 public struct RedisConfiguration {
