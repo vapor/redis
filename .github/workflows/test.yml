@@ -7,7 +7,9 @@ env:
   LOG_LEVEL: debug
   SWIFT_DETERMINISTIC_HASHING: 1
   REDIS_HOSTNAME: redis
+  REDIS_PORT: 6379
   REDIS_HOSTNAME_2: redis-2
+  REDIS_PORT_2: 6379
 
 jobs:
   api-breakage:
