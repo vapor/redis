@@ -1,4 +1,5 @@
 import Vapor
+import RediStack
 
 extension Application.Redis {
     private struct PubSubKey: StorageKey, LockKey {

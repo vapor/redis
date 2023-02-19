@@ -1,9 +1,9 @@
-@_exported import struct Foundation.URL
+import Foundation
 import NIOSSL
 import NIOPosix
-@_exported import struct Logging.Logger
-@_exported import struct NIO.TimeAmount
-import enum NIO.SocketAddress
+import Logging
+import NIOCore
+import RediStack
 
 /// Configuration for connecting to a Redis instance
 public struct RedisConfiguration {

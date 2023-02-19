@@ -1,5 +1,6 @@
 import Foundation
 import Vapor
+import RediStack
 
 /// A delegate object that controls key behavior of an `Application.Redis.Sessions` driver.
 public protocol RedisSessionsDelegate {

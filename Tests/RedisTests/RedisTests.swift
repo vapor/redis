@@ -2,6 +2,7 @@ import Redis
 import Vapor
 import Logging
 import XCTVapor
+import RediStack
 
 extension String {
     var int: Int? { Int(self) }

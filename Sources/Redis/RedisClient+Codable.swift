@@ -1,5 +1,6 @@
 import AsyncKit
 import Foundation
+import RediStack
 
 extension RedisClient {
     /// Gets the provided key as a decodable type.
