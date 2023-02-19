@@ -68,8 +68,5 @@ jobs:
           uses: actions/checkout@v3
           with:
             fetch-depth: 0
-        - name: Remove exports
-          run: |
-            rm -rf Sources/Redis/Exports.swift
         - name: Build
-          run: swift build
+          run: swift build -Xswiftc -DBUILDING_DOCC
