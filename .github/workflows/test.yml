@@ -7,6 +7,7 @@ env:
   LOG_LEVEL: debug
   SWIFT_DETERMINISTIC_HASHING: 1
   REDIS_HOSTNAME: redis
+  REDIS_HOSTNAME_2: redis-2
 
 jobs:
   api-breakage:
@@ -35,6 +36,9 @@ jobs:
     container: ${{ matrix.container }}
     services:
       redis:
+        image: redis:6
+        ports: ["6379:6379"]
+      redis-2:
         image: redis:6
         ports: ["6379:6379"]
     runs-on: ubuntu-latest
