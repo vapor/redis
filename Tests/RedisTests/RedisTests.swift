@@ -3,6 +3,7 @@ import Vapor
 import Logging
 import XCTVapor
 import RediStack
+import XCTest
 
 extension String {
     var int: Int? { Int(self) }

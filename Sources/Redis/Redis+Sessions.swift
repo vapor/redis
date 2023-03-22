@@ -1,6 +1,7 @@
 import Foundation
 import Vapor
 import RediStack
+import NIOCore
 
 /// A delegate object that controls key behavior of an `Application.Redis.Sessions` driver.
 public protocol RedisSessionsDelegate {

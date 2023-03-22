@@ -1,9 +1,8 @@
-#if compiler(>=5.5) && canImport(_Concurrency)
 import NIOCore
 import Vapor
 import RediStack
+import Foundation
 
-@available(macOS 12, iOS 15, watchOS 8, tvOS 15, *)
 extension Application.Redis {
     public func send(command: String, with arguments: [RESPValue]) async throws -> RESPValue {
         try await self.application.redis(self.id)
@@ -55,7 +54,6 @@ extension Application.Redis {
     }
 }
 
-@available(macOS 12, iOS 15, watchOS 8, tvOS 15, *)
 extension RedisClient {
     /// Gets the provided key as a decodable type.
     public func get<D>(_ key: RedisKey, asJSON type: D.Type) async throws -> D?
@@ -80,7 +78,6 @@ extension RedisClient {
     }
 }
 
-@available(macOS 12, iOS 15, watchOS 8, tvOS 15, *)
 extension Request.Redis {
     public func send(command: String, with arguments: [RESPValue]) async throws -> RESPValue {
         try await self.request.application.redis(self.id)
@@ -132,6 +129,3 @@ extension Request.Redis {
             .get()
     }
 }
-
-
-#endif
