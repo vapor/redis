@@ -1,6 +1,7 @@
 import Vapor
 import Foundation
 import RediStack
+import NIOCore
 
 // MARK: RedisCacheCoder
 

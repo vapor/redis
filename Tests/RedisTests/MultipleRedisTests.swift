@@ -3,6 +3,7 @@ import Redis
 import Vapor
 import Logging
 import XCTVapor
+import XCTest
 
 private extension RedisID {
     static let one: RedisID = "one"

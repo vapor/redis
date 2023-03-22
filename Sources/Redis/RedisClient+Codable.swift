@@ -1,6 +1,7 @@
 import AsyncKit
 import Foundation
 import RediStack
+import NIOCore
 
 extension RedisClient {
     /// Gets the provided key as a decodable type.

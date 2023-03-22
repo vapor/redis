@@ -1,5 +1,7 @@
 import Vapor
 import RediStack
+import NIOCore
+import Logging
 
 extension Application {
     public struct Redis {
