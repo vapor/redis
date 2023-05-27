@@ -1,10 +1,13 @@
 name: test
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 on:
-  pull_request: { branches: ['*'] }
-  push: { branches: ['main'] }
+  pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
+  push: { branches: [ main ] }
 
 env:
-  LOG_LEVEL: debug
+  LOG_LEVEL: info
   SWIFT_DETERMINISTIC_HASHING: 1
   REDIS_HOSTNAME: redis
   REDIS_PORT: 6379
@@ -13,50 +16,55 @@ env:
 
 jobs:
   api-breakage:
-    if: github.event_name == 'pull_request'
+    if: ${{ !(github.event.pull_request.draft || false) }}
     runs-on: ubuntu-latest
-    container: swift:5.7-jammy
+    container: swift:5.8-jammy
     steps:
-      - name: Check out package
+      - name: Check out code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      # https://github.com/actions/checkout/issues/766
-      - name: Mark the workspace as safe
-        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
-      - name: Check for API breaking changes
-        run: swift package diagnose-api-breaking-changes origin/main
+        with: { 'fetch-depth': 0 }
+      - name: Run API breakage check action
+        uses: vapor/ci/.github/actions/ci-swift-check-api-breakage@reusable-workflows
 
   linux-unit:
+    if: ${{ !(github.event.pull_request.draft || false) }}
     strategy:
       fail-fast: false
       matrix:
         container:
-          - swift:5.5-bionic
           - swift:5.6-focal
           - swift:5.7-jammy
+          - swift:5.8-jammy
+          - swiftlang/swift:nightly-5.9-jammy
+          - swiftlang/swift:nightly-main-jammy
+        redis:
+          - redis:6
+          - redis:7
+    runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     services:
       redis:
-        image: redis:6
+        image: ${{ matrix.redis }}
       redis-2:
-        image: redis:6
-    runs-on: ubuntu-latest
+        image: ${{ matrix.redis }}
     steps:
+      - name: Save Redis version to env
+        run: |
+          echo REDIS_VERSION='${{ matrix.redis }}' >> $GITHUB_ENV
+      - name: Display versions
+        shell: bash
+        run: |
+          if [[ '${{ contains(matrix.container, 'nightly') }}' == 'true' ]]; then
+            SWIFT_PLATFORM="$(source /etc/os-release && echo "${ID}${VERSION_ID}")" SWIFT_VERSION="$(cat /.swift_tag)"
+            printf 'SWIFT_PLATFORM=%s\nSWIFT_VERSION=%s\n' "${SWIFT_PLATFORM}" "${SWIFT_VERSION}" >>"${GITHUB_ENV}"
+          fi
+          printf 'OS:  %s\nTag: %s\nVersion:\n' "${SWIFT_PLATFORM}-${RUNNER_ARCH}" "${SWIFT_VERSION}" && swift --version
       - name: Check out package
         uses: actions/checkout@v3
-      - name: Run unit tests with Thread Sanitizer
-        run: swift test --sanitize=thread
-  
-  # TODO: Use reusable workflow
-
-  test-exports:
-      name: Test exports
-      runs-on: ubuntu-latest
-      steps:
-        - name: Check out Vapor
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 0
-        - name: Build
-          run: swift build -Xswiftc -DBUILDING_DOCC
+      - name: Run unit tests with Thread Sanitizer and coverage
+        run: swift test --sanitize=thread --enable-code-coverage
+      - name: Submit coverage report to Codecov.io
+        uses: vapor/swift-codecov-action@v0.2
+        with:
+          cc_env_vars: 'SWIFT_VERSION,SWIFT_PLATFORM,RUNNER_OS,RUNNER_ARCH,REDIS_VERSION'
+          cc_fail_ci_if_error: false
