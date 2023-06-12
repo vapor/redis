@@ -22,19 +22,22 @@ public struct RedisConfiguration {
         public var connectionBackoffFactor: Float32
         public var initialConnectionBackoffDelay: TimeAmount
         public var connectionRetryTimeout: TimeAmount?
+        public var onUnexpectedConnectionClose: ((RedisConnection) -> Void)?
 
         public init(
             maximumConnectionCount: RedisConnectionPoolSize = .maximumActiveConnections(2),
             minimumConnectionCount: Int = 0,
             connectionBackoffFactor: Float32 = 2,
             initialConnectionBackoffDelay: TimeAmount = .milliseconds(100),
-            connectionRetryTimeout: TimeAmount? = nil
+            connectionRetryTimeout: TimeAmount? = nil,
+            onUnexpectedConnectionClose: ((RedisConnection) -> Void)? = nil
         ) {
             self.maximumConnectionCount = maximumConnectionCount
             self.minimumConnectionCount = minimumConnectionCount
             self.connectionBackoffFactor = connectionBackoffFactor
             self.initialConnectionBackoffDelay = initialConnectionBackoffDelay
             self.connectionRetryTimeout = connectionRetryTimeout
+            self.onUnexpectedConnectionClose = onUnexpectedConnectionClose
         }
     }
 
@@ -121,6 +124,7 @@ extension RedisConnectionPool.Configuration {
             connectionBackoffFactor: config.pool.connectionBackoffFactor,
             initialConnectionBackoffDelay: config.pool.initialConnectionBackoffDelay,
             connectionRetryTimeout: config.pool.connectionRetryTimeout,
+            onUnexpectedConnectionClose: config.pool.onUnexpectedConnectionClose,
             poolDefaultLogger: defaultLogger
         )
     }
