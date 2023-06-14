@@ -13,7 +13,7 @@ let package = Package(
         .library(name: "Redis", targets: ["Redis"])
     ],
     dependencies: [
-        .package(url: "https://gitlab.com/swift-server-community/RediStack.git", from: "1.4.0"),
+        .package(url: "https://gitlab.com/swift-server-community/RediStack.git", from: "1.4.1"),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.50.0"),
     ],
     targets: [
