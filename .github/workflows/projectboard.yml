@@ -1,4 +1,3 @@
-[2023-06-16 11:14:58] gwynne@kontonnoumi:~/Desktop/Vapor/mysql-nio$ git -C ../swift-nio-test/ status
 name: issue-to-project-board-workflow
 on:
   # Trigger when an issue gets labeled or deleted
