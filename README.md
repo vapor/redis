@@ -15,8 +15,8 @@
         <img src="https://github.com/vapor/redis/actions/workflows/test.yml/badge.svg?event=push" alt="CI">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-5.5-brightgreen.svg" alt="Swift 5.5">
+        <img src="http://img.shields.io/badge/swift-5.6-brightgreen.svg" alt="Swift 5.6">
     </a>
 
-<span>This project is based off the Redis driver <a href="https://gitlab.com/Mordil/RediStack" target="_blank"><bold>RediStack</bold></a>. For the majority of API documentation, refer to <a href="https://docs.redistack.info" target="_blank">docs.redistack.info</a>.</span>
+<span>This project is based off the Redis driver <a href="https://github.com/swift-server/RediStack" target="_blank"><bold>RediStack</bold></a>. For the majority of API documentation, refer to <a href="https://swiftpackageindex.com/swift-server/RediStack/documentation" target="_blank">the RediStack documentation homepage</a>.</span>
 </p>
