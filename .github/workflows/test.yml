@@ -5,7 +5,6 @@ concurrency:
 on:
   pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
   push: { branches: [ main ] }
-
 env:
   LOG_LEVEL: info
   SWIFT_DETERMINISTIC_HASHING: 1
@@ -67,4 +66,3 @@ jobs:
         uses: vapor/swift-codecov-action@v0.2
         with:
           cc_env_vars: 'SWIFT_VERSION,SWIFT_PLATFORM,RUNNER_OS,RUNNER_ARCH,REDIS_VERSION'
-          cc_fail_ci_if_error: false
