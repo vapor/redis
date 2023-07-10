@@ -16,9 +16,6 @@
     </a>
     <a href="https://swift.org">
         <img src="http://img.shields.io/badge/swift-5.6-brightgreen.svg" alt="Swift 5.6">
-   </a>
-    <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-5.8-brightgreen.svg" alt="Swift 5.8">
     </a>
 
 <span>This project is based off the Redis driver <a href="https://github.com/swift-server/RediStack" target="_blank"><bold>RediStack</bold></a>. For the majority of API documentation, refer to <a href="https://swiftpackageindex.com/swift-server/RediStack/documentation" target="_blank">the RediStack documentation homepage</a>.</span>
