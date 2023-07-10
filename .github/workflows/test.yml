@@ -1,10 +1,10 @@
 name: test
-on:
-  pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
-  push: { branches: [ main ] }
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+on:
+  pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
+  push: { branches: [ main ] }
 env:
   LOG_LEVEL: info
   SWIFT_DETERMINISTIC_HASHING: 1
@@ -39,22 +39,30 @@ jobs:
         redis:
           - redis:6
           - redis:7
+    runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     services:
       redis:
         image: ${{ matrix.redis }}
       redis-2:
         image: ${{ matrix.redis }}
-    runs-on: ubuntu-latest
     steps:
       - name: Save Redis version to env
         run: |
           echo REDIS_VERSION='${{ matrix.redis }}' >> $GITHUB_ENV
+      - name: Display versions
+        shell: bash
+        run: |
+          if [[ '${{ contains(matrix.container, 'nightly') }}' == 'true' ]]; then
+            SWIFT_PLATFORM="$(source /etc/os-release && echo "${ID}${VERSION_ID}")" SWIFT_VERSION="$(cat /.swift_tag)"
+            printf 'SWIFT_PLATFORM=%s\nSWIFT_VERSION=%s\n' "${SWIFT_PLATFORM}" "${SWIFT_VERSION}" >>"${GITHUB_ENV}"
+          fi
+          printf 'OS:  %s\nTag: %s\nVersion:\n' "${SWIFT_PLATFORM}-${RUNNER_ARCH}" "${SWIFT_VERSION}" && swift --version
       - name: Check out package
         uses: actions/checkout@v3
-      - name: Run unit tests with Thread Sanitizer
+      - name: Run unit tests with Thread Sanitizer and coverage
         run: swift test --sanitize=thread --enable-code-coverage
-      - name: Upload code coverage
+      - name: Submit coverage report to Codecov.io
         uses: vapor/swift-codecov-action@v0.2
         with:
           cc_env_vars: 'SWIFT_VERSION,SWIFT_PLATFORM,RUNNER_OS,RUNNER_ARCH,REDIS_VERSION'

@@ -20,7 +20,8 @@ final class RedisTests: XCTestCase {
         try super.setUpWithError()
         redisConfig = try RedisConfiguration(
             hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
-            port: Environment.get("REDIS_PORT")?.int ?? 6379
+            port: Environment.get("REDIS_PORT")?.int ?? 6379,
+            pool: .init(connectionRetryTimeout: .milliseconds(100))
         )
     }
 }
@@ -199,6 +200,7 @@ extension RedisTests {
         app.caches.use(.redis)
         try app.boot()
 
+        XCTAssertNoThrow(try app.redis.send(command: "DEL", with: [.init(from: "foo")]).wait())
         try XCTAssertNil(app.cache.get("foo", as: String.self).wait())
         try app.cache.set("foo", to: "bar").wait()
         try XCTAssertEqual(app.cache.get("foo", as: String.self).wait(), "bar")
