@@ -15,6 +15,11 @@ public struct RedisConfiguration {
     public let tlsConfiguration: TLSConfiguration?
     public let tlsHostname: String?
 
+    let factory: RedisFactory.Type
+    var provider: RedisFactory {
+        factory.init(configuration: self)
+    }
+
     public init(url string: String, tlsConfiguration: TLSConfiguration? = nil, pool: PoolOptions = .init()) throws {
         guard let url = URL(string: string) else { throw ValidationError.invalidURLString }
         try self.init(url: url, tlsConfiguration: tlsConfiguration, pool: pool)
@@ -83,5 +88,6 @@ public struct RedisConfiguration {
         self.tlsHostname = tlsHostname
         self.database = database
         self.pool = pool
+        factory = RedisProvider.self
     }
 }
