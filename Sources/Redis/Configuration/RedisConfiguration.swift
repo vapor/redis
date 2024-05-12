@@ -15,7 +15,7 @@ public struct RedisConfiguration {
     public let tlsConfiguration: TLSConfiguration?
     public let tlsHostname: String?
 
-    let factory: RedisFactory.Type
+    private let factory: RedisFactory.Type
     var provider: RedisFactory {
         factory.init(configuration: self)
     }
@@ -80,7 +80,8 @@ public struct RedisConfiguration {
         tlsConfiguration: TLSConfiguration? = nil,
         tlsHostname: String? = nil,
         database: Int? = nil,
-        pool: PoolOptions = .init()
+        pool: PoolOptions = .init(),
+        factory: RedisFactory.Type? = nil
     ) throws {
         self.serverAddresses = serverAddresses
         self.password = password
@@ -88,6 +89,6 @@ public struct RedisConfiguration {
         self.tlsHostname = tlsHostname
         self.database = database
         self.pool = pool
-        factory = RedisProvider.self
+        self.factory = factory ?? RedisProvider.self
     }
 }
