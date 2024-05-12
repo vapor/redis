@@ -1,30 +1,32 @@
-import Vapor
 import NIOConcurrencyHelpers
 import NIOCore
 import NIOPosix
 import NIOSSL
 import RediStack
+import Vapor
 
 extension Application {
     private struct RedisStorageKey: StorageKey {
         typealias Value = RedisStorage
     }
+
     var redisStorage: RedisStorage {
-        if let existing = self.storage[RedisStorageKey.self] {
+        if let existing = storage[RedisStorageKey.self] {
             return existing
         }
 
         let redisStorage = RedisStorage()
-        self.storage[RedisStorageKey.self] = redisStorage
-        self.lifecycle.use(RedisStorage.Lifecycle(redisStorage: redisStorage))
+        storage[RedisStorageKey.self] = redisStorage
+        lifecycle.use(RedisStorage.Lifecycle(redisStorage: redisStorage))
         return redisStorage
     }
 }
 
 final class RedisStorage {
-    private var lock: NIOLock
+    private let lock: NIOLock
+
     private var configurations: [RedisID: RedisConfiguration]
-    fileprivate var pools: [PoolKey: RedisConnectionPool] {
+    private var pools: [PoolKey: RedisClient] {
         willSet {
             guard pools.isEmpty else {
                 fatalError("Modifying connection pools after application has booted is not supported")
@@ -33,29 +35,68 @@ final class RedisStorage {
     }
 
     init() {
-        self.configurations = [:]
-        self.pools = [:]
-        self.lock = .init()
+        configurations = [:]
+        pools = [:]
+        lock = .init()
     }
 
-    func use(_ redisConfiguration: RedisConfiguration, as id: RedisID = .default) {
-        self.configurations[id] = redisConfiguration
+    func use(_ configuration: RedisConfiguration, as id: RedisID = .default) {
+        configurations[id] = configuration
     }
 
     func configuration(for id: RedisID = .default) -> RedisConfiguration? {
-        self.configurations[id]
+        configurations[id]
     }
 
     func ids() -> Set<RedisID> {
-        Set(self.configurations.keys)
+        Set(configurations.keys)
     }
 
-    func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
+    func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisClient {
         let key = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
         guard let pool = pools[key] else {
             fatalError("No redis found for id \(redisID), or the app may not have finished booting. Also, the eventLoop must be from Application's EventLoopGroup.")
         }
         return pool
+    }
+}
+
+extension RedisStorage {
+    func bootstrap(application: Application) {
+        lock.lock()
+        defer { lock.unlock() }
+        pools = configurations.reduce(into: [PoolKey: RedisClient]()) { pools, instance in
+            let (id, configuration) = instance
+
+            application
+                .eventLoopGroup
+                .makeIterator()
+                .forEach { eventLoop in
+                    let newKey: PoolKey = .init(eventLoopKey: eventLoop.key, redisID: id)
+                    let newPool: RedisClient = configuration.provider.makeClient(for: eventLoop, logger: application.logger)
+
+                    pools[newKey] = newPool
+                }
+        }
+    }
+
+    func shutdown(application: Application) {
+        lock.lock()
+        defer { lock.unlock() }
+
+        let shutdownFuture: EventLoopFuture<Void> = pools.values.compactMap { pool in
+            guard let pool = pool as? RedisConnectionPool else { return nil }
+
+            let promise = pool.eventLoop.makePromise(of: Void.self)
+            pool.close(promise: promise)
+            return promise.futureResult
+        }.flatten(on: application.eventLoopGroup.next())
+
+        do {
+            try shutdownFuture.wait()
+        } catch {
+            application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
+        }
     }
 }
 
@@ -69,64 +110,12 @@ extension RedisStorage {
         }
 
         func didBoot(_ application: Application) throws {
-            self.redisStorage.lock.lock()
-            defer {
-                self.redisStorage.lock.unlock()
-            }
-            var newPools: [PoolKey: RedisConnectionPool] = [:]
-            for eventLoop in application.eventLoopGroup.makeIterator() {
-                for (redisID, configuration) in redisStorage.configurations {
-
-                    let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
-
-                    let redisTLSClient: ClientBootstrap? = {
-                        guard let tlsConfig = configuration.tlsConfiguration,
-                                let tlsHost = configuration.tlsHostname else { return nil }
-
-                        return ClientBootstrap(group: eventLoop)
-                            .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
-                            .channelInitializer { channel in
-                                do {
-                                    let sslContext = try NIOSSLContext(configuration: tlsConfig)
-                                    return EventLoopFuture.andAllSucceed([
-                                        channel.pipeline.addHandler(try NIOSSLClientHandler(context: sslContext,
-                                                                                            serverHostname: tlsHost)),
-                                        channel.pipeline.addBaseRedisHandlers()
-                                    ], on: channel.eventLoop)
-                                } catch {
-                                    return channel.eventLoop.makeFailedFuture(error)
-                                }
-                            }
-                    }()
-
-                    let newPool = RedisConnectionPool(
-                        configuration: .init(configuration, defaultLogger: application.logger, customClient: redisTLSClient),
-                        boundEventLoop: eventLoop)
-
-                    newPools[newKey] = newPool
-                }
-            }
-
-            self.redisStorage.pools = newPools
+            redisStorage.bootstrap(application: application)
         }
 
         /// Close each connection pool
         func shutdown(_ application: Application) {
-            self.redisStorage.lock.lock()
-            defer {
-                self.redisStorage.lock.unlock()
-            }
-            let shutdownFuture: EventLoopFuture<Void> = redisStorage.pools.values.map { pool in
-                let promise = pool.eventLoop.makePromise(of: Void.self)
-                pool.close(promise: promise)
-                return promise.futureResult
-            }.flatten(on: application.eventLoopGroup.next())
-
-            do {
-                try shutdownFuture.wait()
-            } catch {
-                application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
-            }
+            redisStorage.shutdown(application: application)
         }
     }
 }
