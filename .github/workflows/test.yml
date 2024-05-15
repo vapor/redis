@@ -17,7 +17,7 @@ jobs:
   api-breakage:
     if: ${{ !(github.event.pull_request.draft || false) }}
     runs-on: ubuntu-latest
-    container: swift:5.10
+    container: swift:5.10-jammy
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -33,9 +33,9 @@ jobs:
         container:
           - swift:5.8-focal
           - swift:5.9-jammy
-          - swift:5.10
-          - swiftlang/swift:nightly-6.0
-          - swiftlang/swift:nightly-main
+          - swift:5.10-jammy
+          - swiftlang/swift:nightly-6.0-jammy
+          - swiftlang/swift:nightly-main-jammy
         redis:
           - redis:6
           - redis:7
