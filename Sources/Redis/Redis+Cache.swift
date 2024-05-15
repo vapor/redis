@@ -7,14 +7,14 @@ import NIOCore
 
 /// An encoder whose output is convertible to a `RESPValue` for storage in Redis.
 /// Directly based on `Combine.TopLevelEncoder` but can't extend it because Combine isn't available on Linux.
-public protocol RedisCacheEncoder: Sendable {
+public protocol RedisCacheEncoder {
     associatedtype Output: RESPValueConvertible
     func encode<T>(_ value: T) throws -> Self.Output where T: Encodable
 }
 
 /// A decoder whose input is convertible from a `RESPValue` loaded from Redis.
 /// Directly based on `Combine.TopLevelDecoder` but can't extend it because Combine isn't available on Linux.
-public protocol RedisCacheDecoder: Sendable {
+public protocol RedisCacheDecoder {
     associatedtype Input: RESPValueConvertible
     func decode<T>(_ type: T.Type, from: Self.Input) throws -> T where T: Decodable
 }
@@ -40,6 +40,11 @@ extension Application.Caches {
 
     /// A cache configured for a given Redis ID and using the provided encoder and decoder.
     public func redis<E: RedisCacheEncoder, D: RedisCacheDecoder>(_ id: RedisID  = .default, encoder: E, decoder: D) -> Cache {
+        RedisCache(encoder: FakeSendable(value: encoder), decoder: FakeSendable(value: decoder), client: self.application.redis(id))
+    }
+    
+    /// A cache configured for a given Redis ID and using the provided encoder and decoder wrapped as FakeSendable.
+    func redis(_ id: RedisID  = .default, encoder: FakeSendable<some RedisCacheEncoder>, decoder: FakeSendable<some RedisCacheDecoder>) -> Cache {
         RedisCache(encoder: encoder, decoder: decoder, client: self.application.redis(id))
     }
 }
@@ -59,20 +64,25 @@ extension Application.Caches.Provider {
     
     /// Configures the application cache to use the given Redis ID and the provided encoder and decoder.
     public static func redis<E: RedisCacheEncoder, D: RedisCacheDecoder>(_ id: RedisID  = .default, encoder: E, decoder: D) -> Self {
-        .init { $0.caches.use { $0.caches.redis(id, encoder: encoder, decoder: decoder) } }
+        let wrappedEncoder = FakeSendable(value: encoder)
+        let wrappedDecoder = FakeSendable(value: decoder)
+        return .init { $0.caches.use { $0.caches.redis(id, encoder: wrappedEncoder, decoder: wrappedDecoder) } }
     }
 }
 
 // MARK: - Redis cache driver
 
+/// A wrapper to silence `Sendable` warnings for `JSONDecoder` and `JSONEncoder` when not on macOS.
+struct FakeSendable<T>: @unchecked Sendable { let value: T }
+
 /// `Cache` driver for storing cache data in Redis, using a provided encoder and decoder to serialize and deserialize values respectively.
 private struct RedisCache<CacheEncoder: RedisCacheEncoder, CacheDecoder: RedisCacheDecoder>: Cache, Sendable {
-    let encoder: CacheEncoder
-    let decoder: CacheDecoder
+    let encoder: FakeSendable<CacheEncoder>
+    let decoder: FakeSendable<CacheDecoder>
     let client: RedisClient
     
     func get<T: Decodable>(_ key: String, as type: T.Type) -> EventLoopFuture<T?> {
-        self.client.get(RedisKey(key), as: CacheDecoder.Input.self).optionalFlatMapThrowing { try self.decoder.decode(T.self, from: $0) }
+        self.client.get(RedisKey(key), as: CacheDecoder.Input.self).optionalFlatMapThrowing { try self.decoder.value.decode(T.self, from: $0) }
     }
 
     func set<T: Encodable>(_ key: String, to value: T?, expiresIn expirationTime: CacheExpirationTime?) -> EventLoopFuture<Void> {
@@ -81,7 +91,7 @@ private struct RedisCache<CacheEncoder: RedisCacheEncoder, CacheDecoder: RedisCa
         }
         
         return self.client.eventLoop
-            .tryFuture { try self.encoder.encode(value) }
+            .tryFuture { try self.encoder.value.encode(value) }
             .flatMap {
                 if let expirationTime = expirationTime {
                     return self.client.setex(RedisKey(key), to: $0, expirationInSeconds: expirationTime.seconds)
