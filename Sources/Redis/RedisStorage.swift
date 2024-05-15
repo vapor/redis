@@ -128,6 +128,24 @@ extension RedisStorage {
                 application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
             }
         }
+        
+        func shutdownAsync(_ application: Application) async {
+            self.redisStorage.lock.lock()
+            defer {
+                self.redisStorage.lock.unlock()
+            }
+            let shutdownFuture: EventLoopFuture<Void> = redisStorage.pools.values.map { pool in
+                let promise = pool.eventLoop.makePromise(of: Void.self)
+                pool.close(promise: promise)
+                return promise.futureResult
+            }.flatten(on: application.eventLoopGroup.next())
+
+            do {
+                try shutdownFuture.wait()
+            } catch {
+                application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
+            }
+        }
     }
 }
 
