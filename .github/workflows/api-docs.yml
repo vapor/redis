@@ -11,4 +11,4 @@ jobs:
      with:
        package_name: redis
        modules: Redis
-       pathsToInvalidate: /redis
+       pathsToInvalidate: /redis/*

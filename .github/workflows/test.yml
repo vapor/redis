@@ -17,13 +17,36 @@ jobs:
   api-breakage:
     if: ${{ !(github.event.pull_request.draft || false) }}
     runs-on: ubuntu-latest
-    container: swift:5.10-jammy
+    container: swift:jammy
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with: { 'fetch-depth': 0 }
-      - name: Run API breakage check action
-        uses: vapor/ci/.github/actions/ci-swift-check-api-breakage@reusable-workflows
+      - name: Run API breakage check
+        run: |
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          swift package diagnose-api-breaking-changes origin/main
+
+  gh-codeql:
+    if: ${{ !(github.event.pull_request.draft || false) }}
+    runs-on: ubuntu-latest
+    permissions: { actions: write, contents: read, security-events: write }
+    timeout-minutes: 30
+    steps:
+      - name: Install latest Swift toolchain
+        uses: vapor/swiftly-action@v0.1
+        with: { toolchain: latest }
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Fix Git configuration
+        run: 'git config --global --add safe.directory "${GITHUB_WORKSPACE}"'
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with: { languages: swift }
+      - name: Perform build
+        run: swift build
+      - name: Run CodeQL analyze
+        uses: github/codeql-action/analyze@v3
 
   linux-unit:
     if: ${{ !(github.event.pull_request.draft || false) }}
@@ -47,22 +70,11 @@ jobs:
       redis-2:
         image: ${{ matrix.redis }}
     steps:
-      - name: Save Redis version to env
-        run: |
-          echo REDIS_VERSION='${{ matrix.redis }}' >> $GITHUB_ENV
-      - name: Display versions
-        shell: bash
-        run: |
-          if [[ '${{ contains(matrix.container, 'nightly') }}' == 'true' ]]; then
-            SWIFT_PLATFORM="$(source /etc/os-release && echo "${ID}${VERSION_ID}")" SWIFT_VERSION="$(cat /.swift_tag)"
-            printf 'SWIFT_PLATFORM=%s\nSWIFT_VERSION=%s\n' "${SWIFT_PLATFORM}" "${SWIFT_VERSION}" >>"${GITHUB_ENV}"
-          fi
-          printf 'OS:  %s\nTag: %s\nVersion:\n' "${SWIFT_PLATFORM}-${RUNNER_ARCH}" "${SWIFT_VERSION}" && swift --version
       - name: Check out package
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run unit tests with Thread Sanitizer and coverage
         run: swift test --sanitize=thread --enable-code-coverage
-      - name: Submit coverage report to Codecov.io
-        uses: vapor/swift-codecov-action@v0.2
+      - name: Upload coverage data
+        uses: vapor/swift-codecov-action@v0.3
         with:
-          cc_env_vars: 'SWIFT_VERSION,SWIFT_PLATFORM,RUNNER_OS,RUNNER_ARCH,REDIS_VERSION'
+          codecov_token: ${{ secrets.CODECOV_TOKEN }}
