@@ -3,7 +3,7 @@ import NIOConcurrencyHelpers
 import NIOCore
 import NIOPosix
 import NIOSSL
-import RediStack
+@preconcurrency import RediStack
 
 extension Application {
     private struct RedisStorageKey: StorageKey {
@@ -141,7 +141,7 @@ extension RedisStorage {
             }.flatten(on: application.eventLoopGroup.next())
 
             do {
-                try shutdownFuture.wait()
+                try await shutdownFuture.get()
             } catch {
                 application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
             }

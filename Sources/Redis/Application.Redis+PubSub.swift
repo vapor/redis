@@ -1,5 +1,5 @@
 import Vapor
-import RediStack
+@preconcurrency import RediStack
 
 extension Application.Redis {
     private struct PubSubKey: StorageKey, LockKey {

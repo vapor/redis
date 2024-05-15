@@ -4,7 +4,7 @@ import RediStack
 import NIOCore
 
 /// A delegate object that controls key behavior of an `Application.Redis.Sessions` driver.
-public protocol RedisSessionsDelegate {
+public protocol RedisSessionsDelegate: Sendable {
     /// Makes a new session ID token.
     /// - Note: This method is optional to implement.
     ///

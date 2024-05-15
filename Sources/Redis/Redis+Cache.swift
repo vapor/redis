@@ -1,20 +1,20 @@
 import Vapor
 import Foundation
-import RediStack
+@preconcurrency import RediStack
 import NIOCore
 
 // MARK: RedisCacheCoder
 
 /// An encoder whose output is convertible to a `RESPValue` for storage in Redis.
 /// Directly based on `Combine.TopLevelEncoder` but can't extend it because Combine isn't available on Linux.
-public protocol RedisCacheEncoder {
+public protocol RedisCacheEncoder: Sendable {
     associatedtype Output: RESPValueConvertible
     func encode<T>(_ value: T) throws -> Self.Output where T: Encodable
 }
 
 /// A decoder whose input is convertible from a `RESPValue` loaded from Redis.
 /// Directly based on `Combine.TopLevelDecoder` but can't extend it because Combine isn't available on Linux.
-public protocol RedisCacheDecoder {
+public protocol RedisCacheDecoder: Sendable {
     associatedtype Input: RESPValueConvertible
     func decode<T>(_ type: T.Type, from: Self.Input) throws -> T where T: Decodable
 }
@@ -66,7 +66,7 @@ extension Application.Caches.Provider {
 // MARK: - Redis cache driver
 
 /// `Cache` driver for storing cache data in Redis, using a provided encoder and decoder to serialize and deserialize values respectively.
-private struct RedisCache<CacheEncoder: RedisCacheEncoder, CacheDecoder: RedisCacheDecoder>: Cache {
+private struct RedisCache<CacheEncoder: RedisCacheEncoder, CacheDecoder: RedisCacheDecoder>: Cache, Sendable {
     let encoder: CacheEncoder
     let decoder: CacheDecoder
     let client: RedisClient
