@@ -3,10 +3,10 @@ import NIOSSL
 import NIOPosix
 import Logging
 import NIOCore
-import RediStack
+@preconcurrency import RediStack
 
 /// Configuration for connecting to a Redis instance
-public struct RedisConfiguration {
+public struct RedisConfiguration: Sendable {
     public typealias ValidationError = RedisConnection.Configuration.ValidationError
 
     public var serverAddresses: [SocketAddress]
@@ -16,21 +16,22 @@ public struct RedisConfiguration {
     public var tlsConfiguration: TLSConfiguration?
     public var tlsHostname: String?
 
-    public struct PoolOptions {
+    public struct PoolOptions: Sendable {
         public var maximumConnectionCount: RedisConnectionPoolSize
         public var minimumConnectionCount: Int
         public var connectionBackoffFactor: Float32
         public var initialConnectionBackoffDelay: TimeAmount
         public var connectionRetryTimeout: TimeAmount?
-        public var onUnexpectedConnectionClose: ((RedisConnection) -> Void)?
+        public var onUnexpectedConnectionClose: (@Sendable (RedisConnection) -> Void)?
 
+        @preconcurrency
         public init(
             maximumConnectionCount: RedisConnectionPoolSize = .maximumActiveConnections(2),
             minimumConnectionCount: Int = 0,
             connectionBackoffFactor: Float32 = 2,
             initialConnectionBackoffDelay: TimeAmount = .milliseconds(100),
             connectionRetryTimeout: TimeAmount? = nil,
-            onUnexpectedConnectionClose: ((RedisConnection) -> Void)? = nil
+            onUnexpectedConnectionClose: (@Sendable (RedisConnection) -> Void)? = nil
         ) {
             self.maximumConnectionCount = maximumConnectionCount
             self.minimumConnectionCount = minimumConnectionCount
