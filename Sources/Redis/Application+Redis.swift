@@ -20,8 +20,8 @@ extension Application {
             self.application.redisStorage.pool(for: eventLoop, id: self.id)
         }
         
-        public func use(_ factory: RedisFactory) throws {
-            try self.application.redisStorage.use(factory, as: id)
+        public func use(_ factory: RedisFactory) {
+            self.application.redisStorage.use(factory, as: id)
         }
     }
 }

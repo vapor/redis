@@ -25,7 +25,7 @@ extension Application {
 final class RedisStorage {
     private let lock: NIOLock
 
-    private var configurations: [RedisID: RedisConfiguration]
+    private var configurations: [RedisID: RedisFactory]
     private var pools: [PoolKey: RedisClient] {
         willSet {
             guard pools.isEmpty else {
@@ -40,16 +40,8 @@ final class RedisStorage {
         lock = .init()
     }
 
-    func use(_ configuration: RedisConfiguration, as id: RedisID = .default) {
+    func use(_ configuration: RedisFactory, as id: RedisID) {
         configurations[id] = configuration
-    }
-
-    func configuration(for id: RedisID = .default) -> RedisConfiguration? {
-        configurations[id]
-    }
-
-    func ids() -> Set<RedisID> {
-        Set(configurations.keys)
     }
 
     func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisClient {
@@ -73,7 +65,7 @@ extension RedisStorage {
                 .makeIterator()
                 .forEach { eventLoop in
                     let newKey: PoolKey = .init(eventLoopKey: eventLoop.key, redisID: id)
-                    let newPool: RedisClient = configuration.provider.makeClient(for: eventLoop, logger: application.logger)
+                    let newPool: RedisClient = configuration.make(for: eventLoop, logger: application.logger)
 
                     pools[newKey] = newPool
                 }
@@ -109,6 +101,7 @@ extension RedisStorage {
             self.redisStorage = redisStorage
         }
 
+        /// Prepare each instance on each connection pool
         func didBoot(_ application: Application) throws {
             redisStorage.bootstrap(application: application)
         }
