@@ -14,18 +14,26 @@ public struct RedisConfiguration {
     public let pool: PoolOptions
     public let tlsConfiguration: TLSConfiguration?
     public let tlsHostname: String?
+    public let logger: Logger?
+}
 
-    private let factory: RedisFactory.Type
-    var provider: RedisFactory {
-        factory.init(configuration: self)
-    }
-
-    public init(url string: String, tlsConfiguration: TLSConfiguration? = nil, pool: PoolOptions = .init()) throws {
+extension RedisConfiguration {
+    public init(
+        url string: String,
+        tlsConfiguration: TLSConfiguration? = nil,
+        pool: PoolOptions = .init(),
+        logger: Logger? = nil
+    ) throws {
         guard let url = URL(string: string) else { throw ValidationError.invalidURLString }
         try self.init(url: url, tlsConfiguration: tlsConfiguration, pool: pool)
     }
 
-    public init(url: URL, tlsConfiguration: TLSConfiguration? = nil, pool: PoolOptions = .init()) throws {
+    public init(
+        url: URL,
+        tlsConfiguration: TLSConfiguration? = nil,
+        pool: PoolOptions = .init(),
+        logger: Logger? = nil
+    ) throws {
         guard
             let scheme = url.scheme,
             !scheme.isEmpty
@@ -48,7 +56,8 @@ public struct RedisConfiguration {
             password: url.password,
             tlsConfiguration: defaultTLSConfig,
             database: Int(url.lastPathComponent),
-            pool: pool
+            pool: pool,
+            logger: logger
         )
     }
 
@@ -58,7 +67,8 @@ public struct RedisConfiguration {
         password: String? = nil,
         tlsConfiguration: TLSConfiguration? = nil,
         database: Int? = nil,
-        pool: PoolOptions = .init()
+        pool: PoolOptions = .init(),
+        logger: Logger? = nil
     ) throws {
         if let database, database < 0 {
             throw ValidationError.outOfBoundsDatabaseID
@@ -70,7 +80,8 @@ public struct RedisConfiguration {
             tlsConfiguration: tlsConfiguration,
             tlsHostname: hostname,
             database: database,
-            pool: pool
+            pool: pool,
+            logger: logger
         )
     }
 
@@ -81,7 +92,7 @@ public struct RedisConfiguration {
         tlsHostname: String? = nil,
         database: Int? = nil,
         pool: PoolOptions = .init(),
-        factory: RedisFactory.Type? = nil
+        logger: Logger? = nil
     ) throws {
         self.serverAddresses = serverAddresses
         self.password = password
@@ -89,6 +100,6 @@ public struct RedisConfiguration {
         self.tlsHostname = tlsHostname
         self.database = database
         self.pool = pool
-        self.factory = factory ?? RedisProvider.self
+        self.logger = logger
     }
 }

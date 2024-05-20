@@ -1,27 +1,14 @@
-//
-//  RedisProvider.swift
-//
-//
-//  Created by Alessandro Di Maio on 12/05/24.
-//
-
 import NIOCore
 import NIOPosix
 import NIOSSL
 import RediStack
 import Vapor
 
-struct RedisProvider: RedisFactory {
-    let configuration: RedisConfiguration
-
-    init(configuration: RedisConfiguration) {
-        self.configuration = configuration
-    }
-
-    func makeClient(for eventLoop: EventLoop, logger: Logger) -> RedisClient {
+extension RedisConfiguration: RedisFactory {
+    public func make(for eventLoop: EventLoop, logger: Logger) -> RedisClient {
         let redisTLSClient: ClientBootstrap? = {
-            guard let tlsConfig = configuration.tlsConfiguration,
-                  let tlsHost = configuration.tlsHostname else { return nil }
+            guard let tlsConfig = self.tlsConfiguration,
+                  let tlsHost = self.tlsHostname else { return nil }
 
             return ClientBootstrap(group: eventLoop)
                 .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
@@ -44,7 +31,7 @@ struct RedisProvider: RedisFactory {
         }()
 
         return RedisConnectionPool(
-            configuration: .init(configuration, defaultLogger: logger, customClient: redisTLSClient),
+            configuration: .init(self, defaultLogger: self.logger ?? logger, customClient: redisTLSClient),
             boundEventLoop: eventLoop
         )
     }

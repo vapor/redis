@@ -10,7 +10,7 @@ import Vapor
 public extension Application.Redis {
     enum Errors: Error {
         case unsupportedOperation
-        
+
         var localizedDescription: String {
             switch self {
             case .unsupportedOperation:
