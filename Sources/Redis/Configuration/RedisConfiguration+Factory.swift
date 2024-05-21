@@ -5,7 +5,9 @@ import RediStack
 import Vapor
 
 extension RedisConfiguration: RedisFactory {
-    public func make(for eventLoop: EventLoop, logger: Logger) -> RedisClient {
+    public var configuration: RedisConfiguration { self }
+
+    public func makeClient(for eventLoop: EventLoop, logger: Logger) -> RedisClient {
         let redisTLSClient: ClientBootstrap? = {
             guard let tlsConfig = self.tlsConfiguration,
                   let tlsHost = self.tlsHostname else { return nil }
