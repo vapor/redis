@@ -1,4 +1,4 @@
-// swift-tools-version:5.8
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
@@ -22,11 +22,16 @@ let package = Package(
             dependencies: [
                 .product(name: "RediStack", package: "RediStack"),
                 .product(name: "Vapor", package: "vapor"),
-            ]
+            ],
+            swiftSettings: [.enableExperimentalFeature("StrictConcurrency=complete")]
         ),
-        .testTarget(name: "RedisTests", dependencies: [
-            .target(name: "Redis"),
-            .product(name: "XCTVapor", package: "vapor"),
-        ])
+        .testTarget(
+            name: "RedisTests",
+            dependencies: [
+                .target(name: "Redis"),
+                .product(name: "XCTVapor", package: "vapor"),
+            ],
+            swiftSettings: [.enableExperimentalFeature("StrictConcurrency=complete")]
+        )
     ]
 )
