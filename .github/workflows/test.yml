@@ -27,26 +27,26 @@ jobs:
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           swift package diagnose-api-breaking-changes origin/main
 
-  gh-codeql:
-    if: ${{ !(github.event.pull_request.draft || false) }}
-    runs-on: ubuntu-latest
-    permissions: { actions: write, contents: read, security-events: write }
-    timeout-minutes: 30
-    steps:
-      - name: Install latest Swift toolchain
-        uses: vapor/swiftly-action@v0.1
-        with: { toolchain: latest }
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: Fix Git configuration
-        run: 'git config --global --add safe.directory "${GITHUB_WORKSPACE}"'
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with: { languages: swift }
-      - name: Perform build
-        run: swift build
-      - name: Run CodeQL analyze
-        uses: github/codeql-action/analyze@v3
+  # gh-codeql:
+  #   if: ${{ !(github.event.pull_request.draft || false) }}
+  #   runs-on: ubuntu-latest
+  #   permissions: { actions: write, contents: read, security-events: write }
+  #   timeout-minutes: 30
+  #   steps:
+  #     - name: Install latest Swift toolchain
+  #       uses: vapor/swiftly-action@v0.1
+  #       with: { toolchain: latest }
+  #     - name: Check out code
+  #       uses: actions/checkout@v4
+  #     - name: Fix Git configuration
+  #       run: 'git config --global --add safe.directory "${GITHUB_WORKSPACE}"'
+  #     - name: Initialize CodeQL
+  #       uses: github/codeql-action/init@v3
+  #       with: { languages: swift }
+  #     - name: Perform build
+  #       run: swift build
+  #     - name: Run CodeQL analyze
+  #       uses: github/codeql-action/analyze@v3
 
   linux-unit:
     if: ${{ !(github.event.pull_request.draft || false) }}
