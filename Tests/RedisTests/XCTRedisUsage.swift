@@ -31,7 +31,7 @@ class XCTRedisUsage: XCTestCase {
         XCTAssertContains(info2.string, "redis_version_two")
     }
 
-    func test_subscribe_to_pubSub_successfully() throws {
+    func test_usage_of_pubSub_fake_client() throws {
         let expectedChannel = RedisChannelName("common_channel")
         let expectedMessage = "Hello from redis pubSub"
 
