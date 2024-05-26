@@ -1,7 +1,7 @@
 import Redis
 import Vapor
 
-final class DummyRedis {
+final class DummyRedis: Sendable {
     typealias TestError = ArrayTestRedisClient.TestError
 
     private let client: ArrayTestRedisClient
