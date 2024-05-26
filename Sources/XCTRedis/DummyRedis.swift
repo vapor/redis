@@ -15,6 +15,10 @@ final class DummyRedis {
 
 extension DummyRedis: RedisClient {
     func send(command: String, with arguments: [RESPValue]) -> EventLoopFuture<RESPValue> {
+        if command == "PUBLISH" {
+            client.yield(with: arguments)
+        }
+
         switch client.next {
         case let .success(value):
             return eventLoop.makeSucceededFuture(value)
@@ -29,11 +33,12 @@ extension DummyRedis: RedisClient {
         onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
         onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
     ) -> EventLoopFuture<Void> {
-        eventLoop.makeFailedFuture(TestError.unsupported)
-    }
-
-    func unsubscribe(from channels: [RedisChannelName]) -> EventLoopFuture<Void> {
-        eventLoop.makeFailedFuture(TestError.unsupported)
+        psubscribe(
+            to: channels.map(\.rawValue),
+            messageReceiver: receiver,
+            onSubscribe: subscribeHandler,
+            onUnsubscribe: unsubscribeHandler
+        )
     }
 
     func psubscribe(
@@ -42,11 +47,33 @@ extension DummyRedis: RedisClient {
         onSubscribe subscribeHandler: RedisSubscriptionChangeHandler?,
         onUnsubscribe unsubscribeHandler: RedisSubscriptionChangeHandler?
     ) -> EventLoopFuture<Void> {
-        eventLoop.makeFailedFuture(TestError.unsupported)
+        client.subscribe(
+            matching: patterns,
+            publisher: receiver,
+            subHandler: subscribeHandler,
+            unSubHandler: unsubscribeHandler
+        )
+
+        switch client.next {
+        case .success:
+            return eventLoop.makeSucceededVoidFuture()
+        case let .failure(error):
+            return eventLoop.makeFailedFuture(error)
+        }
+    }
+
+    func unsubscribe(from channels: [RedisChannelName]) -> EventLoopFuture<Void> {
+        punsubscribe(from: channels.map(\.rawValue))
     }
 
     func punsubscribe(from patterns: [String]) -> EventLoopFuture<Void> {
-        eventLoop.makeFailedFuture(TestError.unsupported)
+        client.unsubscribe(matching: patterns)
+        switch client.next {
+        case .success:
+            return eventLoop.makeSucceededVoidFuture()
+        case let .failure(error):
+            return eventLoop.makeFailedFuture(error)
+        }
     }
 
     func logging(to logger: Logging.Logger) -> RediStack.RedisClient { return self }
