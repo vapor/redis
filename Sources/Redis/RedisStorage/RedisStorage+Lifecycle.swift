@@ -5,6 +5,7 @@ extension RedisStorage {
     /// configurated `RedisID` on each `EventLoop`.
     final class Lifecycle: LifecycleHandler {
         unowned let redisStorage: RedisStorage
+
         init(redisStorage: RedisStorage) {
             self.redisStorage = redisStorage
         }
@@ -16,7 +17,19 @@ extension RedisStorage {
 
         /// Close each connection pool
         func shutdown(_ application: Application) {
-            redisStorage.shutdown(application: application)
+            do {
+                try redisStorage.shutdown(application: application).wait()
+            } catch {
+                application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
+            }
+        }
+
+        func shutdownAsync(_ application: Application) async {
+            do {
+                try await redisStorage.shutdown(application: application).get()
+            } catch {
+                application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
+            }
         }
     }
 }

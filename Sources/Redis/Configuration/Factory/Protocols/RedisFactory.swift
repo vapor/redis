@@ -4,7 +4,7 @@ import NIOCore
 import NIOSSL
 
 /// A protocol which indicates the ability to create a ``RedisClient``
-public protocol RedisFactory {
+public protocol RedisFactory: Sendable {
     /// Configuration on which ``RedisFactory/makeClient(for:logger:)`` is based
     var configuration: RedisConfiguration { get }
 

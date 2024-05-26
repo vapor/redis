@@ -1,31 +1,32 @@
 import NIOConcurrencyHelpers
+@preconcurrency import RediStack
 import Vapor
 
-final class RedisStorage {
-    private let lock: NIOLock
-
-    private var configurations: [RedisID: RedisConfigurationFactory]
-    private var pools: [PoolKey: RedisClient] {
-        willSet {
-            guard pools.isEmpty else {
-                fatalError("Modifying connection pools after application has booted is not supported")
+final class RedisStorage: Sendable {
+    fileprivate struct StorageBox: Sendable {
+        var configurations: [RedisID: RedisConfigurationFactory]
+        var pools: [PoolKey: RedisClient] {
+            willSet {
+                guard pools.isEmpty else {
+                    fatalError("Modifying connection pools after application has booted is not supported")
+                }
             }
         }
     }
 
+    private let box: NIOLockedValueBox<StorageBox>
+
     init() {
-        configurations = [:]
-        pools = [:]
-        lock = .init()
+        box = .init(.init(configurations: [:], pools: [:]))
     }
 
     func use(_ configuration: RedisConfigurationFactory, as id: RedisID) {
-        configurations[id] = configuration
+        box.withLockedValue { $0.configurations[id] = configuration }
     }
 
     func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisClient {
         let key = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
-        guard let pool = pools[key] else {
+        guard let pool = box.withLockedValue({ $0.pools[key] }) else {
             fatalError("No redis found for id \(redisID), or the app may not have finished booting. Also, the eventLoop must be from Application's EventLoopGroup.")
         }
         return pool
@@ -34,41 +35,36 @@ final class RedisStorage {
 
 extension RedisStorage {
     func bootstrap(application: Application) {
-        lock.lock()
-        defer { lock.unlock() }
-        pools = configurations.reduce(into: [PoolKey: RedisClient]()) { pools, instance in
-            let (id, configuration) = instance
+        box.withLockedValue {
+            $0.pools = $0.configurations.reduce(into: [PoolKey: RedisClient]()) { pools, instance in
+                let (id, configuration) = instance
 
-            application
-                .eventLoopGroup
-                .makeIterator()
-                .forEach { eventLoop in
-                    let newKey: PoolKey = .init(eventLoopKey: eventLoop.key, redisID: id)
-                    let newPool: RedisClient = configuration
-                        .make()
-                        .makeClient(for: eventLoop, logger: application.logger)
+                application
+                    .eventLoopGroup
+                    .makeIterator()
+                    .forEach { eventLoop in
+                        let newKey: PoolKey = .init(eventLoopKey: eventLoop.key, redisID: id)
+                        let newPool: RedisClient = configuration
+                            .make()
+                            .makeClient(for: eventLoop, logger: application.logger)
 
-                    pools[newKey] = newPool
-                }
+                        pools[newKey] = newPool
+                    }
+            }
         }
     }
 
-    func shutdown(application: Application) {
-        lock.lock()
-        defer { lock.unlock() }
-
-        let shutdownFuture: EventLoopFuture<Void> = pools.values.compactMap { pool in
-            guard let pool = pool as? RedisConnectionPool else { return nil }
-
-            let promise = pool.eventLoop.makePromise(of: Void.self)
-            pool.close(promise: promise)
-            return promise.futureResult
-        }.flatten(on: application.eventLoopGroup.next())
-
-        do {
-            try shutdownFuture.wait()
-        } catch {
-            application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
+    func shutdown(application: Application) -> EventLoopFuture<Void> {
+        box.withLockedValue {
+            let shutdownFuture: EventLoopFuture<Void> = $0.pools.values.compactMap { pool in
+                guard let pool = pool as? RedisConnectionPool else { return nil }
+                
+                let promise = pool.eventLoop.makePromise(of: Void.self)
+                pool.close(promise: promise)
+                return promise.futureResult
+            }.flatten(on: application.eventLoopGroup.next())
+            
+            return shutdownFuture
         }
     }
 }

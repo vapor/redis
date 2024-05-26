@@ -2,7 +2,7 @@ import Redis
 import Vapor
 import Logging
 import XCTVapor
-import RediStack
+@preconcurrency import RediStack
 import XCTest
 
 extension String {

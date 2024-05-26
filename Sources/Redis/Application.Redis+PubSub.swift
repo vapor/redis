@@ -1,9 +1,9 @@
 import Vapor
-import RediStack
+@preconcurrency import RediStack
 
 extension Application.Redis {
     private struct PubSubKey: StorageKey, LockKey {
-        typealias Value = [RedisID: RedisClient]
+        typealias Value = [RedisID: RedisClient & Sendable]
     }
 
     var pubsubClient: RedisClient {

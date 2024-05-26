@@ -2,10 +2,9 @@ import Foundation
 import Logging
 import NIOCore
 import NIOSSL
-import RediStack
 
 /// Configuration for connecting to a Redis instance
-public struct RedisConfiguration {
+public struct RedisConfiguration: Sendable {
     public typealias ValidationError = RedisConnection.Configuration.ValidationError
 
     public let serverAddresses: [SocketAddress]

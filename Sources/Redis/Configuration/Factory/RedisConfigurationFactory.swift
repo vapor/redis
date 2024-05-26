@@ -1,11 +1,11 @@
 import Foundation
 
-public struct RedisConfigurationFactory {
+public struct RedisConfigurationFactory: Sendable {
     typealias ValidationError = RedisConfiguration.ValidationError
 
-    public let make: () -> RedisFactory
+    public let make: @Sendable () -> RedisFactory
 
-    public init(make: @escaping () -> RedisFactory) {
+    public init(make: @escaping @Sendable () -> RedisFactory) {
         self.make = make
     }
 }

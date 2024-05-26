@@ -16,7 +16,8 @@ public struct RedisID: Hashable,
                        ExpressibleByStringLiteral,
                        ExpressibleByStringInterpolation,
                        CustomStringConvertible,
-                       Comparable {
+                       Comparable,
+                       Sendable {
 
     public let rawValue: String
 

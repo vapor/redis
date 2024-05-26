@@ -1,14 +1,19 @@
+import NIOConcurrencyHelpers
 import Redis
 import Vapor
 import XCTest
 
 // Common base for stubbing responses since at runtime we will have as many instances as many event loops.
-public class ArrayTestRedisClient {
+public final class ArrayTestRedisClient: Sendable {
     public typealias Item = Result<RESPValue, Error>
 
-    private(set) var results: [Item] = []
-    private(set) var publishers: [String: RedisSubscriptionMessageReceiver] = [:]
-    private(set) var unSubscriptions: [String: RedisSubscriptionChangeHandler] = [:]
+    fileprivate struct StorageBox: @unchecked Sendable {
+        var results: [Item] = []
+        var publishers: [String: RedisSubscriptionMessageReceiver] = [:]
+        var unSubscriptions: [String: RedisSubscriptionChangeHandler] = [:]
+    }
+
+    private let box: NIOLockedValueBox<StorageBox> = .init(.init())
 
     public init() {}
 
@@ -18,24 +23,32 @@ public class ArrayTestRedisClient {
     }
 
     deinit {
-        XCTAssert(results.isEmpty)
+        box.withLockedValue {
+            XCTAssert($0.results.isEmpty)
+        }
     }
 
     public func prepare(with item: Result<RESPValue, Error>) {
-        results.append(item)
+        box.withLockedValue {
+            $0.results.append(item)
+        }
     }
 
     public func prepare(error: Error?) {
-        switch error {
-        case let .some(value):
-            results.append(.failure(value))
-        case .none:
-            results.append(.success(.null))
+        box.withLockedValue {
+            switch error {
+            case let .some(value):
+                $0.results.append(.failure(value))
+            case .none:
+                $0.results.append(.success(.null))
+            }
         }
     }
 
     var next: Item {
-        results.isEmpty ? .failure(TestError.outOfResponses) : results.removeFirst()
+        box.withLockedValue {
+            $0.results.isEmpty ? .failure(TestError.outOfResponses) : $0.results.removeFirst()
+        }
     }
 
     func subscribe(
@@ -44,27 +57,38 @@ public class ArrayTestRedisClient {
         subHandler: RedisSubscriptionChangeHandler?,
         unSubHandler: RedisSubscriptionChangeHandler?
     ) {
-        for value in values {
-            publishers[value] = publisher
-            unSubscriptions[value] = unSubHandler
-            subHandler?(value, 1)
+        box.withLockedValue {
+            for value in values {
+                $0.publishers[value] = publisher
+                $0.unSubscriptions[value] = unSubHandler
+            }
         }
+        values.forEach({ subHandler?($0, 1) })
     }
 
     func unsubscribe(
         matching values: [String]
     ) {
-        for value in values {
-            publishers[value] = nil
-            unSubscriptions[value]?(value, 0)
-            unSubscriptions[value] = nil
+        var unSubscriptions: [String: RedisSubscriptionChangeHandler] = [:]
+
+        box.withLockedValue {
+            for value in values {
+                $0.publishers[value] = nil
+                if let unSubscription = $0.unSubscriptions[value] {
+                    unSubscriptions[value] = unSubscription
+                }
+                $0.unSubscriptions[value] = nil
+            }
         }
+        unSubscriptions.forEach({ $0.value($0.key, 0) })
     }
 
     func yield(with arguments: [RESPValue]) {
         let channel = arguments[0].string!
         let message = arguments[1]
 
-        publishers[channel]?(.init(channel), message)
+        box.withLockedValue {
+            $0.publishers[channel]
+        }?(.init(channel), message)
     }
 }

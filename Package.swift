@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.8
 import PackageDescription
 
 let package = Package(
@@ -15,7 +15,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-server/RediStack.git", from: "1.4.1"),
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.77.1"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.100.0"),
     ],
     targets: [
         .target(
