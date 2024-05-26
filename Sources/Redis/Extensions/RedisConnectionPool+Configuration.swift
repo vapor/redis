@@ -1,10 +1,3 @@
-//
-//  RedisConnectionPool+Configuration.swift
-//
-//
-//  Created by Alessandro Di Maio on 12/05/24.
-//
-
 import NIOPosix
 import RediStack
 

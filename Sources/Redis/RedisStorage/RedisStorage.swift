@@ -1,26 +1,5 @@
 import NIOConcurrencyHelpers
-import NIOCore
-import NIOPosix
-import NIOSSL
-import RediStack
 import Vapor
-
-extension Application {
-    private struct RedisStorageKey: StorageKey {
-        typealias Value = RedisStorage
-    }
-
-    var redisStorage: RedisStorage {
-        if let existing = storage[RedisStorageKey.self] {
-            return existing
-        }
-
-        let redisStorage = RedisStorage()
-        storage[RedisStorageKey.self] = redisStorage
-        lifecycle.use(RedisStorage.Lifecycle(redisStorage: redisStorage))
-        return redisStorage
-    }
-}
 
 final class RedisStorage {
     private let lock: NIOLock
@@ -90,27 +69,6 @@ extension RedisStorage {
             try shutdownFuture.wait()
         } catch {
             application.logger.error("Error shutting down redis connection pools, possibly because the pool never connected to the Redis server: \(error)")
-        }
-    }
-}
-
-extension RedisStorage {
-    /// Lifecyle Handler for Redis Storage. On boot, it creates a RedisConnectionPool for each
-    /// configurated `RedisID` on each `EventLoop`.
-    final class Lifecycle: LifecycleHandler {
-        unowned let redisStorage: RedisStorage
-        init(redisStorage: RedisStorage) {
-            self.redisStorage = redisStorage
-        }
-
-        /// Prepare each instance on each connection pool
-        func didBoot(_ application: Application) throws {
-            redisStorage.bootstrap(application: application)
-        }
-
-        /// Close each connection pool
-        func shutdown(_ application: Application) {
-            redisStorage.shutdown(application: application)
         }
     }
 }

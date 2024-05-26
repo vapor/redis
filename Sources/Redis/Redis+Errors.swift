@@ -1,10 +1,3 @@
-//
-//  Redis+Errors.swift
-//
-//
-//  Created by Alessandro Di Maio on 12/05/24.
-//
-
 import Vapor
 
 public extension Application.Redis {

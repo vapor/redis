@@ -1,10 +1,3 @@
-//
-//  RedisConfiguration+PoolOptions.swift
-//
-//
-//  Created by Alessandro Di Maio on 12/05/24.
-//
-
 import Foundation
 
 extension RedisConfiguration {
