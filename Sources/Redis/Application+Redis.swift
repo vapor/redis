@@ -16,8 +16,12 @@ extension Application {
         }
 
         @usableFromInline
-        internal func pool(for eventLoop: EventLoop) -> RedisConnectionPool {
+        internal func pool(for eventLoop: EventLoop) -> RedisClient {
             self.application.redisStorage.pool(for: eventLoop, id: self.id)
+        }
+        
+        public func use(_ configuration: RedisConfigurationFactory) {
+            self.application.redisStorage.use(configuration, as: id)
         }
     }
 }
@@ -89,10 +93,15 @@ extension Application.Redis {
     public func withBorrowedConnection<Result>(
         _ operation: @escaping (RedisClient) -> EventLoopFuture<Result>
     ) -> EventLoopFuture<Result> {
-        return self.application.redis(self.id)
+        let client = self.application.redis(self.id)
             .pool(for: self.eventLoop)
-            .leaseConnection {
-                return operation($0.logging(to: self.application.logger))
-            }
+        
+        guard let pool = client as? RedisConnectionPool else {
+            return self.eventLoop.makeFailedFuture(Application.Redis.Errors.unsupportedOperation)
+        }
+        
+        return pool.leaseConnection {
+            return operation($0.logging(to: self.application.logger))
+        }
     }
 }

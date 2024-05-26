@@ -10,7 +10,7 @@ extension String {
 }
 
 final class RedisTests: XCTestCase {
-    var redisConfig: RedisConfiguration!
+    var redisConfig: RedisConfigurationFactory!
 
     override class func setUp() {
         XCTAssert(isLoggingConfigured)
@@ -18,7 +18,7 @@ final class RedisTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        redisConfig = try RedisConfiguration(
+        redisConfig = try .standalone(
             hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
             port: Environment.get("REDIS_PORT")?.int ?? 6379,
             pool: .init(connectionRetryTimeout: .milliseconds(100))
@@ -32,7 +32,7 @@ extension RedisTests {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis.configuration = redisConfig
+        app.redis.use(redisConfig)
         try app.boot()
 
         let info = try app.redis.send(command: "INFO").wait()
@@ -43,7 +43,7 @@ extension RedisTests {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis.configuration = redisConfig
+        app.redis.use(redisConfig)
 
         app.get("test") { req in
             req.redis.send(command: "INFO").map {
@@ -63,7 +63,9 @@ extension RedisTests {
     func testInitConfigurationURL() throws {
         let urlStr = URL(string: "redis://name:password@localhost:6379/0")
         
-        let redisConfiguration = try RedisConfiguration(url: urlStr!)
+        let redisConfiguration = try RedisConfigurationFactory.standalone(url: urlStr!)
+            .make()
+            .configuration
         
         XCTAssertEqual(redisConfiguration.password, "password")
         XCTAssertEqual(redisConfiguration.database, 0)
@@ -75,7 +77,7 @@ extension RedisTests {
     func testCodable() throws {
         let app = Application()
         defer { app.shutdown() }
-        app.redis.configuration = redisConfig
+        app.redis.use(redisConfig)
         try app.boot()
 
         struct Hello: Codable {
@@ -100,7 +102,7 @@ extension RedisTests {
     func testRequestConnectionLeasing() throws {
         let app = Application()
         defer { app.shutdown() }
-        app.redis.configuration = self.redisConfig
+        app.redis.use(redisConfig)
 
         app.get("test") {
             $0.redis
@@ -127,7 +129,7 @@ extension RedisTests {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis.configuration = self.redisConfig
+        app.redis.use(redisConfig)
         try app.boot()
 
         let result = try app.redis
@@ -155,7 +157,7 @@ extension RedisTests {
         let app = Application(.testing)
         defer { app.shutdown() }
         
-        app.redis.configuration = redisConfig
+        app.redis.use(redisConfig)
 
         // Configure sessions.
         app.sessions.use(.redis)
@@ -196,7 +198,7 @@ extension RedisTests {
         let app = Application()
         defer { app.shutdown() }
         
-        app.redis.configuration = redisConfig
+        app.redis.use(redisConfig)
         app.caches.use(.redis)
         try app.boot()
 
@@ -221,7 +223,7 @@ extension RedisTests {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         
-        app.redis.configuration = redisConfig
+        app.redis.use(redisConfig)
         app.caches.use(.redis(encoder: encoder, decoder: decoder))
         try app.boot()
         
