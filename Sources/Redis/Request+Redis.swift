@@ -84,10 +84,15 @@ extension Request.Redis {
     public func withBorrowedClient<Result>(
         _ operation: @escaping (RedisClient) -> EventLoopFuture<Result>
     ) -> EventLoopFuture<Result> {
-        return self.request.application.redis(self.id)
+        let client = self.request.application.redis(self.id)
             .pool(for: self.eventLoop)
-            .leaseConnection {
-                return operation($0.logging(to: self.request.logger))
-            }
+        
+        guard let pool = client as? RedisConnectionPool else {
+            return self.eventLoop.makeFailedFuture(Application.Redis.Errors.unsupportedOperation)
+        }
+        
+        return pool.leaseConnection {
+            return operation($0.logging(to: self.request.logger))
+        }
     }
 }

@@ -10,7 +10,8 @@ let package = Package(
        .watchOS(.v6),
     ],
     products: [
-        .library(name: "Redis", targets: ["Redis"])
+        .library(name: "Redis", targets: ["Redis"]),
+        .library(name: "XCTRedis", targets: ["XCTRedis"]),
     ],
     dependencies: [
         .package(url: "https://github.com/swift-server/RediStack.git", from: "1.4.1"),
@@ -24,8 +25,12 @@ let package = Package(
                 .product(name: "Vapor", package: "vapor"),
             ]
         ),
+        .target(name: "XCTRedis", dependencies: [
+            .target(name: "Redis"),
+        ]),
         .testTarget(name: "RedisTests", dependencies: [
             .target(name: "Redis"),
+            .target(name: "XCTRedis"),
             .product(name: "XCTVapor", package: "vapor"),
         ])
     ]

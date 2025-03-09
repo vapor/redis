@@ -1,9 +1,10 @@
 import Foundation
+import Logging
 import Redis
 import Vapor
-import Logging
-import XCTVapor
 import XCTest
+import XCTRedis
+import XCTVapor
 
 private extension RedisID {
     static let one: RedisID = "one"
@@ -11,19 +12,18 @@ private extension RedisID {
 }
 
 class MultipleRedisTests: XCTestCase {
-
-    var redisConfig: RedisConfiguration!
-    var redisConfig2: RedisConfiguration!
+    var redisConfig: RedisConfigurationFactory!
+    var redisConfig2: RedisConfigurationFactory!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        redisConfig = try RedisConfiguration(
+        redisConfig = try .standalone(
             hostname: Environment.get("REDIS_HOSTNAME") ?? "localhost",
             port: Environment.get("REDIS_PORT")?.int ?? 6379,
             pool: .init(connectionRetryTimeout: .milliseconds(100))
         )
-        redisConfig2 = try RedisConfiguration(
+        redisConfig2 = try .standalone(
             hostname: Environment.get("REDIS_HOSTNAME_2") ?? "localhost",
             port: Environment.get("REDIS_PORT_2")?.int ?? 6380,
             pool: .init(connectionRetryTimeout: .milliseconds(100))
@@ -34,8 +34,8 @@ class MultipleRedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis(.one).configuration = redisConfig
-        app.redis(.two).configuration = redisConfig2
+        app.redis(.one).use(redisConfig)
+        app.redis(.two).use(redisConfig2)
 
         try app.boot()
 
@@ -50,8 +50,8 @@ class MultipleRedisTests: XCTestCase {
         let app = Application()
         defer { app.shutdown() }
 
-        app.redis(.one).configuration = redisConfig
-        app.redis(.two).configuration = redisConfig2
+        app.redis(.one).use(redisConfig)
+        app.redis(.two).use(redisConfig2)
 
         app.get("test1") { req in
             req.redis(.one).get("name").map {
