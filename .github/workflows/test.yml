@@ -54,10 +54,9 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - swift:5.8-focal
-          - swift:5.9-jammy
           - swift:5.10-jammy
-          - swiftlang/swift:nightly-6.0-jammy
+          - swift:6.0-jammy
+          - swift:6.1-jammy
           - swiftlang/swift:nightly-main-jammy
         redis:
           - redis:6
