@@ -19,11 +19,11 @@ extension Request {
 
 // MARK: RedisClient
 extension Request.Redis: RedisClient {
-    public var eventLoop: EventLoop {
+    public var eventLoop: any EventLoop {
         self.request.eventLoop
     }
 
-    public func logging(to logger: Logger) -> RedisClient {
+    public func logging(to logger: Logger) -> any RedisClient {
         self.request.application.redis(self.id)
             .pool(for: self.eventLoop)
             .logging(to: logger)
@@ -82,7 +82,7 @@ extension Request.Redis {
     /// See `RedisConnectionPool.leaseConnection(_:)` for more details.
     @inlinable
     public func withBorrowedClient<Result>(
-        _ operation: @escaping (RedisClient) -> EventLoopFuture<Result>
+        _ operation: @escaping (any RedisClient) -> EventLoopFuture<Result>
     ) -> EventLoopFuture<Result> {
         return self.request.application.redis(self.id)
             .pool(for: self.eventLoop)

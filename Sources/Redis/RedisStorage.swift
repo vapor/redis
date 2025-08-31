@@ -50,7 +50,7 @@ final class RedisStorage: Sendable {
         Set(self.box.withLockedValue { $0.configurations.keys })
     }
 
-    func pool(for eventLoop: EventLoop, id redisID: RedisID) -> RedisConnectionPool {
+    func pool(for eventLoop: any EventLoop, id redisID: RedisID) -> RedisConnectionPool {
         let key = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
         guard let pool = self.box.withLockedValue({ $0.pools[key] }) else {
             fatalError("No redis found for id \(redisID), or the app may not have finished booting. Also, the eventLoop must be from Application's EventLoopGroup.")

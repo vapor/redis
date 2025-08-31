@@ -29,22 +29,22 @@ extension PropertyListDecoder: RedisCacheDecoder { public typealias Input = Data
 
 extension Application.Caches {
     /// A cache configured for the default Redis ID and the default coders.
-    public var redis: Cache {
+    public var redis: any Cache {
         self.redis(.default)
     }
     
     /// A cache configured for a given Redis ID and the default coders.
-    public func redis(_ id: RedisID, jsonEncoder: JSONEncoder = JSONEncoder(), jsonDecoder: JSONDecoder = JSONDecoder()) -> Cache {
+    public func redis(_ id: RedisID, jsonEncoder: JSONEncoder = JSONEncoder(), jsonDecoder: JSONDecoder = JSONDecoder()) -> any Cache {
         self.redis(id, encoder: jsonEncoder, decoder: jsonDecoder)
     }
 
     /// A cache configured for a given Redis ID and using the provided encoder and decoder.
-    public func redis<E: RedisCacheEncoder, D: RedisCacheDecoder>(_ id: RedisID  = .default, encoder: E, decoder: D) -> Cache {
+    public func redis<E: RedisCacheEncoder, D: RedisCacheDecoder>(_ id: RedisID  = .default, encoder: E, decoder: D) -> any Cache {
         RedisCache(encoder: FakeSendable(value: encoder), decoder: FakeSendable(value: decoder), client: self.application.redis(id))
     }
     
     /// A cache configured for a given Redis ID and using the provided encoder and decoder wrapped as FakeSendable.
-    func redis(_ id: RedisID  = .default, encoder: FakeSendable<some RedisCacheEncoder>, decoder: FakeSendable<some RedisCacheDecoder>) -> Cache {
+    func redis(_ id: RedisID  = .default, encoder: FakeSendable<some RedisCacheEncoder>, decoder: FakeSendable<some RedisCacheDecoder>) -> any Cache {
         RedisCache(encoder: encoder, decoder: decoder, client: self.application.redis(id))
     }
 }
@@ -79,7 +79,7 @@ struct FakeSendable<T>: @unchecked Sendable { let value: T }
 private struct RedisCache<CacheEncoder: RedisCacheEncoder, CacheDecoder: RedisCacheDecoder>: Cache, Sendable {
     let encoder: FakeSendable<CacheEncoder>
     let decoder: FakeSendable<CacheDecoder>
-    let client: RedisClient
+    let client: any RedisClient
     
     func get<T: Decodable>(_ key: String, as type: T.Type) -> EventLoopFuture<T?> {
         self.client.get(RedisKey(key), as: CacheDecoder.Input.self).optionalFlatMapThrowing { try self.decoder.value.decode(T.self, from: $0) }
