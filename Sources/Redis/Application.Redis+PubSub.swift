@@ -3,10 +3,10 @@ import Vapor
 
 extension Application.Redis {
     private struct PubSubKey: StorageKey, LockKey {
-        typealias Value = [RedisID: RedisClient & Sendable]
+        typealias Value = [RedisID: any RedisClient & Sendable]
     }
 
-    var pubsubClient: RedisClient {
+    var pubsubClient: any RedisClient {
         if let existing = self.application.storage[PubSubKey.self]?[self.id] {
             return existing
         } else {

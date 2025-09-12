@@ -23,7 +23,10 @@ let package = Package(
                 .product(name: "RediStack", package: "RediStack"),
                 .product(name: "Vapor", package: "vapor"),
             ],
-            swiftSettings: [.enableExperimentalFeature("StrictConcurrency=complete")]
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency=complete"),
+                .enableUpcomingFeature("ExistentialAny"),
+            ]
         ),
         .testTarget(
             name: "RedisTests",
@@ -31,7 +34,10 @@ let package = Package(
                 .target(name: "Redis"),
                 .product(name: "XCTVapor", package: "vapor"),
             ],
-            swiftSettings: [.enableExperimentalFeature("StrictConcurrency=complete")]
-        )
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency=complete"),
+                .enableUpcomingFeature("ExistentialAny"),
+            ]
+        ),
     ]
 )
