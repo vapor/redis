@@ -57,6 +57,19 @@ final class RedisStorage: Sendable {
         }
         return pool
     }
+
+    func retryHostnameResolution(for id: RedisID = .default) throws {
+        guard let configuration = self.configuration(for: id) else {
+            throw RedisConfiguration.ValidationError.missingURLHost
+        }
+
+        guard configuration.hasUnresolvedHostname else {
+            return
+        }
+
+        let resolvedConfiguration = try configuration.resolveServerAddresses()
+        self.use(resolvedConfiguration, as: id)
+    }
 }
 
 extension RedisStorage {
@@ -73,12 +86,26 @@ extension RedisStorage {
             for eventLoop in application.eventLoopGroup.makeIterator() {
                 redisStorage.box.withLockedValue { storageBox in
                     for (redisID, configuration) in storageBox.configurations {
+                        // Attempt to resolve any deferred hostnames at boot time
+                        let resolvedConfiguration: RedisConfiguration
+                        if configuration.hasUnresolvedHostname {
+                            do {
+                                resolvedConfiguration = try configuration.resolveServerAddresses()
+                                application.logger.info("Successfully resolved Redis hostname for \(redisID) during application boot")
+                                storageBox.configurations[redisID] = resolvedConfiguration
+                            } catch {
+                                application.logger.warning("Redis hostname resolution failed for \(redisID) during boot: \(error)")
+                                resolvedConfiguration = configuration
+                            }
+                        } else {
+                            resolvedConfiguration = configuration
+                        }
 
                         let newKey: PoolKey = PoolKey(eventLoopKey: eventLoop.key, redisID: redisID)
 
                         let redisTLSClient: ClientBootstrap? = {
-                            guard let tlsConfig = configuration.tlsConfiguration,
-                                    let tlsHost = configuration.tlsHostname else { return nil }
+                            guard let tlsConfig = resolvedConfiguration.tlsConfiguration,
+                                    let tlsHost = resolvedConfiguration.tlsHostname else { return nil }
 
                             return ClientBootstrap(group: eventLoop)
                                 .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
@@ -97,7 +124,7 @@ extension RedisStorage {
                         }()
 
                         let newPool = RedisConnectionPool(
-                            configuration: .init(configuration, defaultLogger: application.logger, customClient: redisTLSClient),
+                            configuration: .init(resolvedConfiguration, defaultLogger: application.logger, customClient: redisTLSClient),
                             boundEventLoop: eventLoop)
 
                         newPools[newKey] = newPool

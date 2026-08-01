@@ -68,6 +68,39 @@ extension RedisTests {
         XCTAssertEqual(redisConfiguration.password, "password")
         XCTAssertEqual(redisConfiguration.database, 0)
     }
+
+    func testDeferredHostnameResolution() throws {
+        let config = try RedisConfiguration(
+            hostname: "nonexistent.hostname",
+            port: 6379,
+            pool: .init(connectionRetryTimeout: .milliseconds(100))
+        )
+
+        XCTAssertTrue(config.hasUnresolvedHostname)
+
+        let localhostConfig = try RedisConfiguration(
+            hostname: "localhost",
+            port: 6379
+        )
+
+        XCTAssertFalse(localhostConfig.hasUnresolvedHostname)
+    }
+
+    func testHostnameResolutionRetry() throws {
+        let config = try RedisConfiguration(
+            hostname: "nonexistent.hostname",
+            port: 6379
+        )
+
+        let app = Application(.testing)
+        defer { app.shutdown() }
+
+        app.redis.configuration = config
+
+        if app.redis.hasUnresolvedHostname {
+            XCTAssertThrowsError(try app.redis.retryHostnameResolution())
+        }
+    }
 }
 
 // MARK: Redis extensions

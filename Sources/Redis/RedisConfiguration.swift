@@ -16,6 +16,13 @@ public struct RedisConfiguration: Sendable {
     public var tlsConfiguration: TLSConfiguration?
     public var tlsHostname: String?
 
+    internal var deferredHostname: String?
+    internal var deferredPort: Int?
+
+    public var hasUnresolvedHostname: Bool {
+        return deferredHostname != nil
+    }
+
     public struct PoolOptions: Sendable {
         public var maximumConnectionCount: RedisConnectionPoolSize
         public var minimumConnectionCount: Int
@@ -83,14 +90,22 @@ public struct RedisConfiguration: Sendable {
     ) throws {
         if database != nil && database! < 0 { throw ValidationError.outOfBoundsDatabaseID }
 
-        try self.init(
-            serverAddresses: [.makeAddressResolvingHost(hostname, port: port)],
-            password: password,
-            tlsConfiguration: tlsConfiguration,
-            tlsHostname: hostname,
-            database: database,
-            pool: pool
-        )
+        do {
+            let resolvedAdress = try SocketAddress.makeAddressResolvingHost(hostname, port: port)
+            self.serverAddresses = [resolvedAdress]
+            self.deferredHostname = nil
+            self.deferredPort = nil
+        } catch {
+            self.serverAddresses = []
+            self.deferredHostname = hostname
+            self.deferredPort = port
+        }
+
+        self.password = password
+        self.tlsConfiguration = tlsConfiguration
+        self.tlsHostname = hostname
+        self.database = database
+        self.pool = pool
     }
 
     public init(
@@ -102,18 +117,48 @@ public struct RedisConfiguration: Sendable {
         pool: PoolOptions = .init()
     ) throws {
         self.serverAddresses = serverAddresses
+        self.deferredHostname = nil
+        self.deferredPort = nil
         self.password = password
         self.tlsConfiguration = tlsConfiguration
         self.tlsHostname = tlsHostname
         self.database = database
         self.pool = pool
     }
+
+    /// Attempts to resolve any pending hostname resolution
+    ///  - Returns: new configuration with resolved addresses, or throws if resolution fails
+    public func resolveServerAddresses() throws -> RedisConfiguration {
+        guard let hostname = deferredHostname, let port = deferredPort else {
+            return self
+        }
+
+        var resolved = self
+        let resolvedAddress = try SocketAddress.makeAddressResolvingHost(hostname, port: port)
+        resolved.serverAddresses = [resolvedAddress]
+        resolved.deferredHostname = nil
+        resolved.deferredPort = nil
+        return resolved
+    }
 }
 
 extension RedisConnectionPool.Configuration {
     internal init(_ config: RedisConfiguration, defaultLogger: Logger, customClient: ClientBootstrap?) {
+        // Handle deferred hostname resolution at pool creation time
+        var addresses = config.serverAddresses
+
+        if let hostname = config.deferredHostname, let port = config.deferredPort {
+            do {
+                let resolvedAddress = try SocketAddress.makeAddressResolvingHost(hostname, port: port)
+                addresses = [resolvedAddress]
+            } catch {
+                defaultLogger.notice("Hostname '\(hostname)' could not be resolved at pool creation time: \(error). Redis connections will fail until hostname becomes resolvable.")
+                // Placeholder address so Redis operations fail gracefully
+                addresses = [try! SocketAddress.makeAddressResolvingHost("0.0.0.0", port: 1)]
+            }
+        }
         self.init(
-            initialServerConnectionAddresses: config.serverAddresses,
+            initialServerConnectionAddresses: addresses,
             maximumConnectionCount: config.pool.maximumConnectionCount,
             connectionFactoryConfiguration: .init(
                 connectionInitialDatabase: config.database,
